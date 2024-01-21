@@ -4,7 +4,7 @@ import { fetchDebug } from "./fetchDebug.tsx";
 export async function proxyDnsOverHttps(
     doh: string,
     url: string,
-    req: Request
+    req: Request,
 ) {
     const remoteUrl = new URL(doh);
     remoteUrl.search = new URL(url).search;

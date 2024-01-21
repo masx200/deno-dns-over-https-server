@@ -6,7 +6,7 @@ import {
 
 export const Strict_Transport_Security = async (
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response> => {
     // console.log(2);
     await next();

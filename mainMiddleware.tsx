@@ -7,7 +7,7 @@ import { handlerMain } from "./handlerMain.tsx";
 
 export const mainMiddleware = async (
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response> => {
     // console.log(1);
     // await next();
