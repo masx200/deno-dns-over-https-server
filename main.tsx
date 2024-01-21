@@ -13,11 +13,12 @@ const handler = createHandler([
         // console.log(2);
         await next();
         const headers = new Headers(ctx.response.headers);
+
+        headers.set("Strict-Transport-Security", "max-age=31536000");
         const res = new Response(ctx.response.body, {
             status: ctx.response.status,
             headers,
         });
-        headers.set("Strict-Transport-Security", "max-age=31536000");
         return res;
     },
     async (ctx, next) => {
@@ -32,7 +33,7 @@ const handler = createHandler([
 
 async function handlerMain(
     req: Request,
-    connInfo: ConnInfo
+    connInfo: ConnInfo,
 ): Promise<Response> {
     const doh = Deno.env.get("doh");
     const { url, headers, method } = req;
