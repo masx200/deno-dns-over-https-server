@@ -10,16 +10,8 @@ import {
 const handler = createHandler([
     logger,
     async (ctx, next) => {
-        // console.log(1);
-        // await next();
-        // console.log(3);
-        const req = ctx.request;
-        const con = getOriginalOptions(ctx);
-        return handlerMain(new Request(req.url, req), con);
-    },
-    (ctx) => {
         // console.log(2);
-
+        await next();
         const headers = new Headers(ctx.response.headers);
         const res = new Response(ctx.response.body, {
             status: ctx.response.status,
@@ -27,6 +19,14 @@ const handler = createHandler([
         });
         headers.set("Strict-Transport-Security", "max-age=31536000");
         return res;
+    },
+    async (ctx, next) => {
+        // console.log(1);
+        // await next();
+        // console.log(3);
+        const req = ctx.request;
+        const con = getOriginalOptions(ctx);
+        return handlerMain(new Request(req.url, req), con);
     },
 ]);
 
