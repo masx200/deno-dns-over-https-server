@@ -1,1 +1,1 @@
-export { handler } from "./main.tsx";
+export { handler } from "./handler.tsx";
