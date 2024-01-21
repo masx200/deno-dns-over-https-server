@@ -19,9 +19,9 @@ if (import.meta.main) {
         await serve(handler, { port, hostname });
     } else {
         // 否则，使用默认的端口号8000和主机名0.0.0.0监听
-        // await Promise.all([
-        //     serve(handler, { hostname: "::", port: 8000 }),
-        serve(handler, { hostname: "0.0.0.0", port: 8000 }); //,
-        // ]);
+        await Promise.all([
+            serve(handler, { hostname: "::", port: 8000 }),
+            serve(handler, { hostname: "0.0.0.0", port: 8000 }),
+        ]);
     }
 }
