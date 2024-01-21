@@ -2,6 +2,7 @@ import { ConnInfo, serve } from "https://deno.land/std@0.182.0/http/server.ts";
 import { parse } from "https://deno.land/std@0.182.0/flags/mod.ts";
 
 import {
+    bodyToBuffer,
     createHandler,
     getOriginalOptions,
     // bodyToBuffer,
@@ -16,9 +17,9 @@ export const handler = createHandler([
 
         headers.set("Strict-Transport-Security", "max-age=31536000");
         // console.log(ctx.response.body);
-        // const body=await bodyToBuffer()
+        const body = await bodyToBuffer(ctx.response.body);
         // headers.delete("content-length");
-        const res = new Response(ctx.response.body, {
+        const res = new Response(body, {
             status: ctx.response.status,
             headers,
         });
@@ -38,6 +39,7 @@ async function handlerMain(
     req: Request,
     connInfo: ConnInfo
 ): Promise<Response> {
+    // return new Response(new Uint8Array([44, 11, 22, 99]));
     const doh = Deno.env.get("doh");
     const { url, headers, method } = req;
 
@@ -46,7 +48,12 @@ async function handlerMain(
         const remoteUrl = new URL(doh);
         remoteUrl.search = new URL(url).search;
         // console.log(new Request(remoteUrl, req));
-        return fetch(remoteUrl, req);
+        const body = await bodyToBuffer(req.body);
+        return fetch(remoteUrl, {
+            body,
+            headers: req.headers,
+            method: req.method,
+        });
     } else {
         const data = {
             ...connInfo,
