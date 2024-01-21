@@ -1,6 +1,5 @@
-import { ConnInfo, serve } from "https://deno.land/std@0.182.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.182.0/http/server.ts";
 import { parse } from "https://deno.land/std@0.182.0/flags/mod.ts";
-
 import {
     bodyToBuffer,
     createHandler,
@@ -8,9 +7,10 @@ import {
     // bodyToBuffer,
     logger,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+import { handlerMain } from "./handlerMain.tsx";
 export const handler = createHandler([
     logger,
-    async (ctx, next) => {
+    async (ctx, next): Promise<Response> => {
         // console.log(2);
         await next();
         const headers = new Headers(ctx.response.headers);
@@ -26,7 +26,7 @@ export const handler = createHandler([
         });
         return res;
     },
-    async (ctx, next) => {
+    async (ctx, next): Promise<Response> => {
         // console.log(1);
         // await next();
         // console.log(3);
@@ -36,44 +36,6 @@ export const handler = createHandler([
     },
 ]);
 
-async function handlerMain(
-    req: Request,
-    connInfo: ConnInfo
-): Promise<Response> {
-    // return new Response(new Uint8Array([44, 11, 22, 99]));
-    const doh = Deno.env.get("doh");
-    const { url, headers, method } = req;
-
-    const pathname = new URL(url).pathname;
-    if (pathname === "/dns-query" && doh?.startsWith("https://")) {
-        const remoteUrl = new URL(doh);
-        remoteUrl.search = new URL(url).search;
-        // console.log(new Request(remoteUrl, req));
-        //必须把请求的主体转换为Uint8Array才行
-        const body = await bodyToBuffer(req.body);
-        return fetch(remoteUrl, {
-            body,
-            headers: req.headers,
-            method: req.method,
-        });
-    } else {
-        const data = {
-            ...connInfo,
-            url,
-            method,
-            headers: Object.fromEntries(headers),
-        };
-
-        const body = JSON.stringify(data);
-        //     console.log("request", body);
-        return new Response(body, {
-            headers: {
-                "Strict-Transport-Security": "max-age=31536000",
-                "content-type": "application/json",
-            },
-        });
-    }
-}
 if (import.meta.main) {
     let { port, hostname } = parse(Deno.args);
     if (port || hostname) {
