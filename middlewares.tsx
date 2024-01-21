@@ -7,7 +7,7 @@ import { error_handler } from "./error_handler.tsx";
 import { Strict_Transport_Security } from "./Strict_Transport_Security.tsx";
 import { mainMiddleware } from "./mainMiddleware.tsx";
 
-export const middlewares: Middleware | Middleware[] | undefined = [
+export const middlewares: Middleware[] = [
     error_handler,
     logger,
     Strict_Transport_Security,
