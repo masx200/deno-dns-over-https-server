@@ -4,10 +4,10 @@ import { parse } from "https://deno.land/std@0.182.0/flags/mod.ts";
 import {
     createHandler,
     getOriginalOptions,
+    // bodyToBuffer,
     logger,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
-
-const handler = createHandler([
+export const handler = createHandler([
     logger,
     async (ctx, next) => {
         // console.log(2);
@@ -15,6 +15,9 @@ const handler = createHandler([
         const headers = new Headers(ctx.response.headers);
 
         headers.set("Strict-Transport-Security", "max-age=31536000");
+        // console.log(ctx.response.body);
+        // const body=await bodyToBuffer()
+        // headers.delete("content-length");
         const res = new Response(ctx.response.body, {
             status: ctx.response.status,
             headers,
@@ -33,7 +36,7 @@ const handler = createHandler([
 
 async function handlerMain(
     req: Request,
-    connInfo: ConnInfo,
+    connInfo: ConnInfo
 ): Promise<Response> {
     const doh = Deno.env.get("doh");
     const { url, headers, method } = req;
@@ -42,6 +45,7 @@ async function handlerMain(
     if (pathname === "/dns-query" && doh?.startsWith("https://")) {
         const remoteUrl = new URL(doh);
         remoteUrl.search = new URL(url).search;
+        // console.log(new Request(remoteUrl, req));
         return fetch(remoteUrl, req);
     } else {
         const data = {
