@@ -12,7 +12,7 @@ import { proxyCheckerDoh } from "./proxyCheckerDoh.tsx"; // 导入proxyCheckerDo
  */
 export async function handlerMain(
     req: Request,
-    connInfo: ConnInfo,
+    connInfo: ConnInfo
 ): Promise<Response> {
     // return new Response(new Uint8Array([44, 11, 22, 99]));
     const doh = Deno.env.get("doh"); // 获取Doh环境变量的值
@@ -23,6 +23,6 @@ export async function handlerMain(
         // 判断是否存在Doh并且路径名满足代理检查条件
         return await proxyDnsOverHttps(doh, url, req); // 使用代理进行DNS-over-HTTPS请求
     } else {
-        return replyInformation(req, connInfo); // 返回回复信息
+        return replyInformation(req, connInfo, 404); // 返回回复信息
     }
 }
