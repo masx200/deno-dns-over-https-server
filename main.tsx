@@ -17,6 +17,7 @@ export const handler = createHandler([
 
         headers.set("Strict-Transport-Security", "max-age=31536000");
         // console.log(ctx.response.body);
+        //必须把响应的主体转换为Uint8Array才行
         const body = await bodyToBuffer(ctx.response.body);
         // headers.delete("content-length");
         const res = new Response(body, {
@@ -48,6 +49,7 @@ async function handlerMain(
         const remoteUrl = new URL(doh);
         remoteUrl.search = new URL(url).search;
         // console.log(new Request(remoteUrl, req));
+        //必须把请求的主体转换为Uint8Array才行
         const body = await bodyToBuffer(req.body);
         return fetch(remoteUrl, {
             body,
