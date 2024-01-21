@@ -5,6 +5,7 @@
         "lint": "deno lint --config deno.json",
         "dev": "deno run --allow-net=:8000 ./main.tsx"
     },
+    "importMap": "import_map.json",
     "fmt": {
         "options": {
             "indentWidth": 4,

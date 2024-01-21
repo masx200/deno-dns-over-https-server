@@ -1,0 +1,7 @@
+{
+  "version": "3",
+  "redirects": {
+    "https://cdn.skypack.dev/-/lodash@v4.17.21-K6GEbP02mWFnLA45zAmi/dist=es2019,mode=types/isPlainObject": "https://cdn.skypack.dev/-/lodash@v4.17.21-K6GEbP02mWFnLA45zAmi/dist=es2019,mode=types/isPlainObject.d.ts"
+  },
+  "remote": {}
+}
