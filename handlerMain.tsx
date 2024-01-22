@@ -16,10 +16,10 @@ import { get_doh_url } from "./get_doh_url.tsx";
  */
 export async function handlerMain(
     req: Request,
-    connInfo: ConnInfo,
-    next: NextFunction,
+    // connInfo: ConnInfo,
+    next: NextFunction
 ): Promise<Response> {
-    console.log("connInfo", connInfo);
+    // console.log("connInfo", connInfo);
     // return new Response(new Uint8Array([44, 11, 22, 99]));
     const doh = get_doh_url(); // 获取Doh环境变量的值
     const { url } = req; // 解构赋值获取请求的url
