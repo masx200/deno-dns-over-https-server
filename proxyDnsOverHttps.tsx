@@ -13,7 +13,7 @@ import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 export async function proxyDnsOverHttps(
     doh: string,
     url: string,
-    req: Request,
+    req: Request
 ): Promise<Response> {
     try {
         const remoteUrl = new URL(doh);
@@ -21,7 +21,7 @@ export async function proxyDnsOverHttps(
         // console.log(new Request(remoteUrl, req));
         // 必须把请求的主体转换为Uint8Array才行
         const body = req.body && (await bodyToBuffer(req.body));
-        return fetchDebug(remoteUrl, {
+        return await fetchDebug(remoteUrl, {
             body,
             headers: req.headers,
             method: req.method,

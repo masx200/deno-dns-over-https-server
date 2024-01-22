@@ -13,12 +13,12 @@ import { handlerMain } from "./handlerMain.tsx";
  */
 export async function mainMiddleware(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<Response> {
     // console.log(1);
     // await next();
     // console.log(3);
     const req = ctx.request;
     const con = getOriginalOptions(ctx);
-    return handlerMain(new Request(req.url, req), con);
+    return await handlerMain(new Request(req.url, req), con, next);
 }

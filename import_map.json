@@ -5,6 +5,7 @@
         "node:assert": "npm:@types/node@20.2.5/assert.d.ts",
         "node:http2": "npm:@types/node@20.2.5/http2.d.ts",
         "@hattip/response": "npm:@hattip/response@0.0.34",
-        "http": "node:http"
+        "http": "node:http",
+        "cache-control-parser": "npm:cache-control-parser@2.0.5"
     }
 }
