@@ -1,5 +1,13 @@
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 
+/**
+ * 回复信息函数
+ *
+ * @param req 请求对象
+ * @param connInfo 连接信息
+ * @param status 状态码
+ * @returns Response 响应对象
+ */
 export function replyInformation(
     req: Request,
     connInfo: ConnInfo,
