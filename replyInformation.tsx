@@ -11,7 +11,7 @@ import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 export function replyInformation(
     req: Request,
     connInfo: ConnInfo,
-    status: number
+    status: number,
 ): Response {
     const { url, headers, method } = req;
     const data = {

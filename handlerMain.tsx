@@ -12,7 +12,7 @@ import { proxyCheckerDoh } from "./proxyCheckerDoh.tsx"; // 导入proxyCheckerDo
  */
 export async function handlerMain(
     req: Request,
-    connInfo: ConnInfo
+    connInfo: ConnInfo,
 ): Promise<Response> {
     console.log("connInfo", connInfo);
     // return new Response(new Uint8Array([44, 11, 22, 99]));
