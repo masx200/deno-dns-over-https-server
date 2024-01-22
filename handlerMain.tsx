@@ -5,6 +5,7 @@ import { proxyCheckerDoh } from "./proxyCheckerDoh.tsx"; // 导入proxyCheckerDo
 import { get_path_name } from "./get_path_name.tsx";
 import { NextFunction } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
 import { response_builder } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/src/response_builder.ts";
+import { get_doh_url } from "./get_doh_url.tsx";
 
 /**
  * 处理请求的函数
@@ -20,7 +21,7 @@ export async function handlerMain(
 ): Promise<Response> {
     console.log("connInfo", connInfo);
     // return new Response(new Uint8Array([44, 11, 22, 99]));
-    const doh = Deno.env.get("doh"); // 获取Doh环境变量的值
+    const doh = get_doh_url(); // 获取Doh环境变量的值
     const { url } = req; // 解构赋值获取请求的url
 
     const pathname = get_path_name(url); // 获取url的路径名

@@ -13,7 +13,7 @@ import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 export async function proxyDnsOverHttps(
     doh: string,
     url: string,
-    req: Request
+    req: Request,
 ): Promise<Response> {
     try {
         const remoteUrl = new URL(doh);
