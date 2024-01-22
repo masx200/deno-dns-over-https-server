@@ -1,10 +1,17 @@
 // 导入Middleware类型
-import { Middleware } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+import {
+    Context,
+    Middleware,
+    NextFunction,
+} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
 // 导入STATUS_TEXT
 import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 
 // 定义error_handler为Middleware类型
-export const error_handler: Middleware = async (_ctx, next) => {
+export async function error_handler(
+    _ctx: Context,
+    next: NextFunction,
+): Promise<Response | undefined> {
     try {
         // 调用next()函数
         await next();
@@ -16,4 +23,4 @@ export const error_handler: Middleware = async (_ctx, next) => {
             status: 500,
         });
     }
-};
+}
