@@ -9,9 +9,10 @@ import {
 import { dns_query_set_cache_control_max_age_greater_than } from "./dns_query_set_cache_control_max_age_greater_than.tsx";
 
 export const middlewares: Middleware[] = [
-    dns_query_set_cache_control_max_age_greater_than,
     error_handler, // 错误处理中间件
     logger, // 日志记录中间件
+    dns_query_set_cache_control_max_age_greater_than,
+
     Strict_Transport_Security, // 设置HTTP响应头的中间件
     mainMiddleware, // 主要的中间件
 ];

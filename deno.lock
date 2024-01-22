@@ -125,6 +125,10 @@
     "https://deno.land/x/masx200_deno_serve_https@1.0.6/on_tls_connection.ts": "0232107f0208016872e8986f86148d988ce947a67f20ba74d722cc5edba1acd5",
     "https://deno.land/x/masx200_deno_serve_https@1.0.6/requestEventProcessor.ts": "000a65066480c947fb10969f8c90238a524e6b79ffdd48a079b8ec2e4004afa6",
     "https://deno.land/x/masx200_deno_serve_https@1.0.6/serve_http.ts": "c8998d9e3509d4ff0c8d6527afe97185454ceedc1a1e2ad489f707a34dab3b6f",
-    "https://deno.land/x/masx200_deno_serve_https@1.0.6/serve_https.ts": "9979b85b48afd4eb149ac2213059648379ffc10497b9b5bf2a616af89360876e"
+    "https://deno.land/x/masx200_deno_serve_https@1.0.6/serve_https.ts": "9979b85b48afd4eb149ac2213059648379ffc10497b9b5bf2a616af89360876e",
+    "https://esm.sh/@hattip/response@0.0.34/": "8396cd44b8f95282fe118f41a4fb58b95d1d6830b53a623578b9e4819e81cfa6",
+    "https://esm.sh/cache-control-parser@2.0.5/": "4016ca938ba3a3fc37f9c82a26c97686e50c4ba1dc638d856664395892b1ed64",
+    "https://esm.sh/v135/@hattip/response@0.0.34/denonext/response.mjs": "ca0620cb0467fe269bfe2473ef35f51de34647b4dc94a316412502491bab1e0a",
+    "https://esm.sh/v135/cache-control-parser@2.0.5/denonext/cache-control-parser.mjs": "3ad5fdba7a0073afa5f2d66e2572d4f9b68c1c346786189ecdf3b4e486a36c39"
   }
 }
