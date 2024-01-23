@@ -2,8 +2,13 @@
 
 doh-cache-deno-deploy
 
-将需要反向代理的 doh 网址设定为环境变量 doh
+### 使用方法
+
+将需要反向代理的 dns over https 网址设定为环境变量 doh, 将需要反向代理的
+缓存时间设定为环境变量 ttl,
 
 ```
-npx -y cross-env "doh=https://doh.pub/dns-query"  deno run -A C:\Documents\doh-cache-deno-deploy\main.tsx
+npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run -A ./main.tsx
 ```
+
+访问`http://localhost:8000/dns-query`使用 dns over https

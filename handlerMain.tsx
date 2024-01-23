@@ -17,7 +17,7 @@ import { get_doh_url } from "./get_doh_url.tsx";
 export async function handlerMain(
     req: Request,
     // connInfo: ConnInfo,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response> {
     // console.log("connInfo", connInfo);
     // return new Response(new Uint8Array([44, 11, 22, 99]));
