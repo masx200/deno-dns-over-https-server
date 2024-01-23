@@ -5,10 +5,11 @@ export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterf
 
     return {
         async get(key) {
+            console.log(await Array.fromAsync(cache.list({ prefix: [] })));
             const result = await cache.get<{
                 status: number;
                 headers: Record<string, string>;
-                body: Uint8Array;
+                body: string;
                 expires: number;
             }>([key]);
             if (
@@ -25,7 +26,7 @@ export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterf
         },
         async set(key, value) {
             const result = await cache.set([key], value);
-            console.log(cache);
+            console.log(await Array.fromAsync(cache.list({ prefix: [] })));
             if (!result.ok) {
                 throw Error(
                     "Failed to set " + key + " to " + JSON.stringify(value)

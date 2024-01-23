@@ -11,7 +11,7 @@ export type CachePromiseInterface = {
         value: {
             status: number;
             headers: Record<string, string>;
-            body: Uint8Array;
+            body: string;
             expires: number;
         }
     ): Promise<void>;
@@ -25,7 +25,7 @@ export type CachePromiseInterface = {
         | {
               status: number;
               headers: Record<string, string>;
-              body: Uint8Array;
+              body: string;
               expires: number;
           }
         | null
