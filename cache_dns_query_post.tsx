@@ -3,7 +3,7 @@ import {
     NextFunction,
     RetHandler,
     bodyToBuffer,
-} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+} from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { should_cache_request_response } from "./should_cache_request_response.tsx";
 import { get_dns_query_cache_key } from "./get_dns_query_cache_key.tsx";
 import { get_path_name } from "./get_path_name.tsx";
@@ -25,14 +25,14 @@ export async function cache_dns_query_post_and_get_method(
     if (get_path_name(ctx.request.url) != dns_query_path_name()) return next();
     const identifier = `DenoCache-${new URL(ctx.request.url).hostname}`;
     const cache = await CachePromiseInterfaceFactory();
-    const request_body =
-        ctx.request.body &&
-        new Uint8Array(
-            await new Request(ctx.request.url, ctx.request)
-                .clone()
-                .arrayBuffer()
-        );
-    //@ts-ignore
+    const request_body = ctx.request.body
+        ? new Uint8Array(
+              await new Request(ctx.request.url, ctx.request)
+                  .clone()
+                  .arrayBuffer()
+          )
+        : null;
+
     ctx.request.body = request_body;
     const cache_key = get_dns_query_cache_key({
         method: ctx.request.method,

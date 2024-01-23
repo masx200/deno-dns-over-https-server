@@ -3,7 +3,7 @@ import {
     Context,
     NextFunction,
     RetHandler,
-} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+} from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 
 /**
  * Strict_Transport_Security 中间件函数，用于设置响应头中的 Strict-Transport-Security 字段

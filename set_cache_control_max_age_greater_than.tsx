@@ -3,7 +3,7 @@ import {
     Context, // 日志记录中间件
     Middleware,
     RetHandler,
-} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+} from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { get_path_name } from "./get_path_name.tsx";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 

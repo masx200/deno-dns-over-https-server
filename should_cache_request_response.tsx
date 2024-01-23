@@ -1,6 +1,6 @@
 import { get_path_name } from "./get_path_name.tsx";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
-import { Context } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+import { Context } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 
 /**
  * 判断是否应该缓存请求和响应

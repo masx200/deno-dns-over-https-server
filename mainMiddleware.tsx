@@ -3,7 +3,7 @@ import {
     // getOriginalOptions,
     NextFunction,
     RetHandler,
-} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+} from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { handlerMain } from "./handlerMain.tsx";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { get_path_name } from "./get_path_name.tsx";

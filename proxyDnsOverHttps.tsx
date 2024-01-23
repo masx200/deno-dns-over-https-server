@@ -1,8 +1,8 @@
-import { bodyToBuffer } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+import { bodyToBuffer } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { fetchDebug } from "./fetchDebug.tsx";
 import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
-import { RequestOptions } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/src/Context.ts";
+import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
 
 /**
  * 转发DNS over HTTPS请求的代理函数
@@ -14,7 +14,7 @@ export async function proxyDnsOverHttps(
     doh: string,
     // url: string,
     req: RequestOptions,
-    connInfo: ConnInfo,
+    connInfo: ConnInfo
 ): Promise<Response> {
     try {
         const url = req.url;
@@ -30,7 +30,7 @@ export async function proxyDnsOverHttps(
                 new URL(url).hostname
             };by=${(connInfo.localAddr as Deno.NetAddr).hostname};for=${
                 (connInfo.remoteAddr as Deno.NetAddr).hostname
-            }`,
+            }`
         );
         return await fetchDebug(remoteUrl, {
             body,

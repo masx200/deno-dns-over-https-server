@@ -8,7 +8,7 @@ import {
     getOriginalOptions,
     NextFunction,
     RetHandler,
-} from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+} from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { get_doh_url } from "./get_doh_url.tsx";
 
 /**
