@@ -13,7 +13,7 @@ export interface ResponseCacheType {
     /**
      * 响应体
      */
-    body: string;
+    body: Uint8Array;
     /**
      * 过期时间
      */

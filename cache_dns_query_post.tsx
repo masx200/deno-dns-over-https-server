@@ -2,6 +2,7 @@ import {
     Context,
     NextFunction,
     RetHandler,
+    bodyToBuffer,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
 import { should_cache_request_response } from "./should_cache_request_response.tsx";
 import { get_dns_query_cache_key } from "./get_dns_query_cache_key.tsx";
@@ -10,7 +11,6 @@ import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { CachePromiseInterfaceFactory } from "./CachePromiseInterfaceFactory.tsx";
 import { get_ttl_min } from "./get_ttl_min.ts";
 import { parse } from "cache-control-parser";
-import { bodyToText } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/body/bodyToText.ts";
 
 /**
  * 缓存DNS查询的POST和GET方法
@@ -69,10 +69,7 @@ export async function cache_dns_query_post_and_get_method(
                 parse(header_cache_control)?.["max-age"]) ??
                 0
         );
-        const response_body = await bodyToText(
-            ctx.response.body,
-            ctx.response.headers
-        );
+        const response_body = await bodyToBuffer(ctx.response.body);
         // console.log(ttl)
         await cache.set(cache_key, {
             body: response_body,
