@@ -11,6 +11,12 @@ import { CachePromiseInterfaceFactory } from "./CachePromiseInterfaceFactory.tsx
 import { get_ttl_min } from "./get_ttl_min.ts";
 import { parse } from "cache-control-parser";
 
+/**
+ * 缓存DNS查询的POST和GET方法
+ * @param {Context} context - 请求上下文对象
+ * @param {NextFunction} next - 下一个中间件函数
+ * @returns {Promise<RetHandler>} - 返回一个Promise对象，用于处理请求的返回结果
+ */
 export async function cache_dns_query_post_and_get_method(
     context: Context,
     next: NextFunction
