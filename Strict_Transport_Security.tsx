@@ -2,6 +2,7 @@ import {
     bodyToBuffer,
     Context,
     NextFunction,
+    RetHandler,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
 
 /**
@@ -12,8 +13,8 @@ import {
  */
 export async function Strict_Transport_Security(
     ctx: Context,
-    next: NextFunction,
-): Promise<Response> {
+    next: NextFunction
+): Promise<RetHandler> {
     // console.log(2);
     await next();
     const headers = new Headers(ctx.response.headers);

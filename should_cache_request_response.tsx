@@ -9,6 +9,7 @@ import { Context } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/
  */
 export function should_cache_request_response(ctx: Context): boolean {
     return (
+        (ctx.request.method === "POST" || ctx.request.method === "GET") &&
         get_path_name(ctx.request.url) === dns_query_path_name() &&
         ctx.response.status === 200
     );

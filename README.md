@@ -11,7 +11,7 @@ doh-cache-deno-deploy
 启动
 
 ```
-npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run -A ./main.tsx
+npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --unsatble -A ./main.tsx
 ```
 
 访问`http://localhost:8000/dns-query`使用 dns over https

@@ -2,7 +2,10 @@ import { parse, stringify } from "cache-control-parser";
 import {
     Context, // 日志记录中间件
     Middleware,
+    RetHandler,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
+import { get_path_name } from "./get_path_name.tsx";
+import { dns_query_path_name } from "./dns_query_path_name.tsx";
 
 /**
  * 设置缓存控制的最大年龄大于指定的最小年龄，并根据条件执行中间件函数。
@@ -12,34 +15,36 @@ import {
  */
 export function set_cache_control_max_age_greater_than(
     min_age: number,
-    condition: (params: Context) => boolean,
+    condition: (params: Context) => boolean
 ): Middleware {
-    return async function (params: Context, next): Promise<void> {
+    return async function (context: Context, next): Promise<RetHandler> {
+        if (get_path_name(context.request.url) != dns_query_path_name())
+            return next();
+
         await next();
-        if (!condition(params)) return;
-        const cacheControlHeader = params.response.headers.get("cache-control");
+        if (!condition(context)) return;
+        const cacheControlHeader =
+            context.response.headers.get("cache-control");
         // 设置cache-control不得小于min_age
         if (cacheControlHeader) {
             const cacheControl = parse(cacheControlHeader);
             if (cacheControl["max-age"]) {
                 if (cacheControl["max-age"] < min_age) {
-                    params.response.headers.set(
+                    context.response.headers.set(
                         "cache-control",
                         stringify({
                             "max-age": min_age,
-                        }),
+                        })
                     );
                 }
             }
         } else {
-            params.response.headers.set(
+            context.response.headers.set(
                 "cache-control",
                 stringify({
                     "max-age": min_age,
-                }),
+                })
             );
-            return;
         }
-        return;
     };
 }
