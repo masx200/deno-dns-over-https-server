@@ -40,6 +40,23 @@ export async function cache_dns_query_post_and_get_method(
         body: request_body,
     });
 
+    if (cache_key) {
+        const result = await cache.get(cache_key);
+
+        if (result) {
+            // console.log(cache_key, result);
+            const response_body = result.body;
+            const ttl = result.ttl;
+            ctx.response.status = result.status;
+            ctx.response.headers = new Headers(result.headers);
+            ctx.response.headers.append(
+                "Cache-Status",
+                identifier + `;key=${cache_key};hit;ttl=${ttl}`
+            );
+            ctx.response.body = response_body;
+            return;
+        }
+    }
     await next();
     if (should_cache_request_response(ctx)) {
         if (!cache_key) return;
@@ -62,6 +79,7 @@ export async function cache_dns_query_post_and_get_method(
             headers: Object.fromEntries(ctx.response.headers),
             status: ctx.response.status,
             expires: Date.now() + 1000 * ttl,
+            ttl,
         });
 
         ctx.response.headers.append(
