@@ -25,6 +25,7 @@ export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterf
         },
         async set(key, value) {
             const result = await cache.set([key], value);
+            console.log(cache);
             if (!result.ok) {
                 throw Error(
                     "Failed to set " + key + " to " + JSON.stringify(value)

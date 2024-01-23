@@ -24,6 +24,7 @@ export async function cache_dns_query_post_and_get_method(
     next: NextFunction
 ): Promise<RetHandler> {
     if (get_path_name(ctx.request.url) != dns_query_path_name()) return next();
+    const identifier = `DenoCache-${new URL(ctx.request.url).hostname}`;
     const cache = await CachePromiseInterfaceFactory();
     const request_body =
         ctx.request.body &&
@@ -59,14 +60,11 @@ export async function cache_dns_query_post_and_get_method(
             status: ctx.response.status,
             expires: Date.now() + 1000 * ttl,
         });
-        const connInfo: ConnInfo = getOriginalOptions(ctx);
+
         ctx.response.headers.append(
             "Cache-Status",
-            `DenoCache-${
-                (connInfo.localAddr as Deno.NetAddr).hostname
-            };key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${
-                ctx.response.status
-            }`
+            identifier +
+                `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${ctx.response.status}`
         );
     } else {
         return;
