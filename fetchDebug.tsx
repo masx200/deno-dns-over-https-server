@@ -19,9 +19,9 @@ export async function fetchDebug(
     console.log({
         response: {
             // 打印响应信息
-            url: request.url, // 请求的URL
+            // url: request.url, // 请求的URL
             status: response.status, // 响应状态码
-            method, // 请求方法
+            // method, // 请求方法
             headers: Object.fromEntries(response.headers), // 响应头信息
         },
         request: {
