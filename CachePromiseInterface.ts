@@ -1,11 +1,28 @@
+/**
+ * 响应缓存类型接口
+ */
 export interface ResponseCacheType {
+    /**
+     * 状态码
+     */
     status: number;
+    /**
+     * 头部信息
+     */
     headers: Record<string, string>;
+    /**
+     * 响应体
+     */
     body: string;
+    /**
+     * 过期时间
+     */
     expires: number;
+    /**
+     * 有效期时间
+     */
     ttl: number;
 }
-
 // 缓存Promise接口
 export type CachePromiseInterface = {
     /**
