@@ -14,7 +14,7 @@ export async function proxyDnsOverHttps(
     doh: string,
     // url: string,
     req: RequestOptions,
-    connInfo: ConnInfo
+    connInfo: ConnInfo,
 ): Promise<Response> {
     try {
         const url = req.url;
@@ -30,7 +30,7 @@ export async function proxyDnsOverHttps(
                 new URL(url).hostname
             };by=${(connInfo.localAddr as Deno.NetAddr).hostname};for=${
                 (connInfo.remoteAddr as Deno.NetAddr).hostname
-            }`
+            }`,
         );
         return await fetchDebug(remoteUrl, {
             body,
