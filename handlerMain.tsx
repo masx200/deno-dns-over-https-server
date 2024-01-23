@@ -10,7 +10,6 @@ import {
     RetHandler,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
 import { get_doh_url } from "./get_doh_url.tsx";
-import { ResponseOptions } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/src/Context.ts";
 
 /**
  * 处理请求的函数
