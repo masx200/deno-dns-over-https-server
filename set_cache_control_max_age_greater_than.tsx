@@ -12,7 +12,7 @@ import {
  */
 export function set_cache_control_max_age_greater_than(
     min_age: number,
-    condition: (params: Context) => boolean
+    condition: (params: Context) => boolean,
 ): Middleware {
     return async function (params: Context, next): Promise<void> {
         await next();
@@ -27,7 +27,7 @@ export function set_cache_control_max_age_greater_than(
                         "cache-control",
                         stringify({
                             "max-age": min_age,
-                        })
+                        }),
                     );
                 }
             }
@@ -36,7 +36,7 @@ export function set_cache_control_max_age_greater_than(
                 "cache-control",
                 stringify({
                     "max-age": min_age,
-                })
+                }),
             );
             return;
         }

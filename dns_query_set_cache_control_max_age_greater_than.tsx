@@ -15,6 +15,6 @@ export const dns_query_set_cache_control_max_age_greater_than =
         get_ttl_min(),
         (ctx) =>
             get_path_name(ctx.request.url) === dns_query_path_name() &&
-            ctx.response.status === 200
+            ctx.response.status === 200,
     );
 // 定义dns_query_set_cache_control_max_age_greater_than函数，用于设置缓存控制最大年龄并且查询路径名

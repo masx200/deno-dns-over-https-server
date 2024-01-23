@@ -4,7 +4,7 @@ import {
     NextFunction,
     RetHandler,
 } from "https://deno.land/x/masx200_deno_http_middleware@3.2.1/mod.ts";
-
+import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts"; // 导入ConnInfo类型
 /**
  * 日志记录中间件
  *
@@ -14,11 +14,11 @@ import {
  */
 export async function logger(
     context: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     const { request } = context;
     const { url, method, headers } = request;
-    const connInfo = getOriginalOptions(context);
+    const connInfo: ConnInfo = getOriginalOptions(context);
     console.log({
         connInfo,
         request: {

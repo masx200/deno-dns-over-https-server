@@ -18,7 +18,7 @@ export async function mainMiddleware(
     // console.log(1);
     // await next();
     // console.log(3);
-    const req = ctx.request;
+    // const req = ctx.request;
 
-    return await handlerMain(new Request(req.url, req), /* con, */ next);
+    return await handlerMain(ctx, /* con, */ next);
 }
