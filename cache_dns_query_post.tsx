@@ -39,10 +39,14 @@ export async function cache_dns_query_post_and_get_method(
 
         const header_cache_control =
             context.response.headers.get("cache-control");
+        // console.log(header_cache_control);
         const ttl = Math.max(
             get_ttl_min(),
-            (header_cache_control && parse(header_cache_control)?.maxAge) ?? 0
+            (header_cache_control &&
+                parse(header_cache_control)?.["max-age"]) ??
+                0
         );
+        // console.log(ttl)
         await cache.set(cache_key, {
             body: context.response.body,
             headers: Object.fromEntries(context.response.headers),
