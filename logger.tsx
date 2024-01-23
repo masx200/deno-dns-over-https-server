@@ -14,34 +14,46 @@ import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts"; // å¯¼å
  */
 export async function logger(
     context: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const { request } = context;
     const { url, method, headers } = request;
     const connInfo: ConnInfo = getOriginalOptions(context);
-    console.log({
-        connInfo,
-        request: {
-            url,
-            method,
-            headers: Object.fromEntries(headers),
-        },
-    });
+    console.log(
+        JSON.stringify(
+            {
+                connInfo,
+                request: {
+                    url,
+                    method,
+                    headers: Object.fromEntries(headers),
+                },
+            },
+            null,
+            4
+        )
+    );
 
     await next();
     const { response } = context;
-    console.log({
-        response: {
-            // url: request.url,
-            status: response.status,
-            // method,
-            headers: Object.fromEntries(response.headers),
-        },
-        connInfo,
-        request: {
-            url,
-            method,
-            headers: Object.fromEntries(headers),
-        },
-    });
+    console.log(
+        JSON.stringify(
+            {
+                response: {
+                    // url: request.url,
+                    status: response.status,
+                    // method,
+                    headers: Object.fromEntries(response.headers),
+                },
+                connInfo,
+                request: {
+                    url,
+                    method,
+                    headers: Object.fromEntries(headers),
+                },
+            },
+            null,
+            4
+        )
+    );
 }
