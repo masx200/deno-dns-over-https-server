@@ -18,11 +18,15 @@ export async function cache_dns_query_post_and_get_method(
     if (get_path_name(context.request.url) != dns_query_path_name())
         return next();
     const cache = await CachePromiseInterfaceFactory();
-    const request_body = new Uint8Array(
-        await new Request(context.request.url, context.request)
-            .clone()
-            .arrayBuffer()
-    );
+    const request_body =
+        context.request.body &&
+        new Uint8Array(
+            await new Request(context.request.url, context.request)
+                .clone()
+                .arrayBuffer()
+        );
+    //@ts-ignore
+    context.request.body = request_body;
     const cache_key = get_dns_query_cache_key({
         method: context.request.method,
         url: context.request.url,
@@ -34,7 +38,7 @@ export async function cache_dns_query_post_and_get_method(
         if (!cache_key) return;
 
         const header_cache_control =
-            context.response.headers.get("Cache-Control");
+            context.response.headers.get("cache-control");
         const ttl = Math.max(
             get_ttl_min(),
             (header_cache_control && parse(header_cache_control)?.maxAge) ?? 0
