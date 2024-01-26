@@ -7,7 +7,9 @@ import {
  * CachePromiseInterfaceFactory函数用于创建一个CachePromiseInterface实例
  * @returns {Promise<CachePromiseInterface>} 返回一个实现了CachePromiseInterface接口的Promise实例
  */
-export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterface> {
+export async function CachePromiseInterfaceFactory(): Promise<
+    CachePromiseInterface
+> {
     const cache = await Deno.openKv();
 
     return {
@@ -24,7 +26,7 @@ export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterf
                 result.value.ttl
             ) {
                 console.log(
-                    JSON.stringify({ key, value: result.value }, null, 4)
+                    JSON.stringify({ key, value: result.value }, null, 4),
                 );
                 return result.value;
             } else {
@@ -38,7 +40,7 @@ export async function CachePromiseInterfaceFactory(): Promise<CachePromiseInterf
 
             if (!result.ok) {
                 throw Error(
-                    "Failed to set " + key + " to " + JSON.stringify(value)
+                    "Failed to set " + key + " to " + JSON.stringify(value),
                 );
             }
             console.log(JSON.stringify({ key, value }, null, 4));

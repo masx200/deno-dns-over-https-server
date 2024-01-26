@@ -1,7 +1,7 @@
 // 异步函数，发送一个用于调试的请求
 export async function fetchDebug(
     input: RequestInfo | URL, // 请求的URL或URL对象
-    init?: RequestInit | undefined // 请求的初始化配置，可选参数
+    init?: RequestInit | undefined, // 请求的初始化配置，可选参数
 ): Promise<Response> {
     // 返回一个Promise<Response>
     const request = new Request(input, init); // 创建一个Request对象
@@ -17,8 +17,8 @@ export async function fetchDebug(
                 },
             },
             null,
-            4
-        )
+            4,
+        ),
     );
     const response = await fetch(request); // 发送请求并获取响应
 
@@ -40,8 +40,8 @@ export async function fetchDebug(
                 },
             },
             null,
-            4
-        )
+            4,
+        ),
     );
     return response; // 返回响应对象
 }

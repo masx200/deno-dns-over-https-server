@@ -13,7 +13,7 @@ import {
  */
 export async function Strict_Transport_Security(
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     // console.log(2);
     await next();

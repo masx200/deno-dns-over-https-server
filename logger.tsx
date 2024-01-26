@@ -14,7 +14,7 @@ import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts"; // å¯¼å
  */
 export async function logger(
     context: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     // console.log(context);
     const { request } = context;
@@ -31,8 +31,8 @@ export async function logger(
                 },
             },
             null,
-            4
-        )
+            4,
+        ),
     );
 
     await next();
@@ -54,7 +54,7 @@ export async function logger(
                 },
             },
             null,
-            4
-        )
+            4,
+        ),
     );
 }

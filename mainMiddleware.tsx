@@ -16,14 +16,15 @@ import { get_path_name } from "./get_path_name.tsx";
  */
 export async function mainMiddleware(
     context: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     // console.log(1);
     // await next();
     // console.log(3);
     // const req = ctx.request;
-    if (get_path_name(context.request.url) != dns_query_path_name())
+    if (get_path_name(context.request.url) != dns_query_path_name()) {
         return next();
+    }
 
     return await handlerMain(context, /* con, */ next);
 }

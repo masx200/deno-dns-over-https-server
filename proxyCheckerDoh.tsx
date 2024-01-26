@@ -11,6 +11,7 @@ export function proxyCheckerDoh(
     doh: string | undefined,
 ): boolean {
     return Boolean(
-        pathname === dns_query_path_name() && doh?.startsWith("https://"),
+        pathname === dns_query_path_name() &&
+            (doh?.startsWith("https://") || doh?.startsWith("http://")),
     );
 }

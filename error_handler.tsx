@@ -10,7 +10,7 @@ import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 // 定义error_handler为Middleware类型
 export async function error_handler(
     _ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> {
     try {
         // 调用next()函数
