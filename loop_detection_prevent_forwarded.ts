@@ -10,18 +10,27 @@ import { parse_forwarded_header } from "./parse_forwarded_header.ts";
  */
 export async function loop_detection_prevent_forwarded(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const req = ctx.request;
     const Forwarded = req.headers.get("Forwarded");
 
     const forwarded_map = parse_forwarded_header(Forwarded);
-
+    const hosts_forwarded = forwarded_map
+        .map((a) => a.get("host"))
+        .filter(Boolean);
+    const bys_forwarded = forwarded_map.map((a) => a.get("by")).filter(Boolean);
+    const fors_forwarded = forwarded_map
+        .map((a) => a.get("for"))
+        .filter(Boolean);
     //预防循环转发的主机
-    const hosts_forwarded = new Set(forwarded_map.map((a) => a.get("host")));
 
     //检查是否存在循环转发
-    if (hosts_forwarded.size != forwarded_map.length) {
+    if (
+        new Set(hosts_forwarded).size != hosts_forwarded.length ||
+        new Set(bys_forwarded).size != bys_forwarded.length ||
+        new Set(fors_forwarded).size != fors_forwarded.length
+    ) {
         const message = JSON.stringify({ forwarded: Forwarded }, null, 4);
         console.error("loop detected", message);
         return new Response("loop detected\n" + message, { status: 508 });
