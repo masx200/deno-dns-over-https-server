@@ -23,7 +23,7 @@ export async function cache_dns_query_post_and_get_method(
     next: NextFunction
 ): Promise<RetHandler> {
     if (get_path_name(ctx.request.url) != dns_query_path_name()) return next();
-    const identifier = `DenoDeployCache-${new URL(ctx.request.url).hostname}`;
+    const identifier = `DenoDeployCache ${new URL(ctx.request.url).hostname}`;
     const cache = await CachePromiseInterfaceFactory();
     const request_body = ctx.request.body
         ? new Uint8Array(
