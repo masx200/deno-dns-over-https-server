@@ -72,11 +72,12 @@ export async function cache_dns_query_post_and_get_method(
         const response_body = await bodyToBuffer(ctx.response.body);
         // console.log(ttl)
         await cache.set(cache_key, {
-            body: response_body,
+            
             headers: Object.fromEntries(ctx.response.headers),
             status: ctx.response.status,
             expires: Date.now() + 1000 * ttl,
             ttl,
+            body: response_body,
         });
 
         ctx.response.headers.append(
