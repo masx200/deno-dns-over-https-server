@@ -17,4 +17,4 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --un
 访问`http://localhost:8000/dns-query`使用 dns over https
 
 也可以设置`doh`环境变量为一个`json`数组 
-例如设置 `doh`为 `["https://doh.360.cn/dns-query","https://dns.alidns.com/dns-query","https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
+例如设置 `doh`为 `["https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
