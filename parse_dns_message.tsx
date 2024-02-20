@@ -6,7 +6,11 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { get_path_name } from "./get_path_name.tsx";
-import { DNSPacket } from "https://gitee.com/masx200/deno-nameserver/raw/master/dns_packet.ts";
+import Packet from "npm:native-dns-packet@0.1.1";
+// console.log({ Packet });
+import Buffer from "npm:buffer@6.0.3";
+// console.log({ Buffer });
+
 export async function parse_dns_message(
     ctx: Context,
     next: NextFunction
@@ -24,7 +28,7 @@ export async function parse_dns_message(
         if (body?.length) {
             console.log("request");
             console.log({ body });
-            const packet = DNSPacket.fromBytes(body as Uint8Array);
+            const packet = Packet.parse(Buffer.Buffer.from(body as Uint8Array));
             console.log({ packet });
         }
         const res = await next();
@@ -34,7 +38,9 @@ export async function parse_dns_message(
         if (resbody?.length) {
             console.log("response");
             console.log({ resbody });
-            const packet = DNSPacket.fromBytes(resbody as Uint8Array);
+            const packet = Packet.parse(
+                Buffer.Buffer.from(resbody as Uint8Array)
+            );
             console.log({ packet });
         }
         return;
