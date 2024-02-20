@@ -9,6 +9,7 @@ import { get_path_name } from "./get_path_name.tsx";
 import Packet from "npm:native-dns-packet@0.1.1";
 // console.log({ Packet });
 import Buffer from "npm:buffer@6.0.3";
+import { base64Decode } from "./base64Decode.tsx";
 // console.log({ Buffer });
 
 export async function parse_dns_message(
@@ -22,7 +23,16 @@ export async function parse_dns_message(
         pathname === dns_query_path_name() &&
         (ctx.request.method === "POST" || ctx.request.method === "GET")
     ) {
-        if (ctx.request.method === "GET") {
+        if (
+            ctx.request.method === "GET" &&
+            new URL(url).searchParams.get("dns")?.length
+        ) {
+            const data = base64Decode(
+                new URL(url).searchParams.get("dns") ?? ""
+            );
+            const packet = Packet.parse(Buffer.Buffer.from(data as Uint8Array));
+
+            console.log({ request: { data: data, packet } });
         } else if (
             ctx.request.method === "POST" &&
             req.headers.get("content-type") === "application/dns-message"
