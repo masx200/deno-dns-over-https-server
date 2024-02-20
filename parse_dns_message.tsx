@@ -22,6 +22,7 @@ export async function parse_dns_message(
         req.body = body;
 
         console.log({ body });
+        return await next();
     } else {
         return await next();
     }
