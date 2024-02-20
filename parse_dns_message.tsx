@@ -26,22 +26,27 @@ export async function parse_dns_message(
         req.body = body;
 
         if (body?.length) {
-            console.log("request");
-            console.log({ body });
             const packet = Packet.parse(Buffer.Buffer.from(body as Uint8Array));
-            console.log({ packet });
+
+            console.log({ request: { body, packet } });
+            // console.log();
+            // console.log({ packet });
         }
         const res = await next();
-        const resbody = res.body && (await bodyToBuffer(res.body));
-        res.body = resbody;
 
-        if (resbody?.length) {
-            console.log("response");
-            console.log({ resbody });
-            const packet = Packet.parse(
-                Buffer.Buffer.from(resbody as Uint8Array)
-            );
-            console.log({ packet });
+        if (res.status === 200) {
+            const resbody = res.body && (await bodyToBuffer(res.body));
+            res.body = resbody;
+
+            if (resbody?.length) {
+                const packet = Packet.parse(
+                    Buffer.Buffer.from(resbody as Uint8Array)
+                );
+                console.log({ response: { body: resbody, packet: packet } });
+                // console.log({ resbody });
+
+                // console.log({ packet });
+            }
         }
         return;
     } else {
