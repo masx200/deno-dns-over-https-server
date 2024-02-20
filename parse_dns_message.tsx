@@ -13,7 +13,7 @@ import Buffer from "npm:buffer@6.0.3";
 
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
@@ -22,27 +22,38 @@ export async function parse_dns_message(
         pathname === dns_query_path_name() &&
         (ctx.request.method === "POST" || ctx.request.method === "GET")
     ) {
-        const body = req.body && (await bodyToBuffer(req.body));
-        req.body = body;
+        if (ctx.request.method === "GET") {
+        } else if (
+            ctx.request.method === "POST" &&
+            req.headers.get("content-type") === "application/dns-message"
+        ) {
+            const body = req.body && (await bodyToBuffer(req.body));
+            req.body = body;
 
-        if (body?.length) {
-            const packet = Packet.parse(Buffer.Buffer.from(body as Uint8Array));
+            if (body?.length) {
+                const packet = Packet.parse(
+                    Buffer.Buffer.from(body as Uint8Array)
+                );
 
-            console.log({ request: { body, packet } });
-            // console.log();
-            // console.log({ packet });
+                console.log({ request: { data: body, packet } });
+                // console.log();
+                // console.log({ packet });
+            }
         }
         const res = await next();
 
-        if (res.status === 200) {
+        if (
+            res.status === 200 &&
+            res.headers.get("content-type") === "application/dns-message"
+        ) {
             const resbody = res.body && (await bodyToBuffer(res.body));
             res.body = resbody;
 
             if (resbody?.length) {
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(resbody as Uint8Array),
+                    Buffer.Buffer.from(resbody as Uint8Array)
                 );
-                console.log({ response: { body: resbody, packet: packet } });
+                console.log({ response: { data: resbody, packet: packet } });
                 // console.log({ resbody });
 
                 // console.log({ packet });
