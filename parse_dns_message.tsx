@@ -1,15 +1,15 @@
 import {
+    bodyToBuffer,
     Context,
     NextFunction,
     RetHandler,
-    bodyToBuffer,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { get_path_name } from "./get_path_name.tsx";
 import { DNSPacket } from "https://gitee.com/masx200/deno-nameserver/raw/master/dns_packet.ts";
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
