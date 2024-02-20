@@ -13,7 +13,7 @@ import Buffer from "npm:buffer@6.0.3";
 
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
@@ -40,7 +40,7 @@ export async function parse_dns_message(
 
             if (resbody?.length) {
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(resbody as Uint8Array)
+                    Buffer.Buffer.from(resbody as Uint8Array),
                 );
                 console.log({ response: { body: resbody, packet: packet } });
                 // console.log({ resbody });
