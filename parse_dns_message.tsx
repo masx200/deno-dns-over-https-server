@@ -7,10 +7,10 @@ import {
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { get_path_name } from "./get_path_name.tsx";
 import Packet from "npm:native-dns-packet@0.1.1";
-// console.log({ Packet });
+// console.log(JSON.stringify({ Packet });
 import Buffer from "npm:buffer@6.0.3";
 import { base64Decode } from "./base64Decode.tsx";
-// console.log({ Buffer });
+// console.log(JSON.stringify({ Buffer });
 
 export async function parse_dns_message(
     ctx: Context,
@@ -32,7 +32,9 @@ export async function parse_dns_message(
             );
             const packet = Packet.parse(Buffer.Buffer.from(data as Uint8Array));
 
-            console.log({ request: { packet, data: data } });
+            console.log(
+                JSON.stringify({ request: { packet, data: data } }, null, 4)
+            );
         } else if (
             ctx.request.method === "POST" &&
             req.headers.get("content-type") === "application/dns-message"
@@ -45,9 +47,11 @@ export async function parse_dns_message(
                     Buffer.Buffer.from(body as Uint8Array)
                 );
 
-                console.log({ request: { packet, data: body } });
+                console.log(
+                    JSON.stringify({ request: { packet, data: body } }, null, 4)
+                );
                 // console.log();
-                // console.log({ packet });
+                // console.log(JSON.stringify({ packet });
             }
         }
         const res = await next();
@@ -63,10 +67,16 @@ export async function parse_dns_message(
                 const packet = Packet.parse(
                     Buffer.Buffer.from(resbody as Uint8Array)
                 );
-                console.log({ response: { packet, data: resbody } });
-                // console.log({ resbody });
+                console.log(
+                    JSON.stringify(
+                        { response: { packet, data: resbody } },
+                        null,
+                        4
+                    )
+                );
+                // console.log(JSON.stringify({ resbody });
 
-                // console.log({ packet });
+                // console.log(JSON.stringify({ packet });
             }
         }
         return;
