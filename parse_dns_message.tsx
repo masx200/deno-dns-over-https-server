@@ -9,7 +9,7 @@ import { get_path_name } from "./get_path_name.tsx";
 import { DNSPacket } from "https://gitee.com/masx200/deno-nameserver/raw/master/dns_packet.ts";
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
@@ -37,7 +37,7 @@ export async function parse_dns_message(
             const packet = DNSPacket.fromBytes(resbody as Uint8Array);
             console.log({ packet });
         }
-        return res;
+        return;
     } else {
         return await next();
     }
