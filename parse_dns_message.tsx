@@ -32,7 +32,7 @@ export async function parse_dns_message(
             );
             const packet = Packet.parse(Buffer.Buffer.from(data as Uint8Array));
 
-            console.log({ request: { data: data, packet } });
+            console.log({ request: { packet, data: data } });
         } else if (
             ctx.request.method === "POST" &&
             req.headers.get("content-type") === "application/dns-message"
@@ -45,7 +45,7 @@ export async function parse_dns_message(
                     Buffer.Buffer.from(body as Uint8Array)
                 );
 
-                console.log({ request: { data: body, packet } });
+                console.log({ request: { packet, data: body } });
                 // console.log();
                 // console.log({ packet });
             }
@@ -63,7 +63,7 @@ export async function parse_dns_message(
                 const packet = Packet.parse(
                     Buffer.Buffer.from(resbody as Uint8Array)
                 );
-                console.log({ response: { data: resbody, packet: packet } });
+                console.log({ response: { packet, data: resbody } });
                 // console.log({ resbody });
 
                 // console.log({ packet });
