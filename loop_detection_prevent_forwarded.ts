@@ -10,7 +10,7 @@ import { parse_forwarded_header } from "./parse_forwarded_header.ts";
  */
 export async function loop_detection_prevent_forwarded(
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     const req = ctx.request;
     const Forwarded = req.headers.get("Forwarded");

@@ -10,6 +10,7 @@ import { dns_query_set_cache_control_max_age_greater_than } from "./dns_query_se
 import { logger } from "./logger.tsx";
 import { cache_dns_query_post_and_get_method } from "./cache_dns_query_post.tsx";
 import { loop_detection_prevent_forwarded } from "./loop_detection_prevent_forwarded.ts";
+import { parse_dns_message } from "./parse_dns_message.tsx";
 export const middlewares: Middleware[] = [
     error_handler, // 错误处理中间件
     logger, // 日志记录中间件
@@ -18,5 +19,6 @@ export const middlewares: Middleware[] = [
     dns_query_set_cache_control_max_age_greater_than,
 
     Strict_Transport_Security, // 设置HTTP响应头的中间件
+    parse_dns_message,
     mainMiddleware, // 主要的中间件
 ];

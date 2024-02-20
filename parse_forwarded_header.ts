@@ -5,7 +5,7 @@
  * @returns Map<string, string>[] - 返回Map对象数组
  */
 export function parse_forwarded_header(
-    Forwarded: string | null
+    Forwarded: string | null,
 ): Map<string, string>[] {
     if (!Forwarded) {
         return [];
@@ -14,8 +14,8 @@ export function parse_forwarded_header(
         // 去除两边的空格
         return new Map<string, string>(
             a.split(";").map(
-                (a) => a.split("=").map((a) => a.trim()) as [string, string] // 将字符串数组转换为键值对数组
-            ) as [string, string][] // 将字符串数组转换为Map对象
+                (a) => a.split("=").map((a) => a.trim()) as [string, string], // 将字符串数组转换为键值对数组
+            ) as [string, string][], // 将字符串数组转换为Map对象
         );
     });
 }

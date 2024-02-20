@@ -20,17 +20,17 @@ import { parse } from "cache-control-parser";
  */
 export async function cache_dns_query_post_and_get_method(
     ctx: Context,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<RetHandler> {
     if (get_path_name(ctx.request.url) != dns_query_path_name()) return next();
     const identifier = `DenoDeployCache ${new URL(ctx.request.url).hostname}`;
     const cache = await CachePromiseInterfaceFactory();
     const request_body = ctx.request.body
         ? new Uint8Array(
-              await new Request(ctx.request.url, ctx.request)
-                  .clone()
-                  .arrayBuffer()
-          )
+            await new Request(ctx.request.url, ctx.request)
+                .clone()
+                .arrayBuffer(),
+        )
         : null;
 
     ctx.request.body = request_body;
@@ -51,7 +51,7 @@ export async function cache_dns_query_post_and_get_method(
             ctx.response.headers = new Headers(result.headers);
             ctx.response.headers.append(
                 "Cache-Status",
-                identifier + `;key=${cache_key};hit;ttl=${ttl}`
+                identifier + `;key=${cache_key};hit;ttl=${ttl}`,
             );
             ctx.response.body = response_body;
             return;
@@ -67,12 +67,11 @@ export async function cache_dns_query_post_and_get_method(
             get_ttl_min(),
             (header_cache_control &&
                 parse(header_cache_control)?.["max-age"]) ??
-                0
+                0,
         );
         const response_body = await bodyToBuffer(ctx.response.body);
         // console.log(ttl)
         await cache.set(cache_key, {
-            
             headers: Object.fromEntries(ctx.response.headers),
             status: ctx.response.status,
             expires: Date.now() + 1000 * ttl,
@@ -83,7 +82,7 @@ export async function cache_dns_query_post_and_get_method(
         ctx.response.headers.append(
             "Cache-Status",
             identifier +
-                `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${ctx.response.status}`
+                `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${ctx.response.status}`,
         );
         ctx.response.body = response_body;
     } else {
