@@ -22,11 +22,22 @@ export async function parse_dns_message(
         req.body = body;
 
         if (body?.length) {
+            console.log("request");
             console.log({ body });
             const packet = DNSPacket.fromBytes(body as Uint8Array);
             console.log({ packet });
         }
-        return await next();
+        const res = await next();
+        const resbody = res.body && (await bodyToBuffer(res.body));
+        res.body = resbody;
+
+        if (resbody?.length) {
+            console.log("response");
+            console.log({ resbody });
+            const packet = DNSPacket.fromBytes(resbody as Uint8Array);
+            console.log({ packet });
+        }
+        return res;
     } else {
         return await next();
     }

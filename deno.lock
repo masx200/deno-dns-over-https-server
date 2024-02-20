@@ -110,6 +110,10 @@
     "https://esm.sh/@hattip/response@0.0.34/": "8396cd44b8f95282fe118f41a4fb58b95d1d6830b53a623578b9e4819e81cfa6",
     "https://esm.sh/cache-control-parser@2.0.5/": "4016ca938ba3a3fc37f9c82a26c97686e50c4ba1dc638d856664395892b1ed64",
     "https://esm.sh/v135/@hattip/response@0.0.34/denonext/response.mjs": "ca0620cb0467fe269bfe2473ef35f51de34647b4dc94a316412502491bab1e0a",
-    "https://esm.sh/v135/cache-control-parser@2.0.5/denonext/cache-control-parser.mjs": "3ad5fdba7a0073afa5f2d66e2572d4f9b68c1c346786189ecdf3b4e486a36c39"
+    "https://esm.sh/v135/cache-control-parser@2.0.5/denonext/cache-control-parser.mjs": "3ad5fdba7a0073afa5f2d66e2572d4f9b68c1c346786189ecdf3b4e486a36c39",
+    "https://gitee.com/masx200/deno-nameserver/raw/master/dns_packet.ts": "804246a11bc4a8e961a3ed31560f1ca9fe11969e199f082dcb97852dedb06272",
+    "https://gitee.com/masx200/deno-nameserver/raw/master/dns_record_class.ts": "e6561b6fd65224e3302a2c39e79be316138af4df90ca4baa0504e8bda778ae50",
+    "https://gitee.com/masx200/deno-nameserver/raw/master/dns_record_type.ts": "2ad16dbc31d3554f16a43635236e81af101e5398f748be5cc6fba46785b86f25",
+    "https://gitee.com/masx200/deno-nameserver/raw/master/utils.ts": "4d626f205ff1b232e39192f346e04f15fc65ee5cb69da2dd7d1cfe7e217c6d67"
   }
 }
