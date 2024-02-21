@@ -197,7 +197,7 @@ export function reply_dns_query(
                 },
             },
         } as DNSConfig;
-        console.log(records);
+        // console.log(records);
         return {
             success: true,
             result: new DNSServer(records).HandleRequest(data),
@@ -219,7 +219,7 @@ export function ipv4ToNumber(ipv4: string): number {
     result += Number(bytes[1]) << 16;
     result += Number(bytes[2]) << 8;
     result += Number(bytes[3]);
-    console.log("ipv4ToNumber", ipv4, result);
+    // console.log("ipv4ToNumber", ipv4, result);
     return result;
 }
 
@@ -252,7 +252,7 @@ export function ipv6ToBytes(ipv6: string): Uint16Array {
         view.setUint16(i, num, true);
         i += 2;
     }
-    console.log("ipv6ToBytes", ipv6, result);
+    // console.log("ipv6ToBytes", ipv6, result);
     return result;
 }
 

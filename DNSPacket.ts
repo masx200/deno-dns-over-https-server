@@ -57,7 +57,7 @@ export class DNSPacket {
      * calling.
      */
     get Bytes(): Uint8Array {
-        console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
+        // console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
         /* 这个编码有问题,换个dns编码器 */
         const packet: DNSPACKET = Packet.parse(
             Buffer.Buffer.from(this.rawData),
@@ -72,7 +72,7 @@ export class DNSPacket {
                 address: answer.ReadableAddress,
             });
         }
-        console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(packet, null, 4));
+        // console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(packet, null, 4));
         const buff = new Buffer.Buffer(10960);
         const written = Packet.write(buff, packet);
         return buff.slice(0, written);

@@ -97,17 +97,17 @@ export class DNSServer {
             return request;
         }
 
-        console.log(
-            `Serving request: ${JSONSTRINGIFYNULL4(packet.Question, null, 4)}`,
-        );
+        // console.log(
+        //     `Serving request: ${JSONSTRINGIFYNULL4(packet.Question, null, 4)}`,
+        // );
 
         packet.Header.Flags = 32768; // 0x8000
-        console.log(JSONSTRINGIFYNULL4({ records }));
+        // console.log(JSONSTRINGIFYNULL4({ records }));
         for (const record of records) {
             const rrType = this.getResourceRecordType(packet.Question, record);
             if (rrType) packet.Answers.push(...rrType);
         }
-        console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
+        // console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
         packet.Header.TotalAnswers = packet.Answers.length;
         return new Uint8Array(packet.Bytes);
     }
@@ -188,17 +188,17 @@ export class DNSServer {
                     )
                 ),
             );
-            console.log("AAAAResourceRecord", JSONSTRINGIFYNULL4(rr));
+            // console.log("AAAAResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
             //     classConfig[DNSRecordType[DNSRecordType.AAAA]],
             // );
-            console.log(
-                JSONSTRINGIFYNULL4(
-                    { config, question, result: rr, key, classConfig },
-                    null,
-                    4,
-                ),
-            );
+            // console.log(
+            //     JSONSTRINGIFYNULL4(
+            //         { config, question, result: rr, key, classConfig },
+            //         null,
+            //         4,
+            //     ),
+            // );
             return rr;
         }
         // TODO: make records strongly typed to avoid this mess
@@ -225,17 +225,17 @@ export class DNSServer {
                     )
                 ),
             );
-            console.log("AResourceRecord", JSONSTRINGIFYNULL4(rr));
-            // (rr as AResourceRecord).Address = ipv4ToNumber(
-            //     classConfig[DNSRecordType[DNSRecordType.A]],
+            // console.log("AResourceRecord", JSONSTRINGIFYNULL4(rr));
+            // // (rr as AResourceRecord).Address = ipv4ToNumber(
+            // //     classConfig[DNSRecordType[DNSRecordType.A]],
+            // // );
+            // console.log(
+            //     JSONSTRINGIFYNULL4(
+            //         { config, question, result: rr, key, classConfig },
+            //         null,
+            //         4,
+            //     ),
             // );
-            console.log(
-                JSONSTRINGIFYNULL4(
-                    { config, question, result: rr, key, classConfig },
-                    null,
-                    4,
-                ),
-            );
             return rr;
         }
         /* else if (
@@ -251,13 +251,13 @@ export class DNSServer {
             );
             (rr as CNameResourceRecord).CName = name;
         } */
-        console.log(
-            JSONSTRINGIFYNULL4(
-                { config, question, result: rr, key, classConfig },
-                null,
-                4,
-            ),
-        );
+        // console.log(
+        //     JSONSTRINGIFYNULL4(
+        //         { config, question, result: rr, key, classConfig },
+        //         null,
+        //         4,
+        //     ),
+        // );
         return rr;
     }
 }

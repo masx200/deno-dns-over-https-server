@@ -25,4 +25,4 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --un
 
 配置文件为`config.ts`
 
-设置域名与地址的映射关系即可
+设置域名与地址的映射关系即可,支持多个地址
