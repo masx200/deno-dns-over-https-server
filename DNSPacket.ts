@@ -1,12 +1,8 @@
 import Packet from "npm:native-dns-packet@0.1.1";
 import Buffer from "npm:buffer@6.0.3";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
-import {
-    DNSHeader,
-    DNSPACKET,
-    DNSQuestion,
-    ResourceRecord,
-} from "./resolve_dns_query.ts";
+import { DNSPACKET, DNSQuestion, ResourceRecord } from "./resolve_dns_query.ts";
+import { DNSHeader } from "./DNSHeader.ts";
 
 /** Represents a DNS packet. */
 
@@ -64,7 +60,7 @@ export class DNSPacket {
         console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
         /* 这个编码有问题,换个dns编码器 */
         const packet: DNSPACKET = Packet.parse(this.rawData);
-
+        packet.header.qr = this.Header.QR;
         for (const answer of this.Answers) {
             packet.answer.push({
                 name: answer.Name,
