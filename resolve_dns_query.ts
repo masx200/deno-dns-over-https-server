@@ -811,6 +811,7 @@ export class DNSServer {
             (rr as CNameResourceRecord).CName = name;
         } */
 
+        console.log(JSON.stringify({ config, question, result: rr }));
         return rr;
     }
 }
