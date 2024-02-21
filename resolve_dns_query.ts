@@ -787,32 +787,10 @@ export class DNSServer {
         const classConfig =
             config[key].class[DNSRecordClass[question.RecordClass]];
         let rr: ResourceRecord | undefined;
-
-        // TODO: make records strongly typed to avoid this mess
         if (
             Reflect.has(
                 classConfig,
-                DNSRecordType[DNSRecordType.A],
-            )
-        ) {
-            rr = new AResourceRecord(
-                key,
-                key.split("."),
-                question.RecordType,
-                question.RecordClass,
-                config[key].ttl,
-                ipv4ToNumber(
-                    classConfig[DNSRecordType[DNSRecordType.A]],
-                ),
-            );
-            console.log("AResourceRecord", JSON.stringify(rr));
-            // (rr as AResourceRecord).Address = ipv4ToNumber(
-            //     classConfig[DNSRecordType[DNSRecordType.A]],
-            // );
-        } else if (
-            Reflect.has(
-                classConfig,
-                DNSRecordType[DNSRecordType.AAAA],
+                "AAAA",
             )
         ) {
             rr = new AAAAResourceRecord(
@@ -829,7 +807,46 @@ export class DNSServer {
             // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
             //     classConfig[DNSRecordType[DNSRecordType.AAAA]],
             // );
-        } /* else if (
+            console.log(
+                JSON.stringify(
+                    { config, question, result: rr, key, classConfig },
+                    null,
+                    4,
+                ),
+            );
+            return rr;
+        }
+        // TODO: make records strongly typed to avoid this mess
+        if (
+            Reflect.has(
+                classConfig,
+                "A",
+            )
+        ) {
+            rr = new AResourceRecord(
+                key,
+                key.split("."),
+                question.RecordType,
+                question.RecordClass,
+                config[key].ttl,
+                ipv4ToNumber(
+                    classConfig[DNSRecordType[DNSRecordType.A]],
+                ),
+            );
+            console.log("AResourceRecord", JSON.stringify(rr));
+            // (rr as AResourceRecord).Address = ipv4ToNumber(
+            //     classConfig[DNSRecordType[DNSRecordType.A]],
+            // );
+            console.log(
+                JSON.stringify(
+                    { config, question, result: rr, key, classConfig },
+                    null,
+                    4,
+                ),
+            );
+            return rr;
+        }
+        /* else if (
             classConfig.hasOwnProperty(DNSRecordType[DNSRecordType.CNAME])
         ) {
             const name = classConfig[DNSRecordType[DNSRecordType.CNAME]];
