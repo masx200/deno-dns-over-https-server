@@ -691,7 +691,7 @@ export class DNSServer {
         console.log(`Serving request: ${JSON.stringify(packet.Question)}`);
 
         packet.Header.Flags = 32768; // 0x8000
-        console.log({ records });
+        console.log(JSON.stringify({ records }));
         for (const record of records) {
             const rrType = this.getResourceRecordType(packet.Question, record);
             if (rrType) packet.Answers.push(rrType);
