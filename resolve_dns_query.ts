@@ -788,6 +788,7 @@ export class DNSServer {
             config[key].class[DNSRecordClass[question.RecordClass]];
         let rr: ResourceRecord | undefined;
         if (
+            question.RecordType == DNSRecordType.AAAA &&
             Reflect.has(
                 classConfig,
                 "AAAA",
@@ -818,6 +819,7 @@ export class DNSServer {
         }
         // TODO: make records strongly typed to avoid this mess
         if (
+            question.RecordType == DNSRecordType.A &&
             Reflect.has(
                 classConfig,
                 "A",
