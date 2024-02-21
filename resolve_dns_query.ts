@@ -18,6 +18,7 @@ import {
 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import Buffer from "npm:buffer@6.0.3";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
+import { DNSPacket } from "./DNSPacket.ts";
 
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
 
@@ -39,7 +40,7 @@ export async function resolve_dns_query(
             const data = base64Decode(
                 new URL(url).searchParams.get("dns") ?? "",
             );
-            const packet: DNSPACKETWITHQUESTION = Packet.parse(
+            const packet: DNSPACKET = Packet.parse(
                 Buffer.Buffer.from(data as Uint8Array),
             );
             const { success, result } = reply_dns_query(packet, data);
@@ -68,7 +69,7 @@ export async function resolve_dns_query(
             req.body = body;
 
             if (body?.length) {
-                const packet: DNSPACKETWITHQUESTION = Packet.parse(
+                const packet: DNSPACKET = Packet.parse(
                     Buffer.Buffer.from(body as Uint8Array),
                 );
                 const { success, result } = reply_dns_query(
@@ -138,8 +139,19 @@ export interface DNSPACKETWITHQUESTION {
         "class": number;
     }[];
 }
+export interface DNSPACKETWITHANSWER {
+    answer: {
+        "name": string;
+        "type": number;
+        "class": number;
+        "ttl": number;
+        "address"?: string;
+        "data"?: string;
+    }[];
+}
+export type DNSPACKET = DNSPACKETWITHANSWER & DNSPACKETWITHQUESTION;
 export function reply_dns_query(
-    packet: DNSPACKETWITHQUESTION,
+    packet: DNSPACKET,
     data: Uint8Array,
 ): { success: boolean; result: Uint8Array | null | undefined } {
     const name = packet.question[0]?.name;
@@ -351,10 +363,13 @@ export abstract class ResourceRecord {
 
     /** Get the payload for this resource record. */
     abstract get Payload(): Uint8Array;
+    abstract get ReadableAddress(): string;
 }
 
 /** A Resource Record for 'A' record types. */
 export class AResourceRecord extends ResourceRecord {
+    ReadableAddress = "";
+
     /** The IPv4 address (as a number). */
     Address = 0;
 
@@ -373,14 +388,17 @@ export class AResourceRecord extends ResourceRecord {
         recordClass: DNSRecordClass,
         ttl: number,
         address: number,
+        ReadableAddress: string,
     ) {
         super(name, nameParts, recordType, recordClass, ttl);
         this.Address = address;
+        this.ReadableAddress = ReadableAddress;
     }
 }
 
 /** A Resource Record for 'AAAA' record types. */
 export class AAAAResourceRecord extends ResourceRecord {
+    ReadableAddress = "";
     /** The IPv6 address */
     Address: Uint16Array = Uint16Array.from([]);
 
@@ -402,9 +420,11 @@ export class AAAAResourceRecord extends ResourceRecord {
         recordClass: DNSRecordClass,
         ttl: number,
         address: Uint16Array,
+        ReadableAddress: string,
     ) {
         super(name, nameParts, recordType, recordClass, ttl);
         this.Address = address;
+        this.ReadableAddress = ReadableAddress;
     }
 }
 
@@ -529,113 +549,6 @@ export class DNSQuestion {
     }
 }
 
-/** Represents a DNS packet. */
-export class DNSPacket {
-    toString(): string {
-        return JSONSTRINGIFYNULL4(this, null, 4);
-    }
-    /** Copy of the raw data. */
-    public rawData!: Uint8Array;
-
-    /** Data view onto the raw data. */
-    private data!: DataView;
-
-    /** Private copy of the header. */
-    private header!: DNSHeader;
-
-    /** Private copy of the question. */
-    private question!: DNSQuestion;
-
-    /** Private copy of the answer (there may not be an answer). */
-    private answers: ResourceRecord[] = [];
-
-    /** Get the header for this packet. */
-    get Header(): DNSHeader {
-        return this.header;
-    }
-
-    /** Get the question for this packet. */
-    get Question(): DNSQuestion {
-        return this.question;
-    }
-
-    /** Sets the question for this packet. */
-    set Question(question: DNSQuestion) {
-        this.question = question;
-        this.Header.TotalQuestions++;
-    }
-
-    /** Get the answer for this packet, if available. */
-    get Answers(): ResourceRecord[] {
-        return this.answers;
-    }
-
-    /** Sets the answer for this packet. */
-    set Answers(answers: ResourceRecord[]) {
-        this.answers = answers;
-        this.Header.TotalAnswers++;
-    }
-
-    /**
-     * Get the protocol bytes for this packet. Set any packet fields before
-     * calling.
-     */
-    get Bytes(): Uint8Array {
-        console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
-        /* 这个编码有问题,换个dns编码器 */
-
-        const packet = Packet.parse(this.rawData);
-        const buff = new Buffer.Buffer(10960);
-        const written = Packet.write(buff, packet);
-        return buff.slice(0, written);
-        // const header = this.Header?.Bytes;
-        // const question = this.Question?.Bytes;
-
-        // if (!header || !question) {
-        //     console.warn(
-        //         "Potentially invalid DNSPacket - missing header or question section",
-        //     );
-        //     return new Uint8Array();
-        // }
-
-        // const parts = [header, question];
-        // let length = header.length + question.length;
-        // for (const answer of this.Answers) {
-        //     const bytes = answer.Bytes;
-        //     length += bytes.length;
-        //     parts.push(bytes);
-        // }
-
-        // const result = new Uint8Array(length);
-
-        // let offset = 0;
-        // for (const array of parts) {
-        //     result.set(array, offset);
-        //     offset += array.length;
-        // }
-        // return result;
-    }
-
-    constructor() {
-        this.header = new DNSHeader();
-        this.question = new DNSQuestion();
-    }
-
-    /**
-     * Construct a new DNSPacket from the provided UInt8Array byte array. Use this to convert
-     * data from the network into a DNSPacket.
-     */
-    static fromBytes(data: Uint8Array): DNSPacket {
-        const packet = new DNSPacket();
-        packet.rawData = data;
-        packet.data = new DataView(data.buffer);
-
-        packet.header = DNSHeader.Parse(packet.data);
-        packet.question = DNSQuestion.Parse(packet.data);
-
-        return packet;
-    }
-}
 export interface DNSConfig {
     [key: string]: DNSConfigRecord;
 }
@@ -818,6 +731,7 @@ export class DNSServer {
                 ipv6ToBytes(
                     classConfig[DNSRecordType[DNSRecordType.AAAA]],
                 ),
+                classConfig[DNSRecordType[DNSRecordType.AAAA]],
             );
             console.log("AAAAResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
@@ -849,6 +763,7 @@ export class DNSServer {
                 ipv4ToNumber(
                     classConfig[DNSRecordType[DNSRecordType.A]],
                 ),
+                classConfig[DNSRecordType[DNSRecordType.A]],
             );
             console.log("AResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AResourceRecord).Address = ipv4ToNumber(
