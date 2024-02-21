@@ -1,6 +1,8 @@
 import { runCommand } from "./runCommand.ts";
 
-export async function getTailscaleIPs(): Promise<{ [x: string]: string[] }> {
+export async function getTailscaleNetworkIPs(): Promise<
+    { [x: string]: string[] }
+> {
     const text = await runCommand("tailscale", ["status", "--json"]);
     const data: {
         Self: { DNSName: string; TailscaleIPs: string[] };
@@ -19,3 +21,4 @@ export async function getTailscaleIPs(): Promise<{ [x: string]: string[] }> {
     // console.log(JSON.stringify(config, null, 4))
     return config;
 }
+// console.log(await getTailscaleNetworkIPs());
