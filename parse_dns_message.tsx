@@ -10,11 +10,12 @@ import Packet from "npm:native-dns-packet@0.1.1";
 // console.log(JSONSTRINGIFYNULL4({ Packet });
 import Buffer from "npm:buffer@6.0.3";
 import { base64Decode } from "./base64Decode.tsx";
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
 
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
@@ -28,16 +29,12 @@ export async function parse_dns_message(
             new URL(url).searchParams.get("dns")?.length
         ) {
             const data = base64Decode(
-                new URL(url).searchParams.get("dns") ?? "",
+                new URL(url).searchParams.get("dns") ?? ""
             );
             const packet = Packet.parse(Buffer.Buffer.from(data as Uint8Array));
 
             console.log(
-                JSONSTRINGIFYNULL4(
-                    { request: { packet, data: data } },
-                    null,
-                    4,
-                ),
+                JSONSTRINGIFYNULL4({ request: { packet, data: data } }, null, 4)
             );
         } else if (
             ctx.request.method === "POST" &&
@@ -48,15 +45,15 @@ export async function parse_dns_message(
 
             if (body?.length) {
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(body as Uint8Array),
+                    Buffer.Buffer.from(body as Uint8Array)
                 );
 
                 console.log(
                     JSONSTRINGIFYNULL4(
                         { request: { packet, data: body } },
                         null,
-                        4,
-                    ),
+                        4
+                    )
                 );
                 // console.log();
                 // console.log(JSONSTRINGIFYNULL4({ packet });
@@ -73,14 +70,14 @@ export async function parse_dns_message(
 
             if (resbody?.length) {
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(resbody as Uint8Array),
+                    Buffer.Buffer.from(resbody as Uint8Array)
                 );
                 console.log(
                     JSONSTRINGIFYNULL4(
                         { response: { packet, data: resbody } },
                         null,
-                        4,
-                    ),
+                        4
+                    )
                 );
                 // console.log(JSONSTRINGIFYNULL4({ resbody });
 
