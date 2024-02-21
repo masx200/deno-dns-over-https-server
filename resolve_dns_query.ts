@@ -184,13 +184,14 @@ export class DNSHeader {
     TotalAdditionalResourceRecords = 0;
 
     public toString(): string {
-        return `
-        Identification: ${hex(this.Identification)}
-                 Flags: ${hex(this.Flags)}
-       Total Questions: ${hex(this.TotalQuestions)}
-         Total Answers: ${hex(this.TotalAnswers)}
-         Total Auth RR: ${hex(this.TotalAuthorityResourceRecords)}
-   Total Additional RR: ${hex(this.TotalAdditionalResourceRecords)}`;
+        return JSONSTRINGIFYNULL4({
+            Identification: hex(this.Identification),
+            Flags: hex(this.Flags),
+            "Total Questions": hex(this.TotalQuestions),
+            "Total Answers": hex(this.TotalAnswers),
+            "Total Auth RR": hex(this.TotalAuthorityResourceRecords),
+            "Total Additional RR": hex(this.TotalAdditionalResourceRecords),
+        });
     }
 
     /** Get the protocol bytes for the header. */
