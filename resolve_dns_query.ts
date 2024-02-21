@@ -531,8 +531,11 @@ export class DNSQuestion {
 
 /** Represents a DNS packet. */
 export class DNSPacket {
+    toString(): string {
+        return JSONSTRINGIFYNULL4(this, null, 4);
+    }
     /** Copy of the raw data. */
-    // private rawData!: Uint8Array;
+    public rawData!: Uint8Array;
 
     /** Data view onto the raw data. */
     private data!: DataView;
@@ -579,32 +582,38 @@ export class DNSPacket {
      */
     get Bytes(): Uint8Array {
         console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
-        const header = this.Header?.Bytes;
-        const question = this.Question?.Bytes;
+        /* 这个编码有问题,换个dns编码器 */
 
-        if (!header || !question) {
-            console.warn(
-                "Potentially invalid DNSPacket - missing header or question section",
-            );
-            return new Uint8Array();
-        }
+        const packet = Packet.parse(this.rawData);
+        const buff = new Buffer.Buffer(10960);
+        const written = Packet.write(buff, packet);
+        return buff.slice(0, written);
+        // const header = this.Header?.Bytes;
+        // const question = this.Question?.Bytes;
 
-        const parts = [header, question];
-        let length = header.length + question.length;
-        for (const answer of this.Answers) {
-            const bytes = answer.Bytes;
-            length += bytes.length;
-            parts.push(bytes);
-        }
+        // if (!header || !question) {
+        //     console.warn(
+        //         "Potentially invalid DNSPacket - missing header or question section",
+        //     );
+        //     return new Uint8Array();
+        // }
 
-        const result = new Uint8Array(length);
+        // const parts = [header, question];
+        // let length = header.length + question.length;
+        // for (const answer of this.Answers) {
+        //     const bytes = answer.Bytes;
+        //     length += bytes.length;
+        //     parts.push(bytes);
+        // }
 
-        let offset = 0;
-        for (const array of parts) {
-            result.set(array, offset);
-            offset += array.length;
-        }
-        return result;
+        // const result = new Uint8Array(length);
+
+        // let offset = 0;
+        // for (const array of parts) {
+        //     result.set(array, offset);
+        //     offset += array.length;
+        // }
+        // return result;
     }
 
     constructor() {
@@ -618,7 +627,7 @@ export class DNSPacket {
      */
     static fromBytes(data: Uint8Array): DNSPacket {
         const packet = new DNSPacket();
-        // packet.rawData = data;
+        packet.rawData = data;
         packet.data = new DataView(data.buffer);
 
         packet.header = DNSHeader.Parse(packet.data);
