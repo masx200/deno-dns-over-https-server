@@ -7,15 +7,6 @@ import { DNSHeader } from "./DNSHeader.ts";
 /** Represents a DNS packet. */
 
 export class DNSPacket {
-    toString(): string {
-        return JSONSTRINGIFYNULL4(this, null, 4);
-    }
-    /** Copy of the raw data. */
-    public rawData!: Uint8Array;
-
-    /** Data view onto the raw data. */
-    private data!: DataView;
-
     /** Private copy of the header. */
     private header!: DNSHeader;
 
@@ -24,6 +15,15 @@ export class DNSPacket {
 
     /** Private copy of the answer (there may not be an answer). */
     private answers: ResourceRecord[] = [];
+
+    toString(): string {
+        return JSONSTRINGIFYNULL4(this, null, 4);
+    }
+    /** Copy of the raw data. */
+    public rawData!: Uint8Array;
+
+    /** Data view onto the raw data. */
+    private data!: DataView;
 
     /** Get the header for this packet. */
     get Header(): DNSHeader {
@@ -70,6 +70,7 @@ export class DNSPacket {
                 address: answer.ReadableAddress,
             });
         }
+        console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(packet, null, 4));
         const buff = new Buffer.Buffer(10960);
         const written = Packet.write(buff, packet);
         return buff.slice(0, written);
