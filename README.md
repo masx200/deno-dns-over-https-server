@@ -1,6 +1,6 @@
-# deno-ddns-over-https-server
+# deno-dns-over-https-server
 
-deno-ddns-over-https-server
+deno-dns-over-https-server
 
 ### 使用方法
 
