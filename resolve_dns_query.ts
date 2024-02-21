@@ -125,6 +125,7 @@ export async function resolve_dns_query(
         //         // console.log(JSONSTRINGIFYNULL4({ packet });
         //     }
         // }
+        await next();
         return;
     } else {
         return await next();
