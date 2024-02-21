@@ -735,7 +735,7 @@ export class DNSServer {
         if (
             !config
                 .class[DNSRecordClass[recordClass]][DNSRecordType[recordType]]
-        ) throw new Error(`No config for type '${recordType}' for ${name}`);
+        ) console.warn(`No config for type '${recordType}' for ${name}`);
 
         return { [name]: config };
     }
