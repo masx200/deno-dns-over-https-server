@@ -2,6 +2,7 @@ import {
     CachePromiseInterface,
     ResponseCacheType,
 } from "./CachePromiseInterface.ts";
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 
 /**
  * CachePromiseInterfaceFactory函数用于创建一个CachePromiseInterface实例

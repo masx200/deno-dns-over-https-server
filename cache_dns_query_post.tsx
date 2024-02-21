@@ -41,50 +41,63 @@ export async function cache_dns_query_post_and_get_method(
     });
 
     if (cache_key) {
-        const result = await cache.get(cache_key);
+        try {
+            /* TypeError: KV reads quota is exhausted. */
+            const result = await cache.get(cache_key);
 
-        if (result) {
-            // console.log(cache_key, result);
-            const response_body = result.body;
-            const ttl = result.ttl;
-            ctx.response.status = result.status;
-            ctx.response.headers = new Headers(result.headers);
-            ctx.response.headers.append(
-                "Cache-Status",
-                identifier + `;key=${cache_key};hit;ttl=${ttl}`,
-            );
-            ctx.response.body = response_body;
-            return;
+            if (result) {
+                // console.log(cache_key, result);
+                const response_body = result.body;
+                const ttl = result.ttl;
+                ctx.response.status = result.status;
+                ctx.response.headers = new Headers(result.headers);
+                ctx.response.headers.append(
+                    "Cache-Status",
+                    identifier + `;key=${cache_key};hit;ttl=${ttl}`,
+                );
+                ctx.response.body = response_body;
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+            return; // 跳过缓存处理，继续执行下一个中间件函数
         }
     }
     await next();
     if (should_cache_request_response(ctx)) {
         if (!cache_key) return;
+        try {
+            const header_cache_control = ctx.response.headers.get(
+                "cache-control",
+            );
+            // console.log(header_cache_control);
+            const ttl = Math.max(
+                get_ttl_min(),
+                (header_cache_control &&
+                    parse(header_cache_control)?.["max-age"]) ??
+                    0,
+            );
+            const response_body = await bodyToBuffer(ctx.response.body);
+            // console.log(ttl)
+            /* TypeError: KV reads quota is exhausted. */
+            await cache.set(cache_key, {
+                headers: Object.fromEntries(ctx.response.headers),
+                status: ctx.response.status,
+                expires: Date.now() + 1000 * ttl,
+                ttl,
+                body: response_body,
+            });
 
-        const header_cache_control = ctx.response.headers.get("cache-control");
-        // console.log(header_cache_control);
-        const ttl = Math.max(
-            get_ttl_min(),
-            (header_cache_control &&
-                parse(header_cache_control)?.["max-age"]) ??
-                0,
-        );
-        const response_body = await bodyToBuffer(ctx.response.body);
-        // console.log(ttl)
-        await cache.set(cache_key, {
-            headers: Object.fromEntries(ctx.response.headers),
-            status: ctx.response.status,
-            expires: Date.now() + 1000 * ttl,
-            ttl,
-            body: response_body,
-        });
-
-        ctx.response.headers.append(
-            "Cache-Status",
-            identifier +
-                `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${ctx.response.status}`,
-        );
-        ctx.response.body = response_body;
+            ctx.response.headers.append(
+                "Cache-Status",
+                identifier +
+                    `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${ctx.response.status}`,
+            );
+            ctx.response.body = response_body;
+        } catch (error) {
+            console.error(error);
+            return; // 跳过缓存处理，继续执行下一个中间件函数
+        }
     } else {
         return;
     }
