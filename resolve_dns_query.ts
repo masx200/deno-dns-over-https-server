@@ -142,7 +142,12 @@ export function reply_dns_query(
     const name = packet.question[0]?.name;
     const address: string[] | undefined = config[name];
 
-    if (address?.length && name) {
+    if (
+        address?.length && name &&
+        ([DNSRecordType.A, DNSRecordType.AAAA].includes(
+            packet.question[0]?.type,
+        ))
+    ) {
         const ipv4 = address.filter((a) => isIPv4(a))[0];
         const ipv6 = address.filter((a) => isIPv6(a))[0];
         const records: DNSConfig = {
