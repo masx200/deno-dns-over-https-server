@@ -44,7 +44,7 @@ export async function resolve_dns_query(
             );
             const { success, result } = reply_dns_query(packet, data);
 
-            if (success && result) {
+            if (success && result?.length) {
                 const ttl = get_ttl_min();
                 ctx.response.body = result;
                 ctx.response.status = 200;
@@ -76,7 +76,7 @@ export async function resolve_dns_query(
                     body as Uint8Array,
                 );
 
-                if (success && result) {
+                if (success && result?.length) {
                     const ttl = get_ttl_min();
                     ctx.response.body = result;
                     ctx.response.status = 200;
