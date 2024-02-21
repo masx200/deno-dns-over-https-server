@@ -12,6 +12,10 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import Packet from "npm:native-dns-packet@0.1.1";
 // console.log(JSON.stringify({ Packet });
+import {
+    isIPv4,
+    isIPv6,
+} from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import Buffer from "npm:buffer@6.0.3";
 // console.log(JSON.stringify({ Buffer });
 
@@ -131,10 +135,6 @@ export interface DNSPACKETWITHQUESTION {
         "class": number;
     }[];
 }
-import {
-    isIPv4,
-    isIPv6,
-} from "https://deno.land/std@0.169.0/node/internal/net.ts";
 export function reply_dns_query(
     packet: DNSPACKETWITHQUESTION,
     data: Uint8Array,
@@ -158,7 +158,7 @@ export function reply_dns_query(
                 },
             },
         } as DNSConfig;
-
+        console.log(records);
         return {
             success: true,
             result: new DNSServer(records).HandleRequest(data),
