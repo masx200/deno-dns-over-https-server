@@ -1,4 +1,4 @@
-const config = {
+const config: Record<string, string[]> = {
     "desktop-5rh4po7.manx-sun.ts.net": [
         "100.127.196.48",
         "fd7a:115c:a1e0:ab12:4843:cd96:627f:c430",

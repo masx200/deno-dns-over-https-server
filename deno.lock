@@ -70,6 +70,9 @@
       }
     }
   },
+  "redirects": {
+    "https://cdn.skypack.dev/-/lodash@v4.17.21-K6GEbP02mWFnLA45zAmi/dist=es2019,mode=types/isPlainObject": "https://cdn.skypack.dev/-/lodash@v4.17.21-K6GEbP02mWFnLA45zAmi/dist=es2019,mode=types/isPlainObject.d.ts"
+  },
   "remote": {
     "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/adapter/IncomingMessageToRequest.ts": "740d7a1851125a8029d450a2de5ffb38187cb41986fab44c2bdf38cd8f8fbfff",
     "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/adapter/RequestListener.ts": "84cfe40666d0cbc09b4a1f7d43048173979b7385052e1b4afe3a3b337797f3a4",
