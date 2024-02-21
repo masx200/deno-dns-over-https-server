@@ -59,7 +59,9 @@ export class DNSPacket {
     get Bytes(): Uint8Array {
         console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
         /* 这个编码有问题,换个dns编码器 */
-        const packet: DNSPACKET = Packet.parse(this.rawData);
+        const packet: DNSPACKET = Packet.parse(
+            Buffer.Buffer.from(this.rawData),
+        );
         packet.header.qr = this.Header.QR;
         for (const answer of this.Answers) {
             packet.answer.push({
