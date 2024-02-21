@@ -575,6 +575,7 @@ export class DNSPacket {
      * calling.
      */
     get Bytes(): Uint8Array {
+        console.log("DNSPacket.Bytes", JSON.stringify(this, null, 4));
         const header = this.Header?.Bytes;
         const question = this.Question?.Bytes;
 
@@ -721,7 +722,9 @@ export class DNSServer {
             return request;
         }
 
-        console.log(`Serving request: ${JSON.stringify(packet.Question)}`);
+        console.log(
+            `Serving request: ${JSON.stringify(packet.Question), null, 4}`,
+        );
 
         packet.Header.Flags = 32768; // 0x8000
         console.log(JSON.stringify({ records }));
