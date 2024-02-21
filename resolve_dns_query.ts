@@ -18,6 +18,7 @@ import {
 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import Buffer from "npm:buffer@6.0.3";
 import { DNSServer } from "./DNSServer.ts";
+import { DNSConfig } from "./DNSConfig.ts";
 
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
 
@@ -181,16 +182,16 @@ export function reply_dns_query(
             packet.question[0]?.type,
         ))
     ) {
-        const ipv4 = address.filter((a) => isIPv4(a))[0];
-        const ipv6 = address.filter((a) => isIPv6(a))[0];
+        const ipv4 = address.filter((a) => isIPv4(a));
+        const ipv6 = address.filter((a) => isIPv6(a));
         const records: DNSConfig = {
             [name]: {
                 ttl: get_ttl_min(),
                 class: {
                     "IN": {
-                        "A": ipv4,
+                        "A": ipv4.length ? ipv4 : null,
                         // TODO: Currently only A is returned as logic in dns_server shortcircuits the AAAA record.
-                        "AAAA": ipv6,
+                        "AAAA": ipv6.length ? ipv6 : null,
                         // "TXT": "This is some text.",
                     },
                 },
@@ -517,18 +518,4 @@ export class DNSQuestion {
         question.RecordClass = data.getUint16(index += 2);
         return question;
     }
-}
-
-export interface DNSConfig {
-    [key: string]: DNSConfigRecord;
-}
-
-export interface DNSConfigRecord {
-    ttl: number;
-    class: {
-        [key: string]: DNSConfigRecordClass;
-    };
-}
-export interface DNSConfigRecordClass {
-    [key: string]: string;
 }

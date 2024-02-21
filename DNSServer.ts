@@ -3,7 +3,6 @@ import { DNSPacket } from "./DNSPacket.ts";
 import {
     AAAAResourceRecord,
     AResourceRecord,
-    DNSConfig,
     DNSQuestion,
     DNSRecordClass,
     DNSRecordType,
@@ -11,6 +10,7 @@ import {
     ipv6ToBytes,
     ResourceRecord,
 } from "./resolve_dns_query.ts";
+import { DNSConfig } from "./DNSConfig.ts";
 
 /** A simple DNS Server. */
 
@@ -105,7 +105,7 @@ export class DNSServer {
         console.log(JSONSTRINGIFYNULL4({ records }));
         for (const record of records) {
             const rrType = this.getResourceRecordType(packet.Question, record);
-            if (rrType) packet.Answers.push(rrType);
+            if (rrType) packet.Answers.push(...rrType);
         }
         console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
         packet.Header.TotalAnswers = packet.Answers.length;
@@ -160,11 +160,11 @@ export class DNSServer {
     private getResourceRecordType(
         question: DNSQuestion,
         config: DNSConfig,
-    ): ResourceRecord | undefined {
+    ): ResourceRecord[] | undefined {
         const key = Object.keys(config)[0]; // This feels wrong?
         const classConfig =
             config[key].class[DNSRecordClass[question.RecordClass]];
-        let rr: ResourceRecord | undefined;
+        let rr: ResourceRecord[] | undefined;
         if (
             question.RecordType == DNSRecordType.AAAA &&
             Reflect.has(
@@ -172,16 +172,21 @@ export class DNSServer {
                 "AAAA",
             )
         ) {
-            rr = new AAAAResourceRecord(
-                key,
-                key.split("."),
-                question.RecordType,
-                question.RecordClass,
-                config[key].ttl,
-                ipv6ToBytes(
-                    classConfig[DNSRecordType[DNSRecordType.AAAA]],
+            rr ??= [];
+            rr.push(
+                ...classConfig[DNSRecordType[DNSRecordType.AAAA]].map((a) =>
+                    new AAAAResourceRecord(
+                        key,
+                        key.split("."),
+                        question.RecordType,
+                        question.RecordClass,
+                        config[key].ttl,
+                        ipv6ToBytes(
+                            a,
+                        ),
+                        a,
+                    )
                 ),
-                classConfig[DNSRecordType[DNSRecordType.AAAA]],
             );
             console.log("AAAAResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
@@ -204,16 +209,21 @@ export class DNSServer {
                 "A",
             )
         ) {
-            rr = new AResourceRecord(
-                key,
-                key.split("."),
-                question.RecordType,
-                question.RecordClass,
-                config[key].ttl,
-                ipv4ToNumber(
-                    classConfig[DNSRecordType[DNSRecordType.A]],
+            rr ??= [];
+            rr.push(
+                ...classConfig[DNSRecordType[DNSRecordType.A]].map((a) =>
+                    new AResourceRecord(
+                        key,
+                        key.split("."),
+                        question.RecordType,
+                        question.RecordClass,
+                        config[key].ttl,
+                        ipv4ToNumber(
+                            a,
+                        ),
+                        a,
+                    )
                 ),
-                classConfig[DNSRecordType[DNSRecordType.A]],
             );
             console.log("AResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AResourceRecord).Address = ipv4ToNumber(
