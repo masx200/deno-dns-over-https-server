@@ -688,12 +688,14 @@ export class DNSServer {
             return request;
         }
 
-        // console.log(`Serving request: ${packet.Question}`);
+        console.log(`Serving request: ${packet.Question}`);
+
         packet.Header.Flags = 32768; // 0x8000
         for (const record of records) {
             const rrType = this.getResourceRecordType(packet.Question, record);
             if (rrType) packet.Answers.push(rrType);
         }
+        console.log(`Serving answer: ${packet.Answers}`);
         packet.Header.TotalAnswers = packet.Answers.length;
         return new Uint8Array(packet.Bytes);
     }
