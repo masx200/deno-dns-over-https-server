@@ -232,6 +232,7 @@ export function ipv4ToNumber(ipv4: string): number {
     result += Number(bytes[1]) << 16;
     result += Number(bytes[2]) << 8;
     result += Number(bytes[3]);
+    console.log("ipv4ToNumber", ipv4, result);
     return result;
 }
 
@@ -264,7 +265,7 @@ export function ipv6ToBytes(ipv6: string): Uint16Array {
         view.setUint16(i, num, true);
         i += 2;
     }
-
+    console.log("ipv6ToBytes", ipv6, result);
     return result;
 }
 
@@ -505,7 +506,7 @@ export class DNSQuestion {
 /** Represents a DNS packet. */
 export class DNSPacket {
     /** Copy of the raw data. */
-    private rawData!: Uint8Array;
+    // private rawData!: Uint8Array;
 
     /** Data view onto the raw data. */
     private data!: DataView;
@@ -590,7 +591,7 @@ export class DNSPacket {
      */
     static fromBytes(data: Uint8Array): DNSPacket {
         const packet = new DNSPacket();
-        packet.rawData = data;
+        // packet.rawData = data;
         packet.data = new DataView(data.buffer);
 
         packet.header = DNSHeader.Parse(packet.data);
