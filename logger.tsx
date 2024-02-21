@@ -5,6 +5,7 @@ import {
     RetHandler,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts"; // 导入ConnInfo类型
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 /**
  * 日志记录中间件
  *
@@ -14,7 +15,7 @@ import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts"; // 导�
  */
 export async function logger(
     context: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     // console.log(context);
     const { request } = context;
@@ -31,8 +32,8 @@ export async function logger(
                 },
             },
             null,
-            4,
-        ),
+            4
+        )
     );
 
     await next();
@@ -54,7 +55,7 @@ export async function logger(
                 },
             },
             null,
-            4,
-        ),
+            4
+        )
     );
 }
