@@ -17,6 +17,7 @@ import {
     isIPv6,
 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import Buffer from "npm:buffer@6.0.3";
+
 // console.log(JSON.stringify({ Buffer });
 
 export async function resolve_dns_query(
@@ -362,6 +363,17 @@ export class AResourceRecord extends ResourceRecord {
         view.setUint32(0, this.Address);
         return result;
     }
+    constructor(
+        name: string,
+        nameParts: string[],
+        recordType: DNSRecordType,
+        recordClass: DNSRecordClass,
+        ttl: number,
+        address: number,
+    ) {
+        super(name, nameParts, recordType, recordClass, ttl);
+        this.Address = address;
+    }
 }
 
 /** A Resource Record for 'AAAA' record types. */
@@ -379,6 +391,17 @@ export class AAAAResourceRecord extends ResourceRecord {
             outView.setUint16(i, inView.getUint16(i), true);
         }
         return result;
+    }
+    constructor(
+        name: string,
+        nameParts: string[],
+        recordType: DNSRecordType,
+        recordClass: DNSRecordClass,
+        ttl: number,
+        address: Uint16Array,
+    ) {
+        super(name, nameParts, recordType, recordClass, ttl);
+        this.Address = address;
     }
 }
 
@@ -767,7 +790,7 @@ export class DNSServer {
 
         // TODO: make records strongly typed to avoid this mess
         if (
-            Object.prototype.hasOwnProperty.call(
+            Reflect.has(
                 classConfig,
                 DNSRecordType[DNSRecordType.A],
             )
@@ -778,12 +801,16 @@ export class DNSServer {
                 question.RecordType,
                 question.RecordClass,
                 config[key].ttl,
+                ipv4ToNumber(
+                    classConfig[DNSRecordType[DNSRecordType.A]],
+                ),
             );
-            (rr as AResourceRecord).Address = ipv4ToNumber(
-                classConfig[DNSRecordType[DNSRecordType.A]],
-            );
+            console.log("AResourceRecord", JSON.stringify(rr));
+            // (rr as AResourceRecord).Address = ipv4ToNumber(
+            //     classConfig[DNSRecordType[DNSRecordType.A]],
+            // );
         } else if (
-            Object.prototype.hasOwnProperty.call(
+            Reflect.has(
                 classConfig,
                 DNSRecordType[DNSRecordType.AAAA],
             )
@@ -794,10 +821,14 @@ export class DNSServer {
                 question.RecordType,
                 question.RecordClass,
                 config[key].ttl,
+                ipv6ToBytes(
+                    classConfig[DNSRecordType[DNSRecordType.AAAA]],
+                ),
             );
-            (rr as AAAAResourceRecord).Address = ipv6ToBytes(
-                classConfig[DNSRecordType[DNSRecordType.AAAA]],
-            );
+            console.log("AAAAResourceRecord", JSON.stringify(rr));
+            // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
+            //     classConfig[DNSRecordType[DNSRecordType.AAAA]],
+            // );
         } /* else if (
             classConfig.hasOwnProperty(DNSRecordType[DNSRecordType.CNAME])
         ) {
