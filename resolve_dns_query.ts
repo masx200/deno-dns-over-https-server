@@ -626,7 +626,11 @@ export class DNSServer {
         const packet = DNSPacket.fromBytes(request);
         //  const header = packet.Header;
         const question = packet.Question;
-
+        if (
+            !([DNSRecordType.A, DNSRecordType.AAAA].includes(
+                question.RecordType,
+            ))
+        ) return request;
         const records: DNSConfig[] = [];
         try {
             // Special handling for A records: if we don't have an A record, check to
