@@ -11,14 +11,15 @@ import {
     RetHandler,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import Packet from "npm:native-dns-packet@0.1.1";
-// console.log(JSON.stringify({ Packet });
+// console.log(JSONSTRINGIFYNULL4({ Packet });
 import {
     isIPv4,
     isIPv6,
 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import Buffer from "npm:buffer@6.0.3";
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 
-// console.log(JSON.stringify({ Buffer });
+// console.log(JSONSTRINGIFYNULL4({ Buffer });
 
 export async function resolve_dns_query(
     ctx: Context,
@@ -57,7 +58,7 @@ export async function resolve_dns_query(
                 return next();
             }
             // console.log(
-            //     JSON.stringify({ request: { packet, data: data } }, null, 4),
+            //     JSONSTRINGIFYNULL4({ request: { packet, data: data } }, null, 4),
             // );
         } else if (
             ctx.request.method === "POST" &&
@@ -89,14 +90,14 @@ export async function resolve_dns_query(
                     return next();
                 }
                 // console.log(
-                //     JSON.stringify(
+                //     JSONSTRINGIFYNULL4(
                 //         { request: { packet, data: body } },
                 //         null,
                 //         4,
                 //     ),
                 // );
                 // console.log();
-                // console.log(JSON.stringify({ packet });
+                // console.log(JSONSTRINGIFYNULL4({ packet });
             }
         }
         // const res = await next();
@@ -113,15 +114,15 @@ export async function resolve_dns_query(
         //             Buffer.Buffer.from(resbody as Uint8Array),
         //         );
         //         // console.log(
-        //         //     JSON.stringify(
+        //         //     JSONSTRINGIFYNULL4(
         //         //         { response: { packet, data: resbody } },
         //         //         null,
         //         //         4,
         //         //     ),
         //         // );
-        //         // console.log(JSON.stringify({ resbody });
+        //         // console.log(JSONSTRINGIFYNULL4({ resbody });
 
-        //         // console.log(JSON.stringify({ packet });
+        //         // console.log(JSONSTRINGIFYNULL4({ packet });
         //     }
         // }
         return;
@@ -575,7 +576,7 @@ export class DNSPacket {
      * calling.
      */
     get Bytes(): Uint8Array {
-        console.log("DNSPacket.Bytes", JSON.stringify(this, null, 4));
+        console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
         const header = this.Header?.Bytes;
         const question = this.Question?.Bytes;
 
@@ -723,16 +724,16 @@ export class DNSServer {
         }
 
         console.log(
-            `Serving request: ${JSON.stringify(packet.Question), null, 4}`,
+            `Serving request: ${JSONSTRINGIFYNULL4(packet.Question), null, 4}`,
         );
 
         packet.Header.Flags = 32768; // 0x8000
-        console.log(JSON.stringify({ records }));
+        console.log(JSONSTRINGIFYNULL4({ records }));
         for (const record of records) {
             const rrType = this.getResourceRecordType(packet.Question, record);
             if (rrType) packet.Answers.push(rrType);
         }
-        console.log(`Serving answer: ${JSON.stringify(packet.Answers)}`);
+        console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
         packet.Header.TotalAnswers = packet.Answers.length;
         return new Uint8Array(packet.Bytes);
     }
@@ -807,12 +808,12 @@ export class DNSServer {
                     classConfig[DNSRecordType[DNSRecordType.AAAA]],
                 ),
             );
-            console.log("AAAAResourceRecord", JSON.stringify(rr));
+            console.log("AAAAResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AAAAResourceRecord).Address = ipv6ToBytes(
             //     classConfig[DNSRecordType[DNSRecordType.AAAA]],
             // );
             console.log(
-                JSON.stringify(
+                JSONSTRINGIFYNULL4(
                     { config, question, result: rr, key, classConfig },
                     null,
                     4,
@@ -838,12 +839,12 @@ export class DNSServer {
                     classConfig[DNSRecordType[DNSRecordType.A]],
                 ),
             );
-            console.log("AResourceRecord", JSON.stringify(rr));
+            console.log("AResourceRecord", JSONSTRINGIFYNULL4(rr));
             // (rr as AResourceRecord).Address = ipv4ToNumber(
             //     classConfig[DNSRecordType[DNSRecordType.A]],
             // );
             console.log(
-                JSON.stringify(
+                JSONSTRINGIFYNULL4(
                     { config, question, result: rr, key, classConfig },
                     null,
                     4,
@@ -866,7 +867,7 @@ export class DNSServer {
         } */
 
         console.log(
-            JSON.stringify(
+            JSONSTRINGIFYNULL4(
                 { config, question, result: rr, key, classConfig },
                 null,
                 4,

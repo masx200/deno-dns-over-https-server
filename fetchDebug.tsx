@@ -7,7 +7,7 @@ export async function fetchDebug(
     const request = new Request(input, init); // 创建一个Request对象
     const { url, method, headers } = request; // 获取URL、请求方法和请求头信息
     console.log(
-        JSON.stringify(
+        JSONSTRINGIFYNULL4(
             {
                 request: {
                     // 打印请求信息
@@ -23,7 +23,7 @@ export async function fetchDebug(
     const response = await fetch(request); // 发送请求并获取响应
 
     console.log(
-        JSON.stringify(
+        JSONSTRINGIFYNULL4(
             {
                 response: {
                     // 打印响应信息

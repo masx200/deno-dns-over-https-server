@@ -18,7 +18,7 @@ export async function getAllTailscaleNetworkIPs(): Promise<
             [v.DNSName.slice(0, -1)]: v.TailscaleIPs,
         });
     }
-    // console.log(JSON.stringify(config, null, 4))
+    // console.log(JSONSTRINGIFYNULL4(config, null, 4))
     return config;
 }
 // console.log(await getAllTailscaleNetworkIPs());

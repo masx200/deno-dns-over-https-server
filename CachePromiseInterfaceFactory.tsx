@@ -26,7 +26,7 @@ export async function CachePromiseInterfaceFactory(): Promise<
                 result.value.ttl
             ) {
                 console.log(
-                    JSON.stringify(
+                    JSONSTRINGIFYNULL4(
                         { function: "get", key, value: result.value },
                         null,
                         4,
@@ -44,11 +44,11 @@ export async function CachePromiseInterfaceFactory(): Promise<
 
             if (!result.ok) {
                 throw Error(
-                    "Failed to set " + key + " to " + JSON.stringify(value),
+                    "Failed to set " + key + " to " + JSONSTRINGIFYNULL4(value),
                 );
             }
             console.log(
-                JSON.stringify({ function: "set", key, value }, null, 4),
+                JSONSTRINGIFYNULL4({ function: "set", key, value }, null, 4),
             );
         },
     } satisfies CachePromiseInterface;

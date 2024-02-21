@@ -31,7 +31,7 @@ export async function loop_detection_prevent_forwarded(
         new Set(bys_forwarded).size != bys_forwarded.length ||
         new Set(fors_forwarded).size != fors_forwarded.length
     ) {
-        const message = JSON.stringify({ forwarded: Forwarded }, null, 4);
+        const message = JSONSTRINGIFYNULL4({ forwarded: Forwarded }, null, 4);
         console.error("loop detected", message);
         return new Response("loop detected\n" + message, { status: 508 });
     } else {

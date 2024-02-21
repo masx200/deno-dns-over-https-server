@@ -21,7 +21,7 @@ export async function logger(
     const { url, method, headers } = request;
     const connInfo: ConnInfo = getOriginalOptions(context);
     console.log(
-        JSON.stringify(
+        JSONSTRINGIFYNULL4(
             {
                 connInfo,
                 request: {
@@ -38,7 +38,7 @@ export async function logger(
     await next();
     const { response } = context;
     console.log(
-        JSON.stringify(
+        JSONSTRINGIFYNULL4(
             {
                 response: {
                     // url: request.url,
