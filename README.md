@@ -20,3 +20,9 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --un
 
 例如设置 `doh`为
 `["https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
+
+### 说明
+
+配置文件为`config.ts`
+
+设置域名与地址的映射关系即可
