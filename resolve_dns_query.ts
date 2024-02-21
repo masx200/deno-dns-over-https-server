@@ -724,7 +724,7 @@ export class DNSServer {
         }
 
         console.log(
-            `Serving request: ${JSONSTRINGIFYNULL4(packet.Question), null, 4}`,
+            `Serving request: ${JSONSTRINGIFYNULL4(packet.Question, null, 4)}`,
         );
 
         packet.Header.Flags = 32768; // 0x8000
