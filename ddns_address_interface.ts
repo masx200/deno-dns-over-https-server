@@ -17,7 +17,7 @@ export interface DDNScontentID {
     id: string;
 }
 // 缓存Promise接口
-export type DDNScontentInterface = {
+export type DNSRecordsInterface = {
     /**List, search, sort, and filter a zones' DNS records. */
     ListDNSRecords(
         options: Partial<{ name?: string; content?: string; type: string }>,
