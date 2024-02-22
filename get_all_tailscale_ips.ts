@@ -1,10 +1,12 @@
+import { isIPv6 } from "https://deno.land/std@0.143.0/node/internal/net.ts";
+import { DDNScontentContent } from "./ddns_address_interface.ts";
 import { runCommand } from "./runCommand.ts";
 import {
     getPublicIpv4,
     getPublicIpv6,
 } from "https://deno.land/x/masx200_get_public_ip_address@1.0.4/mod.ts";
 export async function getAllTailscaleNetworkIPsAndSelfPublicIPs(): Promise<
-    { [x: string]: string[] }
+    DDNScontentContent[]
 > {
     const text = await runCommand("tailscale", ["status", "--json"]);
     const data: {
@@ -33,7 +35,18 @@ export async function getAllTailscaleNetworkIPsAndSelfPublicIPs(): Promise<
         console.error(error);
     }
     // console.log(JSONSTRINGIFYNULL4(config, null, 4))
-    return config;
+    // return config;
+    const result = new Array<DDNScontentContent>();
+    for (const [k, v] of Object.entries(config)) {
+        for (const ip of v) {
+            result.push({
+                name: k,
+                content: ip,
+                type: isIPv6(ip) ? "AAAA" : "A",
+            });
+        }
+    }
+    return result;
 }
 
 // if (import.meta.main) {
