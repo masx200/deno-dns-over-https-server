@@ -1,12 +1,10 @@
 // deno-lint-ignore-file require-await
-// import config from "./config.ts";
 import {
     DDNScontentContent,
     DDNScontentID,
     DDNScontentType,
     DNSRecordsInterface,
 } from "./ddns_address_interface.ts";
-
 import { createHash } from "node:crypto";
 export class DNSRecordsMemory implements DNSRecordsInterface {
     // #config: DDNScontentContent[]; // 配置项：DDNScontentContent数组

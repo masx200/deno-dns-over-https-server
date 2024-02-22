@@ -1,4 +1,4 @@
-import config from "./config.ts";
+// import config from "./config.ts";
 import { get_ttl_min } from "./get_ttl_min.ts";
 import {
     isIPv4,
@@ -8,18 +8,29 @@ import { DNSServer } from "./DNSServer.ts";
 import { DNSConfig } from "./DNSConfig.ts";
 import { DNSRecordType } from "./DNSRecordType.ts";
 import { DNSPACKET } from "./DNSPacket.ts";
+import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
 // import { DNSPACKET } from "./DNSPACKET.ts";
-
-export function reply_dns_query(
+/**
+ * 回复DNS查询
+ * @param packet DNSPACKET对象
+ * @param data Uint8Array对象
+ * @returns { success: boolean; result: Uint8Array | null | undefined }对象
+ */
+export async function reply_dns_query(
     packet: DNSPACKET,
     data: Uint8Array,
-): { success: boolean; result: Uint8Array | null | undefined } {
+): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
     const name = packet.question[0]?.name;
-    const address: string[] | undefined = config.filter((a) =>
-        ["A", "AAAA"].includes(a.type) && a.name === name
-    )
-        .map((a) => a.content);
-
+    const address: string[] | undefined = (await Promise.all([
+        dNSRecordsInstance.ListDNSRecords({
+            name: name,
+            type: "A",
+        }),
+        dNSRecordsInstance.ListDNSRecords({
+            name: name,
+            type: "AAAA",
+        }),
+    ])).flat().map((a) => a.content);
     if (
         address?.length && name &&
         ([DNSRecordType.A, DNSRecordType.AAAA].includes(

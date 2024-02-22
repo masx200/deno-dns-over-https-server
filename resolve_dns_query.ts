@@ -17,7 +17,12 @@ import { DNSPACKET } from "./DNSPacket.ts";
 // import { DNSPACKET } from "./DNSPACKET.ts";
 
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
-
+/**
+ * 解析DNS查询
+ * @param ctx 上下文对象
+ * @param next 下一步操作
+ * @returns Promise<RetHandler>
+ */
 export async function resolve_dns_query(
     ctx: Context,
     next: NextFunction,
@@ -39,7 +44,7 @@ export async function resolve_dns_query(
             const packet: DNSPACKET = Packet.parse(
                 Buffer.Buffer.from(data as Uint8Array),
             );
-            const { success, result } = reply_dns_query(packet, data);
+            const { success, result } = await reply_dns_query(packet, data);
 
             if (success && result?.length) {
                 const ttl = get_ttl_min();
@@ -68,7 +73,7 @@ export async function resolve_dns_query(
                 const packet: DNSPACKET = Packet.parse(
                     Buffer.Buffer.from(body as Uint8Array),
                 );
-                const { success, result } = reply_dns_query(
+                const { success, result } = await reply_dns_query(
                     packet,
                     body as Uint8Array,
                 );

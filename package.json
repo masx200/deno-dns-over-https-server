@@ -1,5 +1,5 @@
 {
-	"dependencies": {
-		"@types/node": "^20.11.19"
-	}
+    "dependencies": {
+        "@types/node": "^20.11.19"
+    }
 }
