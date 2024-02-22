@@ -5,7 +5,9 @@ import {
     DDNScontentType,
     DNSRecordsInterface,
 } from "./ddns_address_interface.ts";
-import { createHash } from "node:crypto";
+//@ts-ignore
+import crypto from "node:crypto";
+const { createHash } = crypto; // 引入crypto模块中的createHash方法
 export class DNSRecordsMemory implements DNSRecordsInterface {
     // #config: DDNScontentContent[]; // 配置项：DDNScontentContent数组
     #map: Map<string, DDNScontentType> = new Map(); // 记录DDNS内容的Map对象
