@@ -23,7 +23,6 @@ export const middlewares: Middleware[] = [
     resolve_dns_query,
     cache_dns_query_post_and_get_method,
     dns_query_set_cache_control_max_age_greater_than,
-
-    mainMiddleware, // 主要的中间件
     dns_records_middleware,
+    mainMiddleware, // 主要的中间件
 ];
