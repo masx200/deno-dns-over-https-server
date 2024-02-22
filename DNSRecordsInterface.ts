@@ -1,22 +1,9 @@
-/**
- * 响应缓存类型接口
- */
-export type DDNScontentType =
-    & DDNScontentID
-    & DDNScontentContent;
-export type DDNScontentContent = {
-    /**DNS record name (or @ for the zone apex) in Punycode. */
-    name: string;
-    /**A valid IPv4 address. */
-    content: string;
-    /**Record type. */
-    type: string;
-};
-export interface DDNScontentID {
-    /** Identifier */
-    id: string;
-}
+import { DDNScontentContent } from "./DDNScontentContent.ts";
+import { DDNScontentID } from "./DDNScontentID.ts";
+import { DDNScontentType } from "./DDNScontentType.ts";
+
 // 缓存Promise接口
+
 export type DNSRecordsInterface = {
     /**List, search, sort, and filter a zones' DNS records. */
     ListDNSRecords(

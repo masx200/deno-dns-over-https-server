@@ -1,5 +1,5 @@
 import { isIPv6 } from "https://deno.land/std@0.143.0/node/internal/net.ts";
-import { DDNScontentContent } from "./ddns_address_interface.ts";
+import { DDNScontentContent } from "./DDNScontentContent.ts";
 import { runCommand } from "./runCommand.ts";
 import {
     getPublicIpv4,

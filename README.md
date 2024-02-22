@@ -11,7 +11,7 @@ deno-dns-over-https-server
 启动
 
 ```
-npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --unstable -A ./main.tsx
+npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token deno run --unstable -A ./main.tsx
 ```
 
 访问`http://localhost:8000/dns-query`使用 dns over https
@@ -36,3 +36,7 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --un
 访问时需要携带`token`参数,例如
 
 添加请求头`Authorization:Bearer token`
+
+openapi 接口在文件`deno-dns-over-https-server.openapi.json`中
+
+jsonrpc 接口在文件`DNSRecordsInterface.ts`中

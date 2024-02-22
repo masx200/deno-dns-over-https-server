@@ -1,4 +1,4 @@
-import { DDNScontentContent } from "./ddns_address_interface.ts";
+import { DDNScontentContent } from "./DDNScontentContent.ts";
 
 const config: DDNScontentContent[] = [
     {
