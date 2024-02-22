@@ -12,6 +12,7 @@ import { cache_dns_query_post_and_get_method } from "./cache_dns_query_post.tsx"
 import { loop_detection_prevent_forwarded } from "./loop_detection_prevent_forwarded.ts";
 import { parse_dns_message } from "./parse_dns_message.tsx";
 import { resolve_dns_query } from "./resolve_dns_query.ts";
+import { dns_records_middleware } from "./dns_records_middleware.tsx";
 export const middlewares: Middleware[] = [
     error_handler, // 错误处理中间件 logger, // 日志记录中间件
     logger,
@@ -24,4 +25,5 @@ export const middlewares: Middleware[] = [
     dns_query_set_cache_control_max_age_greater_than,
 
     mainMiddleware, // 主要的中间件
+    dns_records_middleware,
 ];
