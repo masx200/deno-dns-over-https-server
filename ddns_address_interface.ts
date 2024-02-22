@@ -43,7 +43,9 @@ Domain names are always represented in Punycode, even if Unicode characters were
 A/AAAA records cannot exist on the same name as CNAME records.
 NS records cannot exist on the same name as any other record type.
 Domain names are always represented in Punycode, even if Unicode characters were used when creating the record. */
-    UpdateDNSRecord(array: DDNScontentType[]): Promise<DDNScontentType[]>;
+    UpdateDNSRecord(
+        array: (DDNScontentID & Partial<DDNScontentContent>)[],
+    ): Promise<DDNScontentType[]>;
     /**Delete DNS Record  */
     DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]>;
     /**DNS Record Details */

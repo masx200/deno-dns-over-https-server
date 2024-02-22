@@ -9,10 +9,10 @@ import {
 
 import { createHash } from "node:crypto";
 export class DNSRecordsMemory implements DNSRecordsInterface {
-    #config: DDNScontentContent[];
+    // #config: DDNScontentContent[];
     #map: Map<string, DDNScontentType> = new Map();
     constructor(config: DDNScontentContent[] = []) {
-        this.#config = config;
+        // this.#config = config;
         this.#map = new Map(
             config.map((a) => {
                 const id = this.#hashDDNScontentContent(a);
@@ -62,17 +62,45 @@ export class DNSRecordsMemory implements DNSRecordsInterface {
     async OverwriteDNSRecord(
         array: DDNScontentType[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const res: DDNScontentType[] = [];
+        for (
+            const a of array
+        ) {
+            const id = a.id;
+            this.#map.set(id, { ...a, id: id });
+            res.push({ ...a, id: id });
+        }
+        return res;
     }
     async UpdateDNSRecord(
-        array: DDNScontentType[],
+        array: (DDNScontentID & Partial<DDNScontentContent>)[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const res: DDNScontentType[] = [];
+        for (
+            const a of array
+        ) {
+            const id = a.id;
+            const record = Object.assign({}, this.#map.get(a.id), {
+                ...a,
+                id: id,
+            });
+            this.#map.set(id, record);
+            res.push(record);
+        }
+        return res;
     }
     async DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]> {
-        throw new Error("Method not implemented.");
+        for (const a of array) {
+            this.#map.delete(a.id);
+        }
+        return array;
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const res: DDNScontentType[] = [];
+        for (const a of array) {
+            const r = this.#map.get(a.id);
+            if (r) res.push(r);
+        }
+        return res;
     }
 }
