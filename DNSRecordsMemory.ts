@@ -49,6 +49,15 @@ export class DNSRecordsMemory implements DNSRecordsInterface {
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
+        const res: DDNScontentType[] = [];
+        for (
+            const a of record
+        ) {
+            const id = this.#hashDDNScontentContent(a);
+            this.#map.set(id, { ...a, id: id });
+            res.push({ ...a, id: id });
+        }
+        return res;
     }
     async OverwriteDNSRecord(
         array: DDNScontentType[],
