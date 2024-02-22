@@ -6,6 +6,7 @@ import {
     RetHandler,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { JSONRPCSERVER } from "./JSONRPCSERVER.tsx";
+import { dns_records_path_name } from "./dns_records_path_name.tsx";
 /**
  * dns_records_middleware中间件函数
  * @param context 上下文对象
@@ -18,7 +19,7 @@ export async function dns_records_middleware(
 ): Promise<RetHandler> {
     // console.log("dns_records_middleware");
     if (
-        new URL(context.request.url).pathname === ("/dns_records") &&
+        new URL(context.request.url).pathname === dns_records_path_name() &&
         context.request.method.toLowerCase() == "post" &&
         context.request.headers.get("content-type")?.startsWith(
             "application/json",
