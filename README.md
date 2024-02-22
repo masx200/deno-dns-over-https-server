@@ -23,6 +23,16 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180'  deno run --un
 
 ### 说明
 
-配置文件为`config.ts`
+配置文件为`config.ts`,可以使用内存中保存的 dns 记录,也可以访问数据库
 
 设置域名与地址的映射关系即可,支持多个地址
+
+接口格式为`JSONRPC` 2.0
+
+访问`http://localhost:8000/dns_records`使用 ddns
+
+设置`token`环境变量为访问秘钥 `token` 即可使用 ddns
+
+访问时需要携带`token`参数,例如
+
+添加请求头`Authorization:Bearer token`

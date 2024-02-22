@@ -7,6 +7,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { JSONRPCSERVER } from "./JSONRPCSERVER.tsx";
 import { dns_records_path_name } from "./dns_records_path_name.tsx";
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4";
 /**
  * dns_records_middleware中间件函数
  * @param context 上下文对象
@@ -41,7 +42,9 @@ export async function dns_records_middleware(
                 },
             };
         }
+        console.log(JSONSTRINGIFYNULL4({ request: body }));
         const result = await JSONRPCSERVER(body, dNSRecordsInstance);
+        console.log(JSONSTRINGIFYNULL4({ response: result, request: body }));
         return {
             headers: {
                 "content-type": "application/json",
