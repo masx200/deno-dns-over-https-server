@@ -1,6 +1,7 @@
 {
     "imports": {
         "node:test": "npm:@types/node@20.2.5/test.d.ts",
+        "node:crypto": "npm:@types/node@20.2.5/crypto.d.ts",
         "net": "node:net",
         "node:assert": "npm:@types/node@20.2.5/assert.d.ts",
         "node:http2": "npm:@types/node@20.2.5/http2.d.ts",
