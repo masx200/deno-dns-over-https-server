@@ -100,7 +100,7 @@ export class DNSRecordsMemory implements DNSRecordsInterface {
         for (const a of array) {
             this.#map.delete(a.id); // 删除指定ID的DNS记录
         }
-        return array;
+        return array.map((a) => ({ id: a.id }));
     }
 
     // 获取DNS记录详情
