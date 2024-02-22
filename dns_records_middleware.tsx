@@ -1,10 +1,17 @@
 import { bodyToJSON } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/body/bodyToJSON.ts";
+import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
 import {
     Context,
     NextFunction,
     RetHandler,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
-
+import { JSONRPCSERVER } from "./JSONRPCSERVER.tsx";
+/**
+ * dns_records_middleware中间件函数
+ * @param context 上下文对象
+ * @param next 下一个中间件函数
+ * @returns Promise<RetHandler> 返回处理结果
+ */
 export async function dns_records_middleware(
     context: Context,
     next: NextFunction,
@@ -33,7 +40,7 @@ export async function dns_records_middleware(
                 },
             };
         }
-
+        const result = await JSONRPCSERVER(body, dNSRecordsInstance);
         return {
             headers: {
                 "content-type": "application/json",
