@@ -1,15 +1,13 @@
-import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
+// import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 import { DNSPacket } from "./DNSPacket.ts";
-import {
-    AAAAResourceRecord,
-    AResourceRecord,
-    DNSQuestion,
-    DNSRecordClass,
-    DNSRecordType,
-    ipv4ToNumber,
-    ipv6ToBytes,
-    ResourceRecord,
-} from "./resolve_dns_query.ts";
+import { ipv4ToNumber } from "./ipv4ToNumber.ts";
+import { ipv6ToBytes } from "./ipv6ToBytes.ts";
+import { DNSQuestion } from "./DNSQuestion.ts";
+import { DNSRecordClass } from "./DNSRecordClass.ts";
+import { AAAAResourceRecord } from "./AAAAResourceRecord.ts";
+import { AResourceRecord } from "./AResourceRecord.ts";
+import { ResourceRecord } from "./ResourceRecord.ts";
+import { DNSRecordType } from "./DNSRecordType.ts";
 import { DNSConfig } from "./DNSConfig.ts";
 
 /** A simple DNS Server. */

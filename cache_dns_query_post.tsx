@@ -74,9 +74,11 @@ export async function cache_dns_query_post_and_get_method(
             // console.log(header_cache_control);
             const ttl = Math.max(
                 get_ttl_min(),
-                (header_cache_control &&
-                    parse(header_cache_control)?.["max-age"]) ??
-                    0,
+                Number(
+                    (header_cache_control &&
+                        parse(header_cache_control)?.["max-age"]) ??
+                        0,
+                ),
             );
             const response_body = await bodyToBuffer(ctx.response.body);
             // console.log(ttl)

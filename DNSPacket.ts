@@ -1,7 +1,30 @@
+import { DNSPACKETWITHANSWER } from "./DNSPACKETWITHANSWER.ts";
+import { DNSPACKETWITHQUESTION } from "./DNSPACKETWITHQUESTION.ts";
+
+export type DNSPACKET =
+    & DNSPACKETWITHANSWER
+    & DNSPACKETWITHQUESTION
+    & {
+        header: {
+            id: number;
+            qr: number;
+            opcode: number;
+            aa: number;
+            tc: number;
+            rd: number;
+            ra: number;
+            res1: number;
+            res2: number;
+            res3: number;
+            rcode: number;
+        };
+    };
 import Packet from "npm:native-dns-packet@0.1.1";
 import Buffer from "npm:buffer@6.0.3";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
-import { DNSPACKET, DNSQuestion, ResourceRecord } from "./resolve_dns_query.ts";
+// import { DNSPACKET } from "./DNSPACKET.ts";
+import { DNSQuestion } from "./DNSQuestion.ts";
+import { ResourceRecord } from "./ResourceRecord.ts";
 import { DNSHeader } from "./DNSHeader.ts";
 
 /** Represents a DNS packet. */

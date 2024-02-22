@@ -1,5 +1,5 @@
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
-import { hex } from "./resolve_dns_query.ts";
+import { hex } from "./hex.ts";
 
 export class DNSHeader {
     Identification = 0;
