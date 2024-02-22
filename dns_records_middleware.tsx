@@ -47,7 +47,7 @@ export async function dns_records_middleware(
             },
             status: 200,
             body: JSON.stringify(
-                body,
+                result,
             ),
         };
     }

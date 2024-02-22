@@ -31,7 +31,12 @@ export async function JSONRPCSERVER<T extends object>(
                     "id": id,
                 };
             }
-            return await Reflect.apply(fn, services, params ? params : []);
+            const result = await Reflect.apply(
+                fn,
+                services,
+                params ? params : [],
+            );
+            return { result, id, "jsonrpc": "2.0" };
         } catch (error) {
             console.error(error);
             return {
