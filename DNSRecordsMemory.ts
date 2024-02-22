@@ -29,7 +29,7 @@ export class DNSRecordsMemory implements DNSRecordsInterface {
                 content?: string | undefined; // DNS记录内容
                 type: string; // DNS记录类型
             }
-        >,
+        > = {},
     ): Promise<DDNScontentType[]> {
         return Array.from(this.#map.values()).filter((a) => {
             if (options.name && a.name !== options.name) return false;
