@@ -5,7 +5,7 @@ import {
     DDNScontentType,
     DNSRecordsInterface,
 } from "./ddns_address_interface.ts";
-//@ts-ignore
+// @deno-types="npm:@types/node@20.11.19/crypto.d.ts"
 import crypto from "node:crypto";
 const { createHash } = crypto; // 引入crypto模块中的createHash方法
 export class DNSRecordsMemory implements DNSRecordsInterface {

@@ -13,7 +13,7 @@ import Packet from "npm:native-dns-packet@0.1.1";
 // console.log(JSONSTRINGIFYNULL4({ Packet });
 import Buffer from "npm:buffer@6.0.3";
 import { reply_dns_query } from "./reply_dns_query.ts";
-import { DNSPACKET } from "./DNSPacket.ts";
+import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 // import { DNSPACKET } from "./DNSPACKET.ts";
 
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
@@ -41,7 +41,7 @@ export async function resolve_dns_query(
             const data = base64Decode(
                 new URL(url).searchParams.get("dns") ?? "",
             );
-            const packet: DNSPACKET = Packet.parse(
+            const packet: DNSPACKETInterface = Packet.parse(
                 Buffer.Buffer.from(data as Uint8Array),
             );
             const { success, result } = await reply_dns_query(packet, data);
@@ -70,7 +70,7 @@ export async function resolve_dns_query(
             req.body = body;
 
             if (body?.length) {
-                const packet: DNSPACKET = Packet.parse(
+                const packet: DNSPACKETInterface = Packet.parse(
                     Buffer.Buffer.from(body as Uint8Array),
                 );
                 const { success, result } = await reply_dns_query(

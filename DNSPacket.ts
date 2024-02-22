@@ -1,24 +1,3 @@
-import { DNSPACKETWITHANSWER } from "./DNSPACKETWITHANSWER.ts";
-import { DNSPACKETWITHQUESTION } from "./DNSPACKETWITHQUESTION.ts";
-
-export type DNSPACKET =
-    & DNSPACKETWITHANSWER
-    & DNSPACKETWITHQUESTION
-    & {
-        header: {
-            id: number;
-            qr: number;
-            opcode: number;
-            aa: number;
-            tc: number;
-            rd: number;
-            ra: number;
-            res1: number;
-            res2: number;
-            res3: number;
-            rcode: number;
-        };
-    };
 import Packet from "npm:native-dns-packet@0.1.1";
 import Buffer from "npm:buffer@6.0.3";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
@@ -26,6 +5,7 @@ import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 import { DNSQuestion } from "./DNSQuestion.ts";
 import { ResourceRecord } from "./ResourceRecord.ts";
 import { DNSHeader } from "./DNSHeader.ts";
+import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 
 /** Represents a DNS packet. */
 
@@ -82,7 +62,7 @@ export class DNSPacket {
     get Bytes(): Uint8Array {
         // console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(this, null, 4));
         /* 这个编码有问题,换个dns编码器 */
-        const packet: DNSPACKET = Packet.parse(
+        const packet: DNSPACKETInterface = Packet.parse(
             Buffer.Buffer.from(this.rawData),
         );
         packet.header.qr = this.Header.QR;

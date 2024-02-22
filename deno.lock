@@ -3,6 +3,7 @@
   "packages": {
     "specifiers": {
       "npm:@types/node": "npm:@types/node@18.16.19",
+      "npm:@types/node@20.11.19": "npm:@types/node@20.11.19",
       "npm:@types/node@20.2.5": "npm:@types/node@20.2.5",
       "npm:buffer@6.0.3": "npm:buffer@6.0.3",
       "npm:native-dns-packet@0.1.1": "npm:native-dns-packet@0.1.1"
@@ -11,6 +12,12 @@
       "@types/node@18.16.19": {
         "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
         "dependencies": {}
+      },
+      "@types/node@20.11.19": {
+        "integrity": "sha512-7xMnVEcZFu0DikYjWOlRq7NTPETrm7teqUT2WkQjrTIkEgUyyGdWsj/Zg8bEJt5TNklzbPD1X3fqfsHw3SpapQ==",
+        "dependencies": {
+          "undici-types": "undici-types@5.26.5"
+        }
       },
       "@types/node@20.2.5": {
         "integrity": "sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==",
@@ -59,6 +66,10 @@
           "buffercursor": "buffercursor@0.0.12",
           "ipaddr.js": "ipaddr.js@2.1.0"
         }
+      },
+      "undici-types@5.26.5": {
+        "integrity": "sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==",
+        "dependencies": {}
       },
       "verror@1.10.1": {
         "integrity": "sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg==",

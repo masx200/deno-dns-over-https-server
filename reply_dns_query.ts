@@ -7,7 +7,7 @@ import {
 import { DNSServer } from "./DNSServer.ts";
 import { DNSConfig } from "./DNSConfig.ts";
 import { DNSRecordType } from "./DNSRecordType.ts";
-import { DNSPACKET } from "./DNSPacket.ts";
+import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
 // import { DNSPACKET } from "./DNSPACKET.ts";
 /**
@@ -17,7 +17,7 @@ import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
  * @returns { success: boolean; result: Uint8Array | null | undefined }对象
  */
 export async function reply_dns_query(
-    packet: DNSPACKET,
+    packet: DNSPACKETInterface,
     data: Uint8Array,
 ): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
     const name = packet.question[0]?.name;
