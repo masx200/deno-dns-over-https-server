@@ -1,5 +1,5 @@
 // deno-lint-ignore-file require-await
-import config from "./config.ts";
+// import config from "./config.ts";
 import {
     DDNScontentContent,
     DDNScontentID,
@@ -9,6 +9,18 @@ import {
 
 import { createHash } from "node:crypto";
 export class DNSRecordsMemory implements DNSRecordsInterface {
+    #config: DDNScontentContent[];
+    #map: Map<string, DDNScontentType> = new Map();
+    constructor(config: DDNScontentContent[] = []) {
+        this.#config = config;
+        this.#map = new Map(
+            config.map((a) => {
+                const id = this.#hashDDNScontentContent(a);
+                return [id, { ...a, id: id }];
+            }),
+        );
+    }
+
     async ListDNSRecords(
         options: Partial<
             {
@@ -18,23 +30,25 @@ export class DNSRecordsMemory implements DNSRecordsInterface {
             }
         >,
     ): Promise<DDNScontentType[]> {
-        return config.filter((a) =>
-            (options.type === undefined || a.type === options.type) &&
-            (options.name === undefined || a.name === options.name) &&
-            (options.content === undefined || a.content === options.content)
-        ).map(function (a) {
-            const key = a.name + a.type + a.content;
-            const hash = createHash("sha512");
-            hash.update(key);
-            const filename = hash.digest("base64");
-
-            return ({ ...a, id: filename });
+        return Array.from(this.#map.values()).filter((a) => {
+            if (options.name && a.name !== options.name) return false;
+            if (options.content && a.content !== options.content) return false;
+            if (options.type && a.type !== options.type) return false;
+            return true;
         });
     }
+
+    #hashDDNScontentContent(a: DDNScontentContent) {
+        const key = a.name + a.type + a.content;
+        const hash = createHash("sha512");
+        hash.update(key);
+        const filename = hash.digest("base64");
+        return filename;
+    }
+
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
     }
     async OverwriteDNSRecord(
         array: DDNScontentType[],
