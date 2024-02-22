@@ -10,6 +10,13 @@ export async function JSONRPCSERVER<T extends object>(
     services: T,
 ): Promise<any> {
     if (Array.isArray(data)) {
+        if (!data.length) {
+            return {
+                "jsonrpc": "2.0",
+                "error": { "code": -32600, "message": "Invalid Request" },
+                "id": null,
+            };
+        }
         return await Promise.all(data.map(async (item) => {
             return await JSONRPCSERVER(item, services);
         }));
