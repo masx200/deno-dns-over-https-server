@@ -12,7 +12,9 @@ export async function dns_records_middleware(
     if (
         new URL(context.request.url).pathname === ("/dns_records") &&
         context.request.method == "post" &&
-        context.request.headers.get("content-type") == "application/json"
+        context.request.headers.get("content-type")?.startsWith(
+            "application/json",
+        )
     ) {
         const body = await bodyToJSON(
             context.request.body,
