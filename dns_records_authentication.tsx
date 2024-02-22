@@ -19,6 +19,9 @@ export async function dns_records_authentication(
             return {
                 status: 401,
                 body: "unauthorized",
+                headers: {
+                    "WWW-Authenticate": 'Bearer realm="example"',
+                },
             };
         }
         return await next();
