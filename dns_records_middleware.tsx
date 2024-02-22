@@ -7,7 +7,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { JSONRPCSERVER } from "./JSONRPCSERVER.tsx";
 import { dns_records_path_name } from "./dns_records_path_name.tsx";
-import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4";
+import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 /**
  * dns_records_middleware中间件函数
  * @param context 上下文对象
