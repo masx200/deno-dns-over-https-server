@@ -1,0 +1,357 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "deno-dns-over-https-server",
+        "description": "",
+        "version": "1.0.0"
+    },
+    "tags": [],
+    "paths": {
+        "/dns_records": {
+            "post": {
+                "summary": "dns_records",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "",
+                        "required": true,
+                        "example": "Bearer 6BB0084C-BFFE-F431-8006-7AF85201818D",
+                        "schema": { "type": "string" }
+                    },
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "description": "",
+                        "required": true,
+                        "example": "application/json",
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "jsonrpc": { "type": "string" },
+                                        "method": { "type": "string" },
+                                        "id": { "type": "integer" },
+                                        "params": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "content": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": { "type": "string" }
+                                                },
+                                                "x-apifox-orders": [
+                                                    "name",
+                                                    "content",
+                                                    "type"
+                                                ],
+                                                "x-apifox-ignore-properties": []
+                                            }
+                                        }
+                                    },
+                                    "x-apifox-orders": [
+                                        "jsonrpc",
+                                        "method",
+                                        "id",
+                                        "params"
+                                    ],
+                                    "required": [
+                                        "jsonrpc",
+                                        "method",
+                                        "id",
+                                        "params"
+                                    ],
+                                    "x-apifox-ignore-properties": []
+                                }
+                            },
+                            "example": [
+                                {
+                                    "jsonrpc": "2.0",
+                                    "method": "ListDNSRecords",
+                                    "id": 322,
+                                    "params": [
+                                        {
+                                            "name": "xiaomi-m2007j3sc.manx-sun.ts.net",
+                                            "content": "fd7a:115c:a1e0::df5c:e817",
+                                            "type": "AAAA"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "result": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "content": {
+                                                            "type": "string"
+                                                        },
+                                                        "type": {
+                                                            "type": "string"
+                                                        },
+                                                        "id": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "x-apifox-orders": [
+                                                        "name",
+                                                        "content",
+                                                        "type",
+                                                        "id"
+                                                    ],
+                                                    "required": [
+                                                        "id",
+                                                        "type",
+                                                        "name",
+                                                        "content"
+                                                    ],
+                                                    "x-apifox-ignore-properties": []
+                                                }
+                                            },
+                                            "id": { "type": "integer" },
+                                            "jsonrpc": { "type": "string" }
+                                        },
+                                        "x-apifox-orders": [
+                                            "result",
+                                            "id",
+                                            "jsonrpc"
+                                        ],
+                                        "required": ["id", "jsonrpc", "result"],
+                                        "x-apifox-ignore-properties": []
+                                    }
+                                },
+                                "examples": {
+                                    "1": {
+                                        "summary": "成功示例",
+                                        "value": [
+                                            {
+                                                "result": [
+                                                    {
+                                                        "name": "desktop-5rh4po7.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0:ab12:4843:cd96:627f:c430",
+                                                        "type": "AAAA",
+                                                        "id": "O4afJzt4FatNI8SuumDUWzwDGoZYuC2dvypXigqlRJOJwqbZ9GEz9wktO7f8Qtpr2rbrYvk+4zX3xmWljT1Wmw=="
+                                                    },
+                                                    {
+                                                        "name": "desktop-5rh4po7.manx-sun.ts.net",
+                                                        "content": "240e:38b:892f:e800:1c88:6f7:d715:c199",
+                                                        "type": "AAAA",
+                                                        "id": "QEzmFMKV5nFA8u1DrsayDgutEkO4hYXwZhL1LgohmGKgoEt01IXS7l0tPaVFFPAVZN0FhZQpY6xyk9840XGAjw=="
+                                                    },
+                                                    {
+                                                        "name": "openwrt.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::6530:c74c",
+                                                        "type": "AAAA",
+                                                        "id": "RQvad06WM0mhXtqno+Gk9TPLAMuehQSURRPQUYW22fnYY45VyCca4uncBhlFGMuhmaMCkumYEJHmchmE6lWVUA=="
+                                                    },
+                                                    {
+                                                        "name": "openwrt-2.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::4a91:2122",
+                                                        "type": "AAAA",
+                                                        "id": "aAs063bxEsNa4zDLtf/SiRwsV7L++jmDmOkYQP4r//jhENOzs8U6zjgaAJ2aqAq8nMzf+ILiaiwOvJj9hLDPNQ=="
+                                                    },
+                                                    {
+                                                        "name": "xiaomi-23013rk75c.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::f88f:f457",
+                                                        "type": "AAAA",
+                                                        "id": "s1fWT7Kd1WQubAQn0xVqVTDgIKJfvpm6GW6blMwx5sQrvBpJZZMoLz5gSDTTFQMQJKsFSmxXG43nbhkEpjzp5Q=="
+                                                    },
+                                                    {
+                                                        "name": "openwrt-1.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::9b56:891f",
+                                                        "type": "AAAA",
+                                                        "id": "uC6WQdJaRNVaO4TAJuVN+1fH8hy+BkpSGvJAvNhw9cGvDpN/Xp68qKj+mS7kN1nuvdlncn2oT9W5zTVIWYU/1Q=="
+                                                    },
+                                                    {
+                                                        "name": "xiaomi-m2007j3sc.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::df5c:e817",
+                                                        "type": "AAAA",
+                                                        "id": "ke1kn7wO/7GipazC4ka4yctWkcNbyCsFnAMn+eqa8kYGQl2bdbXvQ0RTUtwi+ZadKeJ+ZpcYVQzW7qlJrQsDAw=="
+                                                    }
+                                                ],
+                                                "id": 322,
+                                                "jsonrpc": "2.0"
+                                            }
+                                        ]
+                                    },
+                                    "2": {
+                                        "summary": "成功示例",
+                                        "value": [
+                                            {
+                                                "result": [
+                                                    {
+                                                        "name": "xiaomi-m2007j3sc.manx-sun.ts.net",
+                                                        "content": "fd7a:115c:a1e0::df5c:e817",
+                                                        "type": "AAAA",
+                                                        "id": "ke1kn7wO/7GipazC4ka4yctWkcNbyCsFnAMn+eqa8kYGQl2bdbXvQ0RTUtwi+ZadKeJ+ZpcYVQzW7qlJrQsDAw=="
+                                                    }
+                                                ],
+                                                "id": 322,
+                                                "jsonrpc": "2.0"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "x-200:失败": {
+                        "description": "失败",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "jsonrpc": { "type": "string" },
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "code": { "type": "integer" },
+                                                "message": { "type": "string" }
+                                            },
+                                            "required": ["code", "message"],
+                                            "x-apifox-orders": [
+                                                "code",
+                                                "message"
+                                            ],
+                                            "x-apifox-ignore-properties": []
+                                        },
+                                        "id": { "type": "integer" }
+                                    },
+                                    "required": ["jsonrpc", "error", "id"],
+                                    "x-apifox-orders": [
+                                        "jsonrpc",
+                                        "error",
+                                        "id"
+                                    ],
+                                    "x-apifox-ignore-properties": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "x-apifox-folder": "",
+                "x-apifox-status": "developing",
+                "x-run-in-apifox": "https://www.apifox.cn/web/project/4050349/apis/api-149338603-run"
+            }
+        },
+        "/dns-query": {
+            "get": {
+                "summary": "dns-query",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [
+                    {
+                        "name": "dns",
+                        "in": "query",
+                        "description": "",
+                        "required": true,
+                        "example": "q80BAAABAAAAAAAAA3d3dwdleGFtcGxlA2NvbQAAAQAB",
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {},
+                                    "x-apifox-ignore-properties": [],
+                                    "x-apifox-orders": []
+                                },
+                                "examples": {
+                                    "1": {
+                                        "summary": "成功示例",
+                                        "value": "亐 \u0001 \u0001   \u0001\u0003www example\u0003com  \u0001 \u0001\u0003www example\u0003com  \u0001 \u0001  \u0005E \u0004]肛\"  )\u0010       "
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "x-apifox-folder": "",
+                "x-apifox-status": "developing",
+                "x-run-in-apifox": "https://www.apifox.cn/web/project/4050349/apis/api-149340385-run"
+            },
+            "post": {
+                "summary": "dns-query",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "description": "",
+                        "required": true,
+                        "example": "application/dns-message",
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {},
+                                    "x-apifox-ignore-properties": [],
+                                    "x-apifox-orders": []
+                                },
+                                "examples": {
+                                    "1": {
+                                        "summary": "成功示例",
+                                        "value": "亐 \u0001 \u0001   \u0001\u0003www example\u0003com  \u0001 \u0001\u0003www example\u0003com  \u0001 \u0001  \u0005E \u0004]肛\"  )\u0010       "
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "x-apifox-folder": "",
+                "x-apifox-status": "developing",
+                "x-run-in-apifox": "https://www.apifox.cn/web/project/4050349/apis/api-149340678-run"
+            }
+        }
+    },
+    "components": { "schemas": {}, "securitySchemes": {} },
+    "servers": [{ "url": "http://localhost:8000", "description": "开发环境" }]
+}
