@@ -20,7 +20,7 @@ export interface DDNScontentID {
 export type DDNScontentInterface = {
     /**List, search, sort, and filter a zones' DNS records. */
     ListDNSRecords(
-        options: { name?: string; content?: string },
+        options: Partial<{ name?: string; content?: string; type: string }>,
     ): Promise<DDNScontentType[]>;
     /**Create a new DNS record for a zone.
 
