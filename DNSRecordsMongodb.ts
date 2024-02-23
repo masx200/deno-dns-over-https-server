@@ -101,7 +101,11 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         throw new Error("Method not implemented.");
     }
     async DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.get_collection();
+        await collection.deleteMany({
+            _id: { $in: array.map((a) => new ObjectId(a.id)) },
+        });
+        return array;
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
         const { collection } = await this.get_collection();
@@ -139,5 +143,29 @@ if (import.meta.main) {
     );
     console.log(
         await dnsRecordsMongodb.ListDNSRecords(),
+    );
+    console.log(
+        await dnsRecordsMongodb.DNSRecordDetails([{
+            id: "65d82e558071304c2f37c4ce",
+        }, {
+            id: "65d82e558071304c2f37c4cd",
+        }]),
+    );
+    console.log(
+        await dnsRecordsMongodb.DeleteDNSRecord([
+            {
+                id: "65d82e558071304c2f37c4ce",
+            },
+            {
+                id: "65d82e558071304c2f37c4cd",
+            },
+        ]),
+    );
+    console.log(
+        await dnsRecordsMongodb.DNSRecordDetails([{
+            id: "65d82e558071304c2f37c4ce",
+        }, {
+            id: "65d82e558071304c2f37c4cd",
+        }]),
     );
 }
