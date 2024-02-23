@@ -84,6 +84,10 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
+        /* Error: MongoError: {"ok":0,"errmsg":"Write batch sizes must be between 1 and 100000. Got 0 operations.","code":16,"codeName":"InvalidLength","$clusterTime":{"clusterTime":{"$timestamp":"7338715695602991110"},"signature":{"hash":"ldVuq7C1qBkqombHL8Y0rtiF0y0=","keyId":{"low":4,"high":1699536178,"unsigned":false}}},"operationTime":{"$timestamp":"7338715695602991110"}} */
+        if (!record.length) {
+            return [];
+        }
         const { collection } = await this.#get_collection();
         const dnsRecords = await collection.insertMany(record);
         return await this.DNSRecordDetails(
@@ -93,6 +97,9 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     async OverwriteDNSRecord(
         array: DDNScontentType[],
     ): Promise<DDNScontentType[]> {
+        if (!array.length) {
+            return [];
+        }
         const { collection } = await this.#get_collection();
         await Promise.all(
             array.map(async (a) => {
@@ -111,6 +118,9 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     async UpdateDNSRecord(
         array: (DDNScontentID & Partial<DDNScontentContent>)[],
     ): Promise<DDNScontentType[]> {
+        if (!array.length) {
+            return [];
+        }
         const { collection } = await this.#get_collection();
         await Promise.all(
             array.map(async (a) => {
@@ -127,6 +137,9 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         );
     }
     async DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]> {
+        if (!array.length) {
+            return [];
+        }
         const { collection } = await this.#get_collection();
         await collection.deleteMany({
             _id: { $in: array.map((a) => new ObjectId(a.id)) },
@@ -134,6 +147,9 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         return array;
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
+        if (!array.length) {
+            return [];
+        }
         const { collection } = await this.#get_collection();
         const dnsRecords = await collection.find({
             _id: { $in: array.map((a) => new ObjectId(a.id)) },

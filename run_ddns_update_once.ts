@@ -70,9 +70,11 @@ export async function run_ddns_update_once(
         const differencelocalsetToremoteset = new Set(
             [...localset].filter((x) => !remoteset.has(x)),
         );
+        console.log("需要添加的地址", differencelocalsetToremoteset);
         const differenceremotesetTolocalset = new Set(
             [...remoteset].filter((x) => !localset.has(x)),
         );
+        console.log("需要删除的地址", differenceremotesetTolocalset);
         const recordstobedeletedids = [...differenceremotesetTolocalset].map(
             (b) => map.get(b) ?? "",
         );
