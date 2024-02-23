@@ -80,8 +80,3 @@ export async function getAllTailscaleNetworkIPsAndSelfPublicIPs(
     }
     return result;
 }
-
-// if (import.meta.main) {
-//     console.log(await getAllTailscaleNetworkIPsAndSelfPublicIPs());
-// }
-// console.log(await getAllTailscaleNetworkIPsAndSelfPublicIPs());
