@@ -123,11 +123,13 @@ if (import.meta.main) {
         mongodb_collection,
     );
     console.log(dnsRecordsMongodb);
-    console.log(await dnsRecordsMongodb.get_collection());
+    console.log("get_collection", await dnsRecordsMongodb.get_collection());
     console.log(
+        "ListDNSRecords",
         await dnsRecordsMongodb.ListDNSRecords(),
     );
     console.log(
+        "ListDNSRecords",
         await dnsRecordsMongodb.ListDNSRecords({
             name: "ssssss",
             type: "A",
@@ -135,16 +137,19 @@ if (import.meta.main) {
         }),
     );
 
-    console.log(await dnsRecordsMongodb.CreateDNSRecord([...config]));
     console.log(
+        "CreateDNSRecord",
+        await dnsRecordsMongodb.CreateDNSRecord([...config]),
+    );
+    console.log(
+        "DNSRecordDetails",
         await dnsRecordsMongodb.DNSRecordDetails([{
             id: "65d829c6924c00407664ea68",
         }, { id: "65d82b60924c00407664ea69" }]),
     );
+    console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
     console.log(
-        await dnsRecordsMongodb.ListDNSRecords(),
-    );
-    console.log(
+        "DNSRecordDetails",
         await dnsRecordsMongodb.DNSRecordDetails([{
             id: "65d82e558071304c2f37c4ce",
         }, {
@@ -152,6 +157,7 @@ if (import.meta.main) {
         }]),
     );
     console.log(
+        "DeleteDNSRecord",
         await dnsRecordsMongodb.DeleteDNSRecord([
             {
                 id: "65d82e558071304c2f37c4ce",
@@ -162,10 +168,12 @@ if (import.meta.main) {
         ]),
     );
     console.log(
+        "DNSRecordDetails",
         await dnsRecordsMongodb.DNSRecordDetails([{
             id: "65d82e558071304c2f37c4ce",
         }, {
             id: "65d82e558071304c2f37c4cd",
         }]),
     );
+    console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
 }
