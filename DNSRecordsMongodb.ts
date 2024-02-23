@@ -27,7 +27,13 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         this.#mongodb_collection = mongodb_collection;
     }
     async get_collection() {
-        if (this.#collection) return this.#collection;
+        if (this.#collection && this.#db && this.#client) {
+            return {
+                collection: this.#collection,
+                db: this.#db,
+                client: this.#client,
+            };
+        }
         const client = new MongoClient();
         this.#client = client;
         await client.connect(this.#mongodb_url);
@@ -87,5 +93,6 @@ if (import.meta.main) {
         mongodb_collection,
     );
     console.log(dnsRecordsMongodb);
+    console.log(await dnsRecordsMongodb.get_collection());
     console.log(await dnsRecordsMongodb.get_collection());
 }
