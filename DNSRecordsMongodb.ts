@@ -7,6 +7,7 @@ import {
     Collection,
     Database,
     MongoClient,
+    ObjectId,
 } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 export class DNSRecordsMongodb implements DNSRecordsInterface {
     #mongodb_url: string;
@@ -15,7 +16,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     #client?: MongoClient;
     #db?: Database;
     #collection?: Collection<
-        DDNScontentType
+        DDNScontentType & { _id: ObjectId }
     >;
     constructor(
         mongodb_url: string,
@@ -38,11 +39,18 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         this.#client = client;
         await client.connect(this.#mongodb_url);
         const db = client.database(this.#mongodb_db);
-        const collection = db.collection<DDNScontentType>(
+        const collection = db.collection<DDNScontentType & { _id: ObjectId }>(
             this.#mongodb_collection,
         );
         this.#db = db;
         this.#collection = collection;
+        await collection.createIndexes({
+            indexes: [
+                { key: { name: 1 }, name: "name_1" },
+                { key: { type: 1 }, name: "type_1" },
+                { key: { content: 1 }, name: "content_1" },
+            ],
+        });
         return {
             collection: this.#collection,
             db: this.#db,
@@ -61,7 +69,9 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
             >
             | undefined,
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.get_collection();
+        const dnsRecords = await collection.find({ ...options }).toArray();
+        return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
     }
     async CreateDNSRecord(
         record: DDNScontentContent[],
@@ -94,5 +104,6 @@ if (import.meta.main) {
     );
     console.log(dnsRecordsMongodb);
     console.log(await dnsRecordsMongodb.get_collection());
-    console.log(await dnsRecordsMongodb.get_collection());
+
+    console.log(await dnsRecordsMongodb.ListDNSRecords());
 }
