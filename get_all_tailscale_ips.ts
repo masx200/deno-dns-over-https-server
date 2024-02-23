@@ -6,6 +6,11 @@ import {
     getPublicIpv6,
 } from "https://deno.land/x/masx200_get_public_ip_address@1.0.4/mod.ts";
 import { isIPv4 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
+/**
+ * 获取所有Tailscale网络IP和自定义公共IP
+ * @param opts - 选项参数
+ * @returns Promise<DDNScontentContent[]>
+ */
 export async function getAllTailscaleNetworkIPsAndSelfPublicIPs(
     opts: {
         name: string;
@@ -14,9 +19,7 @@ export async function getAllTailscaleNetworkIPsAndSelfPublicIPs(
         ipv4: boolean;
         ipv6: boolean;
     },
-): Promise<
-    DDNScontentContent[]
-> {
+): Promise<DDNScontentContent[]> {
     const { name, tailscale, ipv4, ipv6 } = opts;
     const selfIPs: string[] = [];
     const config = {
