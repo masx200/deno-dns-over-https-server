@@ -15,8 +15,8 @@ export async function JSONRPCCLIENT<
         params: params,
         id: Date.now(),
     };
-
-    const response = await fetch(service_url, {
+    console.log({ request });
+    const reqinit = new Request(service_url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -24,12 +24,17 @@ export async function JSONRPCCLIENT<
         },
         body: JSON.stringify(request),
     });
-
+    console.log({ request: reqinit });
+    const response = await fetch(
+        reqinit,
+    );
+    console.log({ request: reqinit, response });
     if (!response.ok) {
         throw new Error(`Server responded with status ${response.status}`);
     }
 
     const data = await response.json();
+    console.log({ response: data, request });
     const rpcResponse = data as JsonRpcResponse<T[M]>;
 
     if ("result" in rpcResponse && rpcResponse.result) {
