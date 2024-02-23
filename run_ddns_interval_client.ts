@@ -41,7 +41,7 @@ export async function run_ddns_interval_client(
 if (import.meta.main) {
     const opts = parse(Deno.args);
     console.log(opts);
-    const stop = await run_ddns_interval_client({
+    /*  const stop = */ await run_ddns_interval_client({
         interval: Number(opts.interval || 30 * 1000),
         ipv4: Boolean(opts.ipv4 ?? true),
         ipv6: Boolean(opts.ipv6 ?? true),
@@ -51,5 +51,5 @@ if (import.meta.main) {
         name: opts.name ?? "name",
         service_url: opts.service_url ?? "XXXXXXXXXXXXXXXXXXXXX",
     });
-    setTimeout(() => stop(), 10000);
+    // setTimeout(() => stop(), 10000);
 }
