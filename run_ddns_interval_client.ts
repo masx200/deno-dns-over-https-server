@@ -31,9 +31,18 @@ export async function run_ddns_interval_client(
         service_url: string;
     },
 ): Promise<() => void> {
-    await run_ddns_update_once(opts); // 运行一次DDNS更新
+    try {
+        await run_ddns_update_once(opts); // 运行一次DDNS更新
+    } catch (error) {
+        console.error(error);
+    }
+
     const timer = setInterval(async () => {
-        await run_ddns_update_once(opts); // 每隔指定时间运行一次DDNS更新
+        try {
+            await run_ddns_update_once(opts); // 运行一次DDNS更新
+        } catch (error) {
+            console.error(error);
+        } // 每隔指定时间运行一次DDNS更新
     }, opts.interval);
     return () => clearInterval(timer); // 返回一个清除定时器的函数
 }
