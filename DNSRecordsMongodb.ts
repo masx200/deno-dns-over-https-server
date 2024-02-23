@@ -141,91 +141,92 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
     }
 }
-if (import.meta.main) {
-    const [mongodb_url, mongodb_db, mongodb_collection] = Deno.args;
-    const dnsRecordsMongodb = new DNSRecordsMongodb(
-        mongodb_url,
-        mongodb_db,
-        mongodb_collection,
-    );
-    console.log(
-        "DNSRecordDetails",
-        await dnsRecordsMongodb.DNSRecordDetails([{
-            id: "65d8366f924c00407664ea6a",
-        }, {
-            id: "65d8366f924c00407664ea6a",
-        }]),
-    );
-    console.log(
-        "OverwriteDNSRecord",
-        await dnsRecordsMongodb.OverwriteDNSRecord([{
-            "id": "65d8366f924c00407664ea6a",
+// }
+// if (import.meta.main) {
+//     const [mongodb_url, mongodb_db, mongodb_collection] = Deno.args;
+//     const dnsRecordsMongodb = new DNSRecordsMongodb(
+//         mongodb_url,
+//         mongodb_db,
+//         mongodb_collection,
+//     );
+//     console.log(
+//         "DNSRecordDetails",
+//         await dnsRecordsMongodb.DNSRecordDetails([{
+//             id: "65d8366f924c00407664ea6a",
+//         }, {
+//             id: "65d8366f924c00407664ea6a",
+//         }]),
+//     );
+//     console.log(
+//         "OverwriteDNSRecord",
+//         await dnsRecordsMongodb.OverwriteDNSRecord([{
+//             "id": "65d8366f924c00407664ea6a",
 
-            "name": "ssssss2222222222",
-            "type": "22222222A",
-            "content": "111111122222221",
-        }]),
-    );
-    console.log(
-        "DNSRecordDetails",
-        await dnsRecordsMongodb.DNSRecordDetails([{
-            id: "65d8366f924c00407664ea6a",
-        }, {
-            id: "65d8366f924c00407664ea6a",
-        }]),
-    );
-    // console.log(dnsRecordsMongodb);
-    // console.log("get_collection", await dnsRecordsMongodb.get_collection());
-    // console.log(
-    //     "ListDNSRecords",
-    //     await dnsRecordsMongodb.ListDNSRecords(),
-    // );
-    // console.log(
-    //     "ListDNSRecords",
-    //     await dnsRecordsMongodb.ListDNSRecords({
-    //         name: "ssssss",
-    //         type: "A",
-    //         content: "11111111",
-    //     }),
-    // );
+//             "name": "ssssss2222222222",
+//             "type": "22222222A",
+//             "content": "111111122222221",
+//         }]),
+//     );
+//     console.log(
+//         "DNSRecordDetails",
+//         await dnsRecordsMongodb.DNSRecordDetails([{
+//             id: "65d8366f924c00407664ea6a",
+//         }, {
+//             id: "65d8366f924c00407664ea6a",
+//         }]),
+//     );
+//     // console.log(dnsRecordsMongodb);
+//     // console.log("get_collection", await dnsRecordsMongodb.get_collection());
+//     // console.log(
+//     //     "ListDNSRecords",
+//     //     await dnsRecordsMongodb.ListDNSRecords(),
+//     // );
+//     // console.log(
+//     //     "ListDNSRecords",
+//     //     await dnsRecordsMongodb.ListDNSRecords({
+//     //         name: "ssssss",
+//     //         type: "A",
+//     //         content: "11111111",
+//     //     }),
+//     // );
 
-    // console.log(
-    //     "CreateDNSRecord",
-    //     await dnsRecordsMongodb.CreateDNSRecord([...config]),
-    // );
-    // console.log(
-    //     "DNSRecordDetails",
-    //     await dnsRecordsMongodb.DNSRecordDetails([{
-    //         id: "65d829c6924c00407664ea68",
-    //     }, { id: "65d82b60924c00407664ea69" }]),
-    // );
-    // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
-    // console.log(
-    //     "DNSRecordDetails",
-    //     await dnsRecordsMongodb.DNSRecordDetails([{
-    //         id: "65d82e558071304c2f37c4ce",
-    //     }, {
-    //         id: "65d82e558071304c2f37c4cd",
-    //     }]),
-    // );
-    // console.log(
-    //     "DeleteDNSRecord",
-    //     await dnsRecordsMongodb.DeleteDNSRecord([
-    //         {
-    //             id: "65d82e558071304c2f37c4ce",
-    //         },
-    //         {
-    //             id: "65d82e558071304c2f37c4cd",
-    //         },
-    //     ]),
-    // );
-    // console.log(
-    //     "DNSRecordDetails",
-    //     await dnsRecordsMongodb.DNSRecordDetails([{
-    //         id: "65d82e558071304c2f37c4ce",
-    //     }, {
-    //         id: "65d82e558071304c2f37c4cd",
-    //     }]),
-    // );
-    // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
-}
+//     // console.log(
+//     //     "CreateDNSRecord",
+//     //     await dnsRecordsMongodb.CreateDNSRecord([...config]),
+//     // );
+//     // console.log(
+//     //     "DNSRecordDetails",
+//     //     await dnsRecordsMongodb.DNSRecordDetails([{
+//     //         id: "65d829c6924c00407664ea68",
+//     //     }, { id: "65d82b60924c00407664ea69" }]),
+//     // );
+//     // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
+//     // console.log(
+//     //     "DNSRecordDetails",
+//     //     await dnsRecordsMongodb.DNSRecordDetails([{
+//     //         id: "65d82e558071304c2f37c4ce",
+//     //     }, {
+//     //         id: "65d82e558071304c2f37c4cd",
+//     //     }]),
+//     // );
+//     // console.log(
+//     //     "DeleteDNSRecord",
+//     //     await dnsRecordsMongodb.DeleteDNSRecord([
+//     //         {
+//     //             id: "65d82e558071304c2f37c4ce",
+//     //         },
+//     //         {
+//     //             id: "65d82e558071304c2f37c4cd",
+//     //         },
+//     //     ]),
+//     // );
+//     // console.log(
+//     //     "DNSRecordDetails",
+//     //     await dnsRecordsMongodb.DNSRecordDetails([{
+//     //         id: "65d82e558071304c2f37c4ce",
+//     //     }, {
+//     //         id: "65d82e558071304c2f37c4cd",
+//     //     }]),
+//     // );
+//     // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
+// }
