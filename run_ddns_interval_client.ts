@@ -4,10 +4,21 @@
 // console.log(await getAllTailscaleNetworkIPsAndSelfPublicIPs());
 
 import parse from "npm:@masx200/mini-cli-args-parser@1.1.0";
-import { DDNScontentContent } from "./DDNScontentContent.ts";
-import { getAllTailscaleNetworkIPsAndSelfPublicIPs } from "./get_all_tailscale_ips.ts";
-import { DNSRecordsRemoteJSONRPC } from "./DNSRecordsRemote.ts";
+import { run_ddns_update_once } from "./run_ddns_update_once.ts";
 
+/**
+ * 异步函数，用于运行DDNS间隔客户端
+ * @param opts - 包含以下属性的对象：
+ *   - interval: 数值，表示更新间隔时间（单位：毫秒）
+ *   - ipv4: 布尔值，表示是否启用IPv4
+ *   - ipv6: 布尔值，表示是否启用IPv6
+ *   - tailscale: 布尔值，表示是否启用Tailscale
+ *   - public: 布尔值，表示是否启用公共DNS
+ *   - token: 字符串，表示API令牌
+ *   - name: 字符串，表示DDNS名称
+ *   - service_url: 字符串，表示DDNS服务URL
+ * @returns 返回一个函数，用于清除定时器
+ */
 export async function run_ddns_interval_client(
     opts: {
         interval: number;
@@ -20,11 +31,11 @@ export async function run_ddns_interval_client(
         service_url: string;
     },
 ): Promise<() => void> {
-    await run_ddns_update_once(opts);
+    await run_ddns_update_once(opts); // 运行一次DDNS更新
     const timer = setInterval(async () => {
-        await run_ddns_update_once(opts);
+        await run_ddns_update_once(opts); // 每隔指定时间运行一次DDNS更新
     }, opts.interval);
-    return () => clearInterval(timer);
+    return () => clearInterval(timer); // 返回一个清除定时器的函数
 }
 
 if (import.meta.main) {
@@ -41,44 +52,4 @@ if (import.meta.main) {
         service_url: opts.service_url ?? "XXXXXXXXXXXXXXXXXXXXX",
     });
     setTimeout(() => stop(), 10000);
-}
-
-/**
- * 异步函数，用于执行一次DDNS更新
- * @param opts - 配置选项
- * @param opts.interval - 更新间隔时间（单位：秒）
- * @param opts.ipv4 - 是否使用IPv4地址
- * @param opts.ipv6 - 是否使用IPv6地址
- * @param opts.tailscale - 是否使用Tailscale网络地址
- * @param opts.public - 是否使用公共IP地址
- * @param opts.token - 访问令牌
- * @param opts.name - DNS记录名称
- * @param opts.service_url - 服务URL
- */
-async function run_ddns_update_once(
-    opts: {
-        interval: number;
-        ipv4: boolean;
-        ipv6: boolean;
-        tailscale: boolean;
-        public: boolean;
-        token: string;
-        name: string;
-        service_url: string;
-    },
-) {
-    // 获取所有Tailscale网络IP地址和自定义公共IP地址
-    const dnscontents: DDNScontentContent[] =
-        await getAllTailscaleNetworkIPsAndSelfPublicIPs({
-            name: opts.name,
-            public: opts.public,
-            tailscale: opts.tailscale,
-            ipv4: opts.ipv4,
-            ipv6: opts.ipv6,
-        });
-    console.log(dnscontents);
-    // 创建DNS记录远程JSON RPC客户端
-    const client = new DNSRecordsRemoteJSONRPC(opts.service_url, opts.token);
-    // 获取所有DNS记录
-    console.log(await client.ListDNSRecords({ name: opts.name }));
 }

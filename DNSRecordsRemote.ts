@@ -21,7 +21,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
             >
             | undefined,
     ): Promise<DDNScontentType[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface, "ListDNSRecords">(
             this.#service_url,
             this.#token,
             "ListDNSRecords",
@@ -31,7 +31,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface>(
             this.#service_url,
             this.#token,
             "CreateDNSRecord",
@@ -41,7 +41,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
     async OverwriteDNSRecord(
         array: DDNScontentType[],
     ): Promise<DDNScontentType[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface>(
             this.#service_url,
             this.#token,
             "OverwriteDNSRecord",
@@ -51,7 +51,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
     async UpdateDNSRecord(
         array: (DDNScontentID & Partial<DDNScontentContent>)[],
     ): Promise<DDNScontentType[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface>(
             this.#service_url,
             this.#token,
             "UpdateDNSRecord",
@@ -59,7 +59,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
         );
     }
     async DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface>(
             this.#service_url,
             this.#token,
             "DeleteDNSRecord",
@@ -67,7 +67,7 @@ export class DNSRecordsRemoteJSONRPC implements DNSRecordsInterface {
         );
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
-        return await JSONRPCCLIENT(
+        return await JSONRPCCLIENT<DNSRecordsInterface>(
             this.#service_url,
             this.#token,
             "DNSRecordDetails",

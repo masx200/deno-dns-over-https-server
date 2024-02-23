@@ -1,14 +1,14 @@
 import { JsonRpcRequest } from "./JsonRpcRequest.ts";
 
 export async function JSONRPCCLIENT<
-    T extends Record<any, (...args: any) => any>,
-    M extends keyof T,
+    T extends Record<any, (...args: any) => any> = any,
+    M extends keyof T = any,
 >(
     service_url: string,
     token: string,
     method: M,
     params: Parameters<T[M]>,
-): Promise<ReturnType<T[M]>[]> {
+): Promise<ReturnType<T[M]>> {
     const request: JsonRpcRequest<T[M]> = {
         jsonrpc: "2.0",
         method: method as string,

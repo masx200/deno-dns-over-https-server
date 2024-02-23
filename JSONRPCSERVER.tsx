@@ -9,7 +9,7 @@ import { JsonRpcRequest } from "./JsonRpcRequest.ts";
  * @returns JSON RPC响应数据
  */
 export async function JSONRPCSERVER<
-    T extends Record<any, (...args: any) => any>,
+    T extends Record<any, (...args: any) => any> = any,
 >(
     data: JsonRpcRequest<any> | JsonRpcRequest<any>[],
     services: T,
