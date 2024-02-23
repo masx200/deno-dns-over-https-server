@@ -104,6 +104,14 @@ if (import.meta.main) {
     );
     console.log(dnsRecordsMongodb);
     console.log(await dnsRecordsMongodb.get_collection());
-
-    console.log(await dnsRecordsMongodb.ListDNSRecords());
+    console.log(
+        await dnsRecordsMongodb.ListDNSRecords(),
+    );
+    console.log(
+        await dnsRecordsMongodb.ListDNSRecords({
+            name: "ssssss",
+            type: "A",
+            content: "11111111",
+        }),
+    );
 }
