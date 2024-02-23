@@ -48,7 +48,7 @@ export async function JSONRPCSERVER<
                 services,
                 params ? params : [],
             );
-            return { result, id, "jsonrpc": "2.0" };
+            return { id, "jsonrpc": "2.0", result };
         } catch (error) {
             console.error(error);
             return {
