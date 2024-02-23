@@ -1,12 +1,17 @@
 // deno-lint-ignore-file no-explicit-any
+
+import { JsonRpcRequest } from "./JsonRpcRequest.ts";
+
 /**
  * JSON RPC服务器
  * @param data - JSON RPC请求数据
  * @param services - JSON RPC服务对象
  * @returns JSON RPC响应数据
  */
-export async function JSONRPCSERVER<T extends object>(
-    data: any,
+export async function JSONRPCSERVER<
+    T extends Record<any, (...args: any) => any>,
+>(
+    data: JsonRpcRequest<any> | JsonRpcRequest<any>[],
     services: T,
 ): Promise<any> {
     if (Array.isArray(data)) {
@@ -68,6 +73,6 @@ export async function JSONRPCSERVER<T extends object>(
  * @param data - 待判断的数据
  * @returns 如果数据为对象则返回true，否则返回false
  */
-function isObject(data: any) {
+export function isObject(data: any) {
     return "[object Object]" === Object.prototype.toString.call(data);
 }
