@@ -9,6 +9,14 @@ import {
     MongoClient,
     ObjectId,
 } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
+import config from "./config.ts";
+export type DDNScontentTypeMongodb = Omit<
+    DDNScontentType & {
+        _id: ObjectId;
+    },
+    "id"
+>;
+
 export class DNSRecordsMongodb implements DNSRecordsInterface {
     #mongodb_url: string;
     #mongodb_db: string;
@@ -16,7 +24,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     #client?: MongoClient;
     #db?: Database;
     #collection?: Collection<
-        DDNScontentType & { _id: ObjectId }
+        DDNScontentTypeMongodb
     >;
     constructor(
         mongodb_url: string,
@@ -39,7 +47,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         this.#client = client;
         await client.connect(this.#mongodb_url);
         const db = client.database(this.#mongodb_db);
-        const collection = db.collection<DDNScontentType & { _id: ObjectId }>(
+        const collection = db.collection<DDNScontentTypeMongodb>(
             this.#mongodb_collection,
         );
         this.#db = db;
@@ -76,7 +84,11 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.get_collection();
+        const dnsRecords = await collection.insertMany(record);
+        return await this.DNSRecordDetails(
+            dnsRecords.insertedIds.map((a) => ({ id: a.toString() })),
+        );
     }
     async OverwriteDNSRecord(
         array: DDNScontentType[],
@@ -92,7 +104,11 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         throw new Error("Method not implemented.");
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.get_collection();
+        const dnsRecords = await collection.find({
+            _id: { $in: array.map((a) => new ObjectId(a.id)) },
+        }).toArray();
+        return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
     }
 }
 if (import.meta.main) {
@@ -113,5 +129,15 @@ if (import.meta.main) {
             type: "A",
             content: "11111111",
         }),
+    );
+
+    console.log(await dnsRecordsMongodb.CreateDNSRecord([...config]));
+    console.log(
+        await dnsRecordsMongodb.DNSRecordDetails([{
+            id: "65d829c6924c00407664ea68",
+        }, { id: "65d82b60924c00407664ea69" }]),
+    );
+    console.log(
+        await dnsRecordsMongodb.ListDNSRecords(),
     );
 }
