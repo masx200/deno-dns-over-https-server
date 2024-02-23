@@ -42,3 +42,5 @@ dns 记录默认保存在内存中,配置文件为`config.ts`,
 openapi 接口在文件`deno-dns-over-https-server.openapi.json`中
 
 jsonrpc 接口在文件`DNSRecordsInterface.ts`中
+
+可以使用客户端 deno-ddns-over-https-client 进行访问 ddns 服务
