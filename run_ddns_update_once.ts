@@ -1,4 +1,5 @@
-import { DDNScontentContent } from "./DDNScontentContent.ts";
+import { isIPv6 } from "https://deno.land/std@0.143.0/node/internal/net.ts";
+// import { DDNScontentContent } from "./DDNScontentContent.ts";
 import { getAllTailscaleNetworkIPsAndSelfPublicIPs } from "./get_all_tailscale_ips.ts";
 import { DNSRecordsRemoteJSONRPC } from "./DNSRecordsRemote.ts";
 
@@ -26,18 +27,69 @@ export async function run_ddns_update_once(
         service_url: string;
     },
 ) {
-    // 获取所有Tailscale网络IP地址和自定义公共IP地址
-    const dnscontents: DDNScontentContent[] =
-        await getAllTailscaleNetworkIPsAndSelfPublicIPs({
+    const client = new DNSRecordsRemoteJSONRPC(opts.service_url, opts.token);
+    const [localdata, remotedata] = await Promise.all([
+        getAllTailscaleNetworkIPsAndSelfPublicIPs({
             name: opts.name,
             public: opts.public,
             tailscale: opts.tailscale,
             ipv4: opts.ipv4,
             ipv6: opts.ipv6,
-        });
-    console.log(dnscontents);
+        }),
+        client.ListDNSRecords({ name: opts.name }),
+    ]);
+    // 获取所有Tailscale网络IP地址和自定义公共IP地址
+    // const dnscontents: DDNScontentContent[] =
+    //     await getAllTailscaleNetworkIPsAndSelfPublicIPs({
+    //         name: opts.name,
+    //         public: opts.public,
+    //         tailscale: opts.tailscale,
+    //         ipv4: opts.ipv4,
+    //         ipv6: opts.ipv6,
+    //     });
+    console.log(localdata);
+    // console.log(localdata.map((a) => a.content));
     // 创建DNS记录远程JSON RPC客户端
-    const client = new DNSRecordsRemoteJSONRPC(opts.service_url, opts.token);
+
+    // const remotedata = await client.ListDNSRecords({ name: opts.name });
     // 获取所有DNS记录
-    console.log(await client.ListDNSRecords({ name: opts.name }));
+    console.log(remotedata);
+    // console.log(remotedata.map((a) => a.content));
+
+    // const localdata = dnscontents;
+    const map = new Map(remotedata.map((a) => [a.content, a.id]));
+    const localset = new Set(localdata.map((a) => a.content));
+    const remoteset = new Set(remotedata.map((a) => a.content));
+    if (
+        localset.size === remoteset.size &&
+        [...localset].every((value) => remoteset.has(value))
+    ) {
+        console.log("两个地址记录完全相等");
+    } else {
+        console.log("两个地址记录不相等");
+        const differencelocalsetToremoteset = new Set(
+            [...localset].filter((x) => !remoteset.has(x)),
+        );
+        const differenceremotesetTolocalset = new Set(
+            [...remoteset].filter((x) => !localset.has(x)),
+        );
+        const recordstobedeletedids = [...differenceremotesetTolocalset].map(
+            (b) => map.get(b) ?? "",
+        );
+        // console.log();
+        console.log(
+            await Promise.all([
+                client.CreateDNSRecord(
+                    [...differencelocalsetToremoteset].map((a) => ({
+                        content: a,
+                        name: opts.name,
+                        type: isIPv6(a) ? "AAAA" : "A",
+                    })),
+                ),
+                client.DeleteDNSRecord(
+                    recordstobedeletedids.map((a) => ({ id: a })),
+                ),
+            ]),
+        );
+    }
 }
