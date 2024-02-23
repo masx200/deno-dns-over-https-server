@@ -21,12 +21,11 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 例如设置 `doh`为
 `["https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
 
-### 说明
+### dns 记录说明
 
-配置文件为`config.ts`,可以使用内存中保存的 dns 记录,
+dns 记录默认保存在内存中,配置文件为`config.ts`,
 
-数据保存方式可以访问数据库,配置环境变量
-`mongodb_url`,`mongodb_db`,`mongodb_collection`
+数据保存方式可以 mongodb 数据库,配置环境变量`mongodb_url`,`mongodb_db`,`mongodb_collection`
 
 设置域名与地址的映射关系即可,支持多个地址
 
