@@ -3,6 +3,7 @@
 // }
 // console.log(await getAllTailscaleNetworkIPsAndSelfPublicIPs());
 
+import parse from "npm:@masx200/mini-cli-args-parser@1.1.0";
 import { DDNScontentContent } from "./DDNScontentContent.ts";
 import { getAllTailscaleNetworkIPsAndSelfPublicIPs } from "./get_all_tailscale_ips.ts";
 
@@ -31,7 +32,6 @@ export function run_ddns_interval_client(
     }, opts.interval);
     return () => clearInterval(timer);
 }
-import { parse } from "npm:@masx200/mini-cli-args-parser@1.1.0";
 
 if (import.meta.main) {
     const opts = parse(Deno.args);
