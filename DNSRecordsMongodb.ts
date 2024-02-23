@@ -35,7 +35,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         this.#mongodb_db = mongodb_db;
         this.#mongodb_collection = mongodb_collection;
     }
-    async get_collection() {
+    async #get_collection() {
         if (this.#collection && this.#db && this.#client) {
             return {
                 collection: this.#collection,
@@ -77,14 +77,14 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
             >
             | undefined,
     ): Promise<DDNScontentType[]> {
-        const { collection } = await this.get_collection();
+        const { collection } = await this.#get_collection();
         const dnsRecords = await collection.find({ ...options }).toArray();
         return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
     }
     async CreateDNSRecord(
         record: DDNScontentContent[],
     ): Promise<DDNScontentType[]> {
-        const { collection } = await this.get_collection();
+        const { collection } = await this.#get_collection();
         const dnsRecords = await collection.insertMany(record);
         return await this.DNSRecordDetails(
             dnsRecords.insertedIds.map((a) => ({ id: a.toString() })),
@@ -93,22 +93,48 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
     async OverwriteDNSRecord(
         array: DDNScontentType[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.#get_collection();
+        await Promise.all(
+            array.map(async (a) => {
+                return await collection.updateOne(
+                    { _id: new ObjectId(a.id) },
+                    { $set: { ...a } },
+                    { upsert: true },
+                );
+            }),
+        );
+
+        return await this.DNSRecordDetails(
+            array.map((a) => ({ id: a.id.toString() })),
+        );
     }
     async UpdateDNSRecord(
         array: (DDNScontentID & Partial<DDNScontentContent>)[],
     ): Promise<DDNScontentType[]> {
-        throw new Error("Method not implemented.");
+        const { collection } = await this.#get_collection();
+        await Promise.all(
+            array.map(async (a) => {
+                return await collection.updateOne(
+                    { _id: new ObjectId(a.id) },
+                    { $set: { ...a } },
+                    { upsert: false },
+                );
+            }),
+        );
+
+        return await this.DNSRecordDetails(
+            array.map((a) => ({ id: a.id.toString() })),
+        );
     }
     async DeleteDNSRecord(array: DDNScontentID[]): Promise<DDNScontentID[]> {
-        const { collection } = await this.get_collection();
+        const { collection } = await this.#get_collection();
         await collection.deleteMany({
             _id: { $in: array.map((a) => new ObjectId(a.id)) },
         });
         return array;
     }
     async DNSRecordDetails(array: DDNScontentID[]): Promise<DDNScontentType[]> {
-        const { collection } = await this.get_collection();
+        const { collection } = await this.#get_collection();
         const dnsRecords = await collection.find({
             _id: { $in: array.map((a) => new ObjectId(a.id)) },
         }).toArray();
@@ -122,58 +148,84 @@ if (import.meta.main) {
         mongodb_db,
         mongodb_collection,
     );
-    console.log(dnsRecordsMongodb);
-    console.log("get_collection", await dnsRecordsMongodb.get_collection());
     console.log(
-        "ListDNSRecords",
-        await dnsRecordsMongodb.ListDNSRecords(),
+        "DNSRecordDetails",
+        await dnsRecordsMongodb.DNSRecordDetails([{
+            id: "65d8366f924c00407664ea6a",
+        }, {
+            id: "65d8366f924c00407664ea6a",
+        }]),
     );
     console.log(
-        "ListDNSRecords",
-        await dnsRecordsMongodb.ListDNSRecords({
-            name: "ssssss",
-            type: "A",
-            content: "11111111",
-        }),
-    );
+        "OverwriteDNSRecord",
+        await dnsRecordsMongodb.OverwriteDNSRecord([{
+            "id": "65d8366f924c00407664ea6a",
 
-    console.log(
-        "CreateDNSRecord",
-        await dnsRecordsMongodb.CreateDNSRecord([...config]),
-    );
-    console.log(
-        "DNSRecordDetails",
-        await dnsRecordsMongodb.DNSRecordDetails([{
-            id: "65d829c6924c00407664ea68",
-        }, { id: "65d82b60924c00407664ea69" }]),
-    );
-    console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
-    console.log(
-        "DNSRecordDetails",
-        await dnsRecordsMongodb.DNSRecordDetails([{
-            id: "65d82e558071304c2f37c4ce",
-        }, {
-            id: "65d82e558071304c2f37c4cd",
+            "name": "ssssss2222222222",
+            "type": "22222222A",
+            "content": "111111122222221",
         }]),
     );
     console.log(
-        "DeleteDNSRecord",
-        await dnsRecordsMongodb.DeleteDNSRecord([
-            {
-                id: "65d82e558071304c2f37c4ce",
-            },
-            {
-                id: "65d82e558071304c2f37c4cd",
-            },
-        ]),
-    );
-    console.log(
         "DNSRecordDetails",
         await dnsRecordsMongodb.DNSRecordDetails([{
-            id: "65d82e558071304c2f37c4ce",
+            id: "65d8366f924c00407664ea6a",
         }, {
-            id: "65d82e558071304c2f37c4cd",
+            id: "65d8366f924c00407664ea6a",
         }]),
     );
-    console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
+    // console.log(dnsRecordsMongodb);
+    // console.log("get_collection", await dnsRecordsMongodb.get_collection());
+    // console.log(
+    //     "ListDNSRecords",
+    //     await dnsRecordsMongodb.ListDNSRecords(),
+    // );
+    // console.log(
+    //     "ListDNSRecords",
+    //     await dnsRecordsMongodb.ListDNSRecords({
+    //         name: "ssssss",
+    //         type: "A",
+    //         content: "11111111",
+    //     }),
+    // );
+
+    // console.log(
+    //     "CreateDNSRecord",
+    //     await dnsRecordsMongodb.CreateDNSRecord([...config]),
+    // );
+    // console.log(
+    //     "DNSRecordDetails",
+    //     await dnsRecordsMongodb.DNSRecordDetails([{
+    //         id: "65d829c6924c00407664ea68",
+    //     }, { id: "65d82b60924c00407664ea69" }]),
+    // );
+    // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
+    // console.log(
+    //     "DNSRecordDetails",
+    //     await dnsRecordsMongodb.DNSRecordDetails([{
+    //         id: "65d82e558071304c2f37c4ce",
+    //     }, {
+    //         id: "65d82e558071304c2f37c4cd",
+    //     }]),
+    // );
+    // console.log(
+    //     "DeleteDNSRecord",
+    //     await dnsRecordsMongodb.DeleteDNSRecord([
+    //         {
+    //             id: "65d82e558071304c2f37c4ce",
+    //         },
+    //         {
+    //             id: "65d82e558071304c2f37c4cd",
+    //         },
+    //     ]),
+    // );
+    // console.log(
+    //     "DNSRecordDetails",
+    //     await dnsRecordsMongodb.DNSRecordDetails([{
+    //         id: "65d82e558071304c2f37c4ce",
+    //     }, {
+    //         id: "65d82e558071304c2f37c4cd",
+    //     }]),
+    // );
+    // console.log("ListDNSRecords", await dnsRecordsMongodb.ListDNSRecords());
 }
