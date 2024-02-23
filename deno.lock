@@ -6,6 +6,7 @@
       "npm:@types/node@20.11.19": "npm:@types/node@20.11.19",
       "npm:@types/node@20.2.5": "npm:@types/node@20.2.5",
       "npm:buffer@6.0.3": "npm:buffer@6.0.3",
+      "npm:lodash-es@4.17.21": "npm:lodash-es@4.17.21",
       "npm:native-dns-packet@0.1.1": "npm:native-dns-packet@0.1.1"
     },
     "npm": {
@@ -58,6 +59,10 @@
       },
       "ipaddr.js@2.1.0": {
         "integrity": "sha512-LlbxQ7xKzfBusov6UMi4MFpEg0m+mAm9xyNGEduwXMEDuf4WfzB/RZwMVYEd7IKGvh4IUkEXYxtAVu9T3OelJQ==",
+        "dependencies": {}
+      },
+      "lodash-es@4.17.21": {
+        "integrity": "sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==",
         "dependencies": {}
       },
       "native-dns-packet@0.1.1": {

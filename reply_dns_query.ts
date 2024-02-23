@@ -9,6 +9,8 @@ import { DNSConfig } from "./DNSConfig.ts";
 import { DNSRecordType } from "./DNSRecordType.ts";
 import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
+//@deno-types="https://unpkg.com/@types/lodash-es@4.17.12/index.d.ts"
+import { uniq } from "npm:lodash-es@4.17.21";
 // import { DNSPACKET } from "./DNSPACKET.ts";
 /**
  * 回复DNS查询
@@ -37,8 +39,9 @@ export async function reply_dns_query(
             packet.question[0]?.type,
         ))
     ) {
-        const ipv4 = address.filter((a) => isIPv4(a));
-        const ipv6 = address.filter((a) => isIPv6(a));
+        /* 可能有重复的地址 */
+        const ipv4 = uniq(address.filter((a) => isIPv4(a)));
+        const ipv6 = uniq(address.filter((a) => isIPv6(a)));
         const records: DNSConfig = {
             [name]: {
                 ttl: get_ttl_min(),
