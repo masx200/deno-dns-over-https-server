@@ -19,8 +19,10 @@
                         "in": "header",
                         "description": "",
                         "required": true,
-                        "example": "Bearer 6BB0084C-BFFE-F431-8006-7AF85201818D",
-                        "schema": { "type": "string" }
+                        "example": "Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     {
                         "name": "Content-Type",
@@ -28,7 +30,9 @@
                         "description": "",
                         "required": true,
                         "example": "application/json",
-                        "schema": { "type": "string" }
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -39,9 +43,15 @@
                                 "items": {
                                     "type": "object",
                                     "properties": {
-                                        "jsonrpc": { "type": "string" },
-                                        "method": { "type": "string" },
-                                        "id": { "type": "integer" },
+                                        "jsonrpc": {
+                                            "type": "string"
+                                        },
+                                        "method": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "integer"
+                                        },
                                         "params": {
                                             "type": "array",
                                             "items": {
@@ -53,7 +63,9 @@
                                                     "content": {
                                                         "type": "string"
                                                     },
-                                                    "type": { "type": "string" }
+                                                    "type": {
+                                                        "type": "string"
+                                                    }
                                                 },
                                                 "x-apifox-orders": [
                                                     "name",
@@ -139,15 +151,23 @@
                                                     "x-apifox-ignore-properties": []
                                                 }
                                             },
-                                            "id": { "type": "integer" },
-                                            "jsonrpc": { "type": "string" }
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "jsonrpc": {
+                                                "type": "string"
+                                            }
                                         },
                                         "x-apifox-orders": [
                                             "result",
                                             "id",
                                             "jsonrpc"
                                         ],
-                                        "required": ["id", "jsonrpc", "result"],
+                                        "required": [
+                                            "id",
+                                            "jsonrpc",
+                                            "result"
+                                        ],
                                         "x-apifox-ignore-properties": []
                                     }
                                 },
@@ -233,23 +253,38 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "jsonrpc": { "type": "string" },
+                                        "jsonrpc": {
+                                            "type": "string"
+                                        },
                                         "error": {
                                             "type": "object",
                                             "properties": {
-                                                "code": { "type": "integer" },
-                                                "message": { "type": "string" }
+                                                "code": {
+                                                    "type": "integer"
+                                                },
+                                                "message": {
+                                                    "type": "string"
+                                                }
                                             },
-                                            "required": ["code", "message"],
+                                            "required": [
+                                                "code",
+                                                "message"
+                                            ],
                                             "x-apifox-orders": [
                                                 "code",
                                                 "message"
                                             ],
                                             "x-apifox-ignore-properties": []
                                         },
-                                        "id": { "type": "integer" }
+                                        "id": {
+                                            "type": "integer"
+                                        }
                                     },
-                                    "required": ["jsonrpc", "error", "id"],
+                                    "required": [
+                                        "jsonrpc",
+                                        "error",
+                                        "id"
+                                    ],
                                     "x-apifox-orders": [
                                         "jsonrpc",
                                         "error",
@@ -280,7 +315,9 @@
                         "description": "",
                         "required": true,
                         "example": "q80BAAABAAAAAAAAA3d3dwdleGFtcGxlA2NvbQAAAQAB",
-                        "schema": { "type": "string" }
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -321,7 +358,9 @@
                         "description": "",
                         "required": true,
                         "example": "application/dns-message",
-                        "schema": { "type": "string" }
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -352,6 +391,14 @@
             }
         }
     },
-    "components": { "schemas": {}, "securitySchemes": {} },
-    "servers": [{ "url": "http://localhost:8000", "description": "开发环境" }]
+    "components": {
+        "schemas": {},
+        "securitySchemes": {}
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "开发环境"
+        }
+    ]
 }
