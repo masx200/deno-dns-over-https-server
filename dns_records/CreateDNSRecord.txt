@@ -1,0 +1,52 @@
+请求 URL:https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/dns_records
+请求方法:POST
+状态代码:200 OK
+远程地址:[2600:1901:0:6d85::]:443
+引用者策略:strict-origin-when-cross-origin
+
+:authority:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+:method:POST
+:path:/dns_records
+:scheme:https
+Accept:*/*
+Accept-Encoding:gzip, deflate, br
+Accept-Language:zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+Authorization:Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Content-Length:176
+Content-Type:application/json
+Dnt:1
+Origin:https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Referer:https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/dns_records
+Sec-Ch-Ua:"Not A(Brand";v="99", "Microsoft Edge";v="121", "Chromium";v="121"
+Sec-Ch-Ua-Mobile:?0
+Sec-Ch-Ua-Platform:"Windows"
+Sec-Fetch-Dest:empty
+Sec-Fetch-Mode:cors
+Sec-Fetch-Site:same-origin
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0
+
+[{"jsonrpc":"2.0","method":"CreateDNSRecord","id":322,"params":[[{"name":"desktop-5rh4po7.manx-sun.ts.net","content":"240e:38b:8986:d800:c1b8:42d0:f7f8:71ff","type":"AAAA"}]]}]
+
+Content-Encoding:gzip
+Content-Type:application/json
+Date:Fri, 23 Feb 2024 12:15:06 GMT
+Server:deno/gcp-asia-southeast1
+Strict-Transport-Security:max-age=31536000
+Vary:Accept-Encoding
+Via:http/2 edgeproxy-h
+
+[
+    {
+        "id": 322,
+        "jsonrpc": "2.0",
+        "result": [
+            {
+                "_id": "65d88c4ab36fe08ca196a9eb",
+                "name": "desktop-5rh4po7.manx-sun.ts.net",
+                "content": "240e:38b:8986:d800:c1b8:42d0:f7f8:71ff",
+                "type": "AAAA",
+                "id": "65d88c4ab36fe08ca196a9eb"
+            }
+        ]
+    }
+]
