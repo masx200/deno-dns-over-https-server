@@ -46,3 +46,5 @@ openapi 接口在文件`deno-dns-over-https-server.openapi.json`中
 jsonrpc 接口在文件`DNSRecordsInterface.ts`中
 
 可以使用客户端 deno-ddns-over-https-client 进行访问 ddns 服务
+
+`jsonrpc`的调用的例子在文件夹`dns_records`中
