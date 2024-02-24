@@ -23,6 +23,8 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 
 ### dns 记录说明
 
+为了 dns 负载均衡,可以对 dns 记录随机排序
+
 dns 记录默认保存在内存中,配置文件为`config.ts`,
 
 数据保存方式可以使用`mongodb`数据库,

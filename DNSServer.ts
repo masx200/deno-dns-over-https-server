@@ -9,6 +9,7 @@ import { AResourceRecord } from "./AResourceRecord.ts";
 import { ResourceRecord } from "./ResourceRecord.ts";
 import { DNSRecordType } from "./DNSRecordType.ts";
 import { DNSConfig } from "./DNSConfig.ts";
+import { ArrayShuffle } from "./ArrayShuffle.ts";
 
 /** A simple DNS Server. */
 
@@ -105,6 +106,9 @@ export class DNSServer {
             const rrType = this.getResourceRecordType(packet.Question, record);
             if (rrType) packet.Answers.push(...rrType);
         }
+
+        /* 为了dns负载均衡,可以对dns记录随机排序 */
+        packet.Answers = ArrayShuffle(packet.Answers);
         // console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
         packet.Header.TotalAnswers = packet.Answers.length;
         return new Uint8Array(packet.Bytes);
