@@ -42,13 +42,24 @@ export async function reply_dns_query(
         /* 可能有重复的地址 */
         const ipv4 = uniq(address.filter((a) => isIPv4(a)));
         const ipv6 = uniq(address.filter((a) => isIPv6(a)));
-
+        /**
+         * 根据传入的DNS数据包检查是否包含所需的IPv4或IPv6地址记录。
+         * 如果数据包中第一个问题请求的是A记录（IPv4）且没有对应的IPv4地址时，返回失败结果。
+         * 如果数据包中第一个问题请求的是AAAA记录（IPv6）且没有对应的IPv6地址时，返回失败结果。
+         *
+         * @param packet DNS数据包，包含问题和应答部分。
+         * @returns 返回一个对象，包含操作成功与否的标志和结果。
+         *          如果请求的记录类型与提供的地址类型匹配，则返回成功结果和相应的地址列表；
+         *          如果没有找到匹配的地址记录，则返回失败结果和null。
+         */
         if (ipv4.length === 0 && packet.question[0]?.type === DNSRecordType.A) {
+            // 当请求A记录（IPv4）但没有提供IPv4地址时，返回失败结果
             return { success: false, result: null };
         }
         if (
             ipv6.length === 0 && packet.question[0]?.type === DNSRecordType.AAAA
         ) {
+            // 当请求AAAA记录（IPv6）但没有提供IPv6地址时，返回失败结果
             return { success: false, result: null };
         }
         const records: DNSConfig = {
