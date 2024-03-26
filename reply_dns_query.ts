@@ -42,6 +42,15 @@ export async function reply_dns_query(
         /* 可能有重复的地址 */
         const ipv4 = uniq(address.filter((a) => isIPv4(a)));
         const ipv6 = uniq(address.filter((a) => isIPv6(a)));
+
+        if (ipv4.length === 0 && packet.question[0]?.type === DNSRecordType.A) {
+            return { success: false, result: null };
+        }
+        if (
+            ipv6.length === 0 && packet.question[0]?.type === DNSRecordType.AAAA
+        ) {
+            return { success: false, result: null };
+        }
         const records: DNSConfig = {
             [name]: {
                 ttl: get_ttl_min(),
