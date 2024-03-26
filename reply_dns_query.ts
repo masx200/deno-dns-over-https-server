@@ -22,6 +22,20 @@ export async function reply_dns_query(
     packet: DNSPACKETInterface,
     data: Uint8Array,
 ): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
+    /**
+     * 检查传入的DNS数据包是否包含A或AAAA记录类型。
+     * 该函数不接受任何参数，直接根据传入的packet对象进行分析。
+     *
+     * @param packet - 一个包含DNS查询信息的对象。
+     *                期望该对象有一个question数组，数组的第一个元素是一个包含type属性的对象。
+     * @returns 返回一个对象，包含成功标识和结果。
+     *          如果packet的question数组的第一个元素的type不是A或AAAA，则返回{ success: false, result: null }。
+     */
+    if (
+        !([DNSRecordType.A, DNSRecordType.AAAA].includes(
+            packet.question[0]?.type,
+        ))
+    ) return { success: false, result: null };
     const name = packet.question[0]?.name;
     const address: string[] | undefined = (await Promise.all([
         dNSRecordsInstance.ListDNSRecords({
