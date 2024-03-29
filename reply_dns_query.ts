@@ -22,6 +22,10 @@ export async function reply_dns_query(
     packet: DNSPACKETInterface,
     data: Uint8Array,
 ): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
+
+    try{
+        
+    
     /**
      * 检查传入的DNS数据包是否包含A或AAAA记录类型。
      * 该函数不接受任何参数，直接根据传入的packet对象进行分析。
@@ -95,6 +99,10 @@ export async function reply_dns_query(
             result: new DNSServer(records).HandleRequest(data),
         };
     } else {
+        return { success: false, result: null };
+    }
+        }catch(e){
+console.error(e)
         return { success: false, result: null };
     }
 }
