@@ -37,6 +37,7 @@ export function set_cache_control_max_age_greater_than(
                         stringify({
                             "max-age": min_age,
                             "s-maxage": min_age,
+                            "public": true,
                         }),
                     );
                 }
@@ -47,6 +48,7 @@ export function set_cache_control_max_age_greater_than(
                 stringify({
                     "max-age": min_age,
                     "s-maxage": min_age,
+                    "public": true,
                 }),
             );
         }
