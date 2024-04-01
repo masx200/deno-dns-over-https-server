@@ -3,6 +3,7 @@ import { fetchDebug } from "./fetchDebug.tsx";
 import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
+import { base64Encode } from "./base64Encode.tsx";
 
 /**
  * 转发DNS over HTTPS请求的代理函数
@@ -17,21 +18,32 @@ export async function proxyDnsOverHttps(
     connInfo: ConnInfo,
 ): Promise<Response> {
     try {
-        const url = req.url;
+        const originurl = req.url;
         const remoteUrl = new URL(doh);
-        remoteUrl.search = new URL(url).search;
+        remoteUrl.search = new URL(originurl).search;
         // console.log(new Request(remoteUrl, req));
         // 必须把请求的主体转换为Uint8Array才行
         const body = req.body && (await bodyToBuffer(req.body));
         const headers = new Headers(req.headers);
         headers.append(
             "Forwarded",
-            `proto=${new URL(url).protocol.slice(0, -1)};host=${
-                new URL(url).hostname
+            `proto=${new URL(originurl).protocol.slice(0, -1)};host=${
+                new URL(originurl).hostname
             };by=${(connInfo.localAddr as Deno.NetAddr).hostname};for=${
                 (connInfo.remoteAddr as Deno.NetAddr).hostname
             }`,
         );
+
+        if (req.method === "POST" && body && body?.length) {
+            const geturl = new URL(remoteUrl);
+
+            geturl.searchParams.set("dns", base64Encode(body));
+            return await fetchDebug(geturl, {
+                // body,
+                headers: headers,
+                method: "GET",
+            });
+        }
         return await fetchDebug(remoteUrl, {
             body,
             headers: headers,
