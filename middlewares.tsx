@@ -22,9 +22,9 @@ export const middlewares: Middleware[] = [
 
     loop_detection_prevent_forwarded,
     parse_dns_message,
+    dns_query_set_cache_control_max_age_greater_than,
     resolve_dns_query,
     cache_dns_query_post_and_get_method,
-    dns_query_set_cache_control_max_age_greater_than,
 
     dns_records_authentication,
     dns_records_middleware,
