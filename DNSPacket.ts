@@ -66,6 +66,7 @@ export class DNSPacket {
             Buffer.Buffer.from(this.rawData),
         );
         packet.header.qr = this.Header.QR;
+        packet.header.ra = this.Header.getra();
         for (const answer of this.Answers) {
             packet.answer.push({
                 name: answer.Name,

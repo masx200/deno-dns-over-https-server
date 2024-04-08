@@ -111,6 +111,7 @@ export class DNSServer {
         packet.Answers = ArrayShuffle(packet.Answers);
         // console.log(`Serving answer: ${JSONSTRINGIFYNULL4(packet.Answers)}`);
         packet.Header.TotalAnswers = packet.Answers.length;
+        packet.Header.setra(true);
         return new Uint8Array(packet.Bytes);
     }
 
