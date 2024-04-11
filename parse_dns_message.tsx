@@ -51,7 +51,11 @@ export async function parse_dns_message(
                     ),
                 );
             } catch (error) {
-                return new Response("invalid dns message", { status: 400 });
+                console.error(error);
+                return new Response(
+                    "bad request\ninvalid dns message\n" + String(error),
+                    { status: 400 },
+                );
             }
         } else if (
             ctx.request.method === "POST" &&
@@ -76,7 +80,11 @@ export async function parse_dns_message(
                     // console.log();
                     // console.log(JSONSTRINGIFYNULL4({ packet });
                 } catch (error) {
-                    return new Response("invalid dns message", { status: 400 });
+                    console.error(error);
+                    return new Response(
+                        "bad request\ninvalid dns message\n" + String(error),
+                        { status: 400 },
+                    );
                 }
             }
         }
