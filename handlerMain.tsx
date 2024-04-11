@@ -32,7 +32,7 @@ export async function handlerMain(
 
     /* 如果不是dns请求,则直接返回写一个中间件 */
     if (
-        !(get_path_name(context.request.url) != dns_query_path_name() &&
+        !(get_path_name(context.request.url) == dns_query_path_name() &&
                 (req.method === "POST" && req.headers.get("content-type") ===
                         "application/dns-message") ||
             (req.method === "GET" &&
