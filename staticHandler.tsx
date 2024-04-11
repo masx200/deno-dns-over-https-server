@@ -9,7 +9,7 @@ export async function staticHandler(
     next: NextFunction,
 ): Promise<RetHandler> {
     const req = new Request(context.request.url, context.request);
-    const target = "./static/";
+    const target = "./static/dist";
     return await serveDir(req, {
         fsRoot: target,
         // showDirListing: serverArgs["dir-listing"],
