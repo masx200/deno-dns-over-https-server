@@ -12,7 +12,14 @@ import Buffer from "npm:buffer@6.0.3";
 import { base64Decode } from "./base64Decode.tsx";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
-
+/**
+ * 解析DNS消息。
+ * 此函数用于处理DNS查询和响应的消息，支持通过GET和POST方法传递DNS消息。
+ *
+ * @param ctx 上下文对象，包含请求和响应的信息。
+ * @param next 中间件的下一个函数，用于继续处理请求链。
+ * @returns 返回一个Promise，解析为处理结果的RetHandler对象。
+ */
 export async function parse_dns_message(
     ctx: Context,
     next: NextFunction,
