@@ -1,34 +1,37 @@
 name: Deploy
 on:
-  push:
-    branches: main
-  pull_request:
-    branches: main
+    push:
+        branches: main
+    pull_request:
+        branches: main
 
 jobs:
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write # Needed for auth with Deno Deploy
-      contents: read # Needed to clone the repository
+        permissions:
+            id-token: write # Needed for auth with Deno Deploy
+            contents: read # Needed to clone the repository
 
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+        steps:
+            - name: Clone repository
+              uses: actions/checkout@v3
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20.12.2
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
+            - name: Install Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
 
-      - name: Build step
-        run: "deno task build"
+            - name: Build step
+              run: "deno task build"
 
-      - name: Upload to Deno Deploy
-        uses: denoland/deployctl@v1
-        with:
-          project: "deno-dns-over-https-server"
-          entrypoint: "./main.ts"
-          root: ""
+            - name: Upload to Deno Deploy
+              uses: denoland/deployctl@v1
+              with:
+                  project: "deno-dns-over-https-server"
+                  entrypoint: "./main.ts"
+                  root: ""
