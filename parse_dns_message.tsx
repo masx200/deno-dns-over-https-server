@@ -28,18 +28,24 @@ export async function parse_dns_message(
             ctx.request.method === "GET" &&
             new URL(url).searchParams.get("dns")?.length
         ) {
-            const data = base64Decode(
-                new URL(url).searchParams.get("dns") ?? "",
-            );
-            const packet = Packet.parse(Buffer.Buffer.from(data as Uint8Array));
+            try {
+                const data = base64Decode(
+                    new URL(url).searchParams.get("dns") ?? "",
+                );
+                const packet = Packet.parse(
+                    Buffer.Buffer.from(data as Uint8Array),
+                );
 
-            console.log(
-                JSONSTRINGIFYNULL4(
-                    { request: { packet, data: data } },
-                    null,
-                    4,
-                ),
-            );
+                console.log(
+                    JSONSTRINGIFYNULL4(
+                        { request: { packet, data: data } },
+                        null,
+                        4,
+                    ),
+                );
+            } catch (error) {
+                return new Response("invalid dns message", { status: 400 });
+            }
         } else if (
             ctx.request.method === "POST" &&
             req.headers.get("content-type") === "application/dns-message"
@@ -48,19 +54,23 @@ export async function parse_dns_message(
             req.body = body;
 
             if (body?.length) {
-                const packet = Packet.parse(
-                    Buffer.Buffer.from(body as Uint8Array),
-                );
+                try {
+                    const packet = Packet.parse(
+                        Buffer.Buffer.from(body as Uint8Array),
+                    );
 
-                console.log(
-                    JSONSTRINGIFYNULL4(
-                        { request: { packet, data: body } },
-                        null,
-                        4,
-                    ),
-                );
-                // console.log();
-                // console.log(JSONSTRINGIFYNULL4({ packet });
+                    console.log(
+                        JSONSTRINGIFYNULL4(
+                            { request: { packet, data: body } },
+                            null,
+                            4,
+                        ),
+                    );
+                    // console.log();
+                    // console.log(JSONSTRINGIFYNULL4({ packet });
+                } catch (error) {
+                    return new Response("invalid dns message", { status: 400 });
+                }
             }
         }
         const res = await next();
