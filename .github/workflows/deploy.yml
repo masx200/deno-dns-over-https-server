@@ -33,5 +33,5 @@ jobs:
               uses: denoland/deployctl@v1
               with:
                   project: "deno-dns-over-https-server"
-                  entrypoint: "./main.ts"
+                  entrypoint: "./main.tsx"
                   root: ""
