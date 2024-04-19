@@ -4,9 +4,9 @@ deno-dns-over-https-server
 
 ### 使用方法
 
-将需要反向代理的 dns over https 网址设定为环境变量 doh,
+将需要反向代理的 dns over https 网址设定为环境变量 `doh`,
 
-将需要反向代理的最小缓存时间设定为环境变量 ttl,
+将需要反向代理的最小缓存时间设定为环境变量 `ttl`,
 
 启动
 
@@ -20,6 +20,10 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 
 例如设置 `doh`为
 `["https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
+
+添加了负载均衡的故障转移功能和校验dns数据包格式的功能
+
+设置doh服务的路径通过环境变量`DOH_PATHNAME`为 "/dns-query"
 
 ### dns 记录说明
 
