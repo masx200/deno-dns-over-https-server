@@ -6,7 +6,7 @@ deno-dns-over-https-server
 
 将需要反向代理的 dns over https 网址设定为环境变量 `doh`,
 
-将需要反向代理的最小缓存时间设定为环境变量 `ttl`,
+将需要反向代理的最小缓存时间(秒)设定为环境变量 `ttl`,
 
 启动
 
