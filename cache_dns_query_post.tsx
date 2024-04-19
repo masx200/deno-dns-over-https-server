@@ -10,7 +10,7 @@ import { get_path_name } from "./get_path_name.tsx";
 import { dns_query_path_name } from "./dns_query_path_name.tsx";
 import { CachePromiseInterfaceFactory } from "./CachePromiseInterfaceFactory.tsx";
 import { get_ttl_min } from "./get_ttl_min.ts";
-import { parse } from "cache-control-parser";
+import { parse } from "@masx200/cache-control-parser";
 
 /**
  * 缓存DNS查询的POST和GET方法

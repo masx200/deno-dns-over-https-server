@@ -6,6 +6,6 @@
         "node:http2": "npm:@types/node@20.2.5/http2.d.ts",
         "@hattip/response": "https://esm.sh/@hattip/response@0.0.34/",
         "http": "node:http",
-        "cache-control-parser": "https://esm.sh/cache-control-parser@2.0.5/"
+        "@masx200/cache-control-parser": "https://esm.sh/@masx200/cache-control-parser@2.2.0/"
     }
 }

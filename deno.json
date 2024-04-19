@@ -3,7 +3,7 @@
         "build": "cd static && pnpm install && npm run build && cd ../ ",
         "fmt": "deno fmt --config deno.json",
         "lint": "deno lint --config deno.json",
-        "dev": "deno run --allow-net=:8000 ./main.tsx",
+        "dev": "deno run -A --allow-net=:8000 ./main.tsx",
         "check": "deno check ./main.tsx"
     },
     "importMap": "import_map.json",

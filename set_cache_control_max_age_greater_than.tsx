@@ -1,4 +1,4 @@
-import { parse, stringify } from "cache-control-parser";
+import { parse, stringify } from "@masx200/cache-control-parser";
 import {
     Context, // 日志记录中间件
     Middleware,
