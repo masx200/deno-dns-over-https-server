@@ -3,5 +3,5 @@
  * @returns {string} DNS查询路径名称
  */
 export function dns_query_path_name(): string {
-    return "/dns-query";
+    return Deno.env.get("DOH_PATHNAME") ?? "/dns-query";
 }
