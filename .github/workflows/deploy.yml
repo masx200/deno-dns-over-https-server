@@ -28,10 +28,10 @@ jobs:
 
             - name: Build step
               run: |
-		        cd static 
-		        npx -y cnpm install  
-		        npm run build 
-		        cd ../ 
+                  cd static 
+                  npx -y cnpm install 
+                  npm run build 
+                  cd ../
 
             - name: Upload to Deno Deploy
               uses: denoland/deployctl@v1
