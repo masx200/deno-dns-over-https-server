@@ -2,20 +2,20 @@
   "version": "4",
   "specifiers": {
     "npm:@types/node@20.2.5": "20.2.5",
-    "npm:@types/node@^20.11.19": "20.16.15",
+    "npm:@types/node@^22.7.8": "22.7.9",
     "npm:buffer@6.0.3": "6.0.3",
     "npm:lodash-es@4.17.21": "4.17.21",
     "npm:native-dns-packet@0.1.1": "0.1.1"
   },
   "npm": {
-    "@types/node@20.16.15": {
-      "integrity": "sha512-DV58qQz9dBMqVVn+qnKwGa51QzCD4YM/tQM16qLKxdf5tqz5W4QwtrMzjSTbabN1cFTSuyxVYBy+QWHjWW8X/g==",
+    "@types/node@20.2.5": {
+      "integrity": "sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ=="
+    },
+    "@types/node@22.7.9": {
+      "integrity": "sha512-jrTfRC7FM6nChvU7X2KqcrgquofrWLFDeYC1hKfwNWomVvrn7JIksqf344WN2X/y8xrgqBd2dJATZV4GbatBfg==",
       "dependencies": [
         "undici-types"
       ]
-    },
-    "@types/node@20.2.5": {
-      "integrity": "sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ=="
     },
     "assert-plus@1.0.0": {
       "integrity": "sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw=="
@@ -319,7 +319,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@types/node@^20.11.19"
+        "npm:@types/node@^22.7.8"
       ]
     }
   }
