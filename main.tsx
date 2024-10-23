@@ -5,6 +5,15 @@ import { handler } from "./handler.tsx";
 
 // 如果当前脚本是作为主脚本运行
 if (import.meta.main) {
+    console.log({
+        mongodb_url: Deno.env.get("mongodb_url"),
+        mongodb_db: Deno.env.get("mongodb_db"),
+        mongodb_collection: Deno.env.get("mongodb_collection"),
+        DOH_PATHNAME: Deno.env.get("DOH_PATHNAME"),
+        ttl: Deno.env.get("ttl"),
+        doh: Deno.env.get("doh"),
+        token: Deno.env.get("token"),
+    });
     // 解析命令行参数，并获取端口号和主机名
     let { port, hostname } = parse(Deno.args);
 
