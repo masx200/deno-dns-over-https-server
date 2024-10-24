@@ -8,7 +8,7 @@ import {
     Database,
     MongoClient,
     ObjectId,
-} from "https://deno.land/x/mongo@v0.32.0/mod.ts";
+} from "https://deno.land/x/mongo@v0.33.0/mod.ts";
 // import config from "./config.ts";
 export type DDNScontentTypeMongodb = Omit<
     DDNScontentType & {
