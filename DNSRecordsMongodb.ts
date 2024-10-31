@@ -4,7 +4,7 @@ import { DDNScontentID } from "./DDNScontentID.ts";
 import { DDNScontentContent } from "./DDNScontentContent.ts";
 import mongoose, {
     // Bson,
-    Collection,
+    // Collection,
     Model,
     // Database,
     // MongoClient,
@@ -99,8 +99,11 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
             | undefined,
     ): Promise<DDNScontentType[]> {
         const { collection } = await this.#get_collection();
-        const dnsRecords = await collection.find({ ...options }).toArray();
-        return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
+        const dnsRecords = await collection.find({ ...options }); //.toArray();
+        return dnsRecords.map((a) => a.toObject()).map((a) => ({
+            ...a,
+            id: a._id.toString(),
+        }));
     }
     async CreateDNSRecord(
         record: DDNScontentContent[],
@@ -125,7 +128,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         await Promise.all(
             array.map(async (a) => {
                 return await collection.updateOne(
-                    { _id: new ObjectId(a.id) },
+                    { _id: new Schema.ObjectId(a.id) },
                     { $set: { ...a } },
                     { upsert: true },
                 );
@@ -146,7 +149,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         await Promise.all(
             array.map(async (a) => {
                 return await collection.updateOne(
-                    { _id: new ObjectId(a.id) },
+                    { _id: new Schema.ObjectId(a.id) },
                     { $set: { ...a } },
                     { upsert: false },
                 );
@@ -163,7 +166,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         }
         const { collection } = await this.#get_collection();
         await collection.deleteMany({
-            _id: { $in: array.map((a) => new ObjectId(a.id)) },
+            _id: { $in: array.map((a) => new Schema.ObjectId(a.id)) },
         });
         return array;
     }
@@ -173,9 +176,12 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         }
         const { collection } = await this.#get_collection();
         const dnsRecords = await collection.find({
-            _id: { $in: array.map((a) => new ObjectId(a.id)) },
-        }).toArray();
-        return dnsRecords.map((a) => ({ ...a, id: a._id.toString() }));
+            _id: { $in: array.map((a) => new Schema.ObjectId(a.id)) },
+        }); //.toArray();
+        return dnsRecords.map((a) => a.toObject()).map((a) => ({
+            ...a,
+            id: a._id.toString(),
+        }));
     }
 }
 // }
