@@ -59,6 +59,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
 
             dbName: this.#mongodb_db,
         });
+        // console.log(client);
         // const client = new MongoClient();
         // this.#client = client;
         // await client.connect(this.#mongodb_url);
@@ -69,10 +70,12 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         const collection = client.model<DDNScontentTypeMongodb>(
             this.#mongodb_collection,
             BlogPostschema,
+            this.#mongodb_collection,
         );
         // this.#db = db;
 
         this.#collection = collection;
+        // console.log(collection);
         // await collection.createIndexes({
         //     indexes: [
         //         { key: { name: 1 }, name: "name_1" },
