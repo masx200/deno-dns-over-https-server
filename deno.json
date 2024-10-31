@@ -1,4 +1,5 @@
 {
+    "nodeModulesDir": "auto",
     "tasks": {
         "build": "cd static && npx -y cnpm install && npm run build && cd ../ ",
         "fmt": "deno fmt --config deno.json",

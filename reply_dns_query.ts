@@ -1,14 +1,14 @@
 // import config from "./config.ts";
-import { get_ttl_min } from "./get_ttl_min.ts";
 import {
     isIPv4,
     isIPv6,
 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
-import { DNSServer } from "./DNSServer.ts";
 import { DNSConfig } from "./DNSConfig.ts";
-import { DNSRecordType } from "./DNSRecordType.ts";
 import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import { dNSRecordsInstance } from "./dNSRecordsInstance.ts";
+import { DNSRecordType } from "./DNSRecordType.ts";
+import { DNSServer } from "./DNSServer.ts";
+import { get_ttl_min } from "./get_ttl_min.ts";
 //@deno-types="https://unpkg.com/@types/lodash-es@4.17.12/index.d.ts"
 import { uniq } from "npm:lodash-es@4.17.21";
 // import { DNSPACKET } from "./DNSPACKET.ts";
