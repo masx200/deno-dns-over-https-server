@@ -2,13 +2,15 @@ import { DNSRecordsInterface } from "./DNSRecordsInterface.ts";
 import { DDNScontentType } from "./DDNScontentType.ts";
 import { DDNScontentID } from "./DDNScontentID.ts";
 import { DDNScontentContent } from "./DDNScontentContent.ts";
-import {
+import mongoose, {
     // Bson,
     Collection,
-    Database,
-    MongoClient,
+    Model,
+    // Database,
+    // MongoClient,
     ObjectId,
-} from "https://deno.land/x/mongo@v0.33.0/mod.ts";
+    Schema,
+} from "mongoose";
 // import config from "./config.ts";
 export type DDNScontentTypeMongodb = Omit<
     DDNScontentType & {
@@ -17,13 +19,19 @@ export type DDNScontentTypeMongodb = Omit<
     "id"
 >;
 
+const BlogPostschema = new Schema({
+    _id: Schema.ObjectId,
+    name: String,
+    content: String,
+    type: String,
+});
 export class DNSRecordsMongodb implements DNSRecordsInterface {
     #mongodb_url: string;
     #mongodb_db: string;
     #mongodb_collection: string;
-    #client?: MongoClient;
-    #db?: Database;
-    #collection?: Collection<
+    // #client?: MongoClient;
+    // #db?: Database;
+    #collection?: Model<
         DDNScontentTypeMongodb
     >;
     constructor(
@@ -35,34 +43,47 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         this.#mongodb_db = mongodb_db;
         this.#mongodb_collection = mongodb_collection;
     }
-    async #get_collection() {
-        if (this.#collection && this.#db && this.#client) {
+    async #get_collection(): Promise<
+        { collection: mongoose.Model<DDNScontentTypeMongodb> }
+    > {
+        if (this.#collection /* && this.#db && this.#client */) {
             return {
                 collection: this.#collection,
-                db: this.#db,
-                client: this.#client,
+                // db: this.#db,
+                // client: this.#client,
             };
         }
-        const client = new MongoClient();
-        this.#client = client;
-        await client.connect(this.#mongodb_url);
-        const db = client.database(this.#mongodb_db);
-        const collection = db.collection<DDNScontentTypeMongodb>(
-            this.#mongodb_collection,
-        );
-        this.#db = db;
-        this.#collection = collection;
-        await collection.createIndexes({
-            indexes: [
-                { key: { name: 1 }, name: "name_1" },
-                { key: { type: 1 }, name: "type_1" },
-                { key: { content: 1 }, name: "content_1" },
-            ],
+        const client = await mongoose.connect(this.#mongodb_url, {
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
+
+            dbName: this.#mongodb_db,
         });
+        // const client = new MongoClient();
+        // this.#client = client;
+        // await client.connect(this.#mongodb_url);
+        // const db = client.database(this.#mongodb_db);
+        BlogPostschema.index({ name: 1 });
+        BlogPostschema.index({ type: 1 });
+        BlogPostschema.index({ content: 1 });
+        const collection = client.model<DDNScontentTypeMongodb>(
+            this.#mongodb_collection,
+            BlogPostschema,
+        );
+        // this.#db = db;
+
+        this.#collection = collection;
+        // await collection.createIndexes({
+        //     indexes: [
+        //         { key: { name: 1 }, name: "name_1" },
+        //         { key: { type: 1 }, name: "type_1" },
+        //         { key: { content: 1 }, name: "content_1" },
+        //     ],
+        // });
         return {
             collection: this.#collection,
-            db: this.#db,
-            client: this.#client,
+            // db: this.#db,
+            // client: this.#client,
         };
     }
 
