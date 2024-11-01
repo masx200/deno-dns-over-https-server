@@ -201,9 +201,12 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         if (!array.length) {
             return [];
         }
+        /* Error: Internal error
+CastError: Cast to ObjectId failed for value "SchemaObjectId  */
         const { collection } = await this.#get_collection();
+        const objectIds = array.map((a) => new mongoose.Types.ObjectId(a.id));
         await collection.deleteMany({
-            _id: { $in: array.map((a) => new Schema.ObjectId(a.id)) },
+            _id: { $in: objectIds },
         });
         return array;
     }

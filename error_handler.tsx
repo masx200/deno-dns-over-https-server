@@ -1,7 +1,7 @@
 // 导入Middleware类型
 import {
     Context,
-    Middleware,
+    // Middleware,
     NextFunction,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 // 导入STATUS_TEXT
