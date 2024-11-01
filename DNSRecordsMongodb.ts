@@ -165,7 +165,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         await Promise.all(
             array.map(async (a) => {
                 return await collection.updateOne(
-                    { _id: new Schema.ObjectId(a.id) },
+                    { _id: new mongoose.Types.ObjectId(a.id) },
                     { $set: { ...a } },
                     { upsert: true },
                 );
@@ -186,7 +186,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         await Promise.all(
             array.map(async (a) => {
                 return await collection.updateOne(
-                    { _id: new Schema.ObjectId(a.id) },
+                    { _id: new mongoose.Types.ObjectId(a.id) },
                     { $set: { ...a } },
                     { upsert: false },
                 );
@@ -216,7 +216,7 @@ CastError: Cast to ObjectId failed for value "SchemaObjectId  */
         }
         const { collection } = await this.#get_collection();
         const dnsRecords = await collection.find({
-            _id: { $in: array.map((a) => new Schema.ObjectId(a.id)) },
+            _id: { $in: array.map((a) => new mongoose.Types.ObjectId(a.id)) },
         }); //.toArray();
         return dnsRecords.map((a) => a.toObject()).map((a) => ({
             ...a,
