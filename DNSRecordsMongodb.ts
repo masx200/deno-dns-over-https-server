@@ -50,7 +50,7 @@ export type DDNScontentTypeMongodb = Omit<
     "id"
 >;
 
-const BlogPostschema = new Schema({
+const DDNSBlogPostschema = new Schema({
     _id: Schema.Types.ObjectId,
     name: String,
     content: String,
@@ -95,12 +95,12 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         // this.#client = client;
         // await client.connect(this.#mongodb_url);
         // const db = client.database(this.#mongodb_db);
-        BlogPostschema.index({ name: 1 });
-        BlogPostschema.index({ type: 1 });
-        BlogPostschema.index({ content: 1 });
+        DDNSBlogPostschema.index({ name: 1 });
+        DDNSBlogPostschema.index({ type: 1 });
+        DDNSBlogPostschema.index({ content: 1 });
         const collection = client.model<DDNScontentTypeMongodb>(
             this.#mongodb_collection,
-            BlogPostschema,
+            DDNSBlogPostschema,
             this.#mongodb_collection,
         );
         // this.#db = db;
@@ -147,11 +147,22 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
             return [];
         }
         const { collection } = await this.#get_collection();
-        const insertedDocs = await collection.insertMany(record);
-        return insertedDocs.map((doc) => doc.toObject()).map((a) => ({
+        const Localdata = record.map((a) =>
+            new collection({ ...a, _id: new mongoose.Types.ObjectId() })
+        );
+        console.log("CreateDNSRecord", Localdata);
+        const insertedDocs = await collection.insertMany(
+            Localdata,
+        );
+        // console.log("CreateDNSRecord", insertedDocs);
+        const datainserted = insertedDocs.map((doc) => doc.toObject()).map((
+            a,
+        ) => ({
             ...a,
             id: a._id.toString(),
         }));
+        console.log("CreateDNSRecord", datainserted);
+        return datainserted;
         // const insertedIds = insertedDocs.map((doc) => doc.toObject()._id);
         // return await this.DNSRecordDetails(
         //     insertedIds
