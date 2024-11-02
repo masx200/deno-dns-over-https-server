@@ -51,7 +51,7 @@ export type DDNScontentTypeMongodb = Omit<
 >;
 
 const BlogPostschema = new Schema({
-    _id: Schema.ObjectId,
+    _id: Schema.Types.ObjectId,
     name: String,
     content: String,
     type: String,
@@ -148,7 +148,7 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         }
         const { collection } = await this.#get_collection();
         const insertedDocs = await collection.insertMany(record);
-        const insertedIds = insertedDocs.map((doc) => doc._id);
+        const insertedIds = insertedDocs.map((doc) => doc.toObject()._id);
         return await this.DNSRecordDetails(
             insertedIds
                 .map((a) => ({ id: a.toString() })),
