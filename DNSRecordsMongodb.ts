@@ -148,12 +148,16 @@ export class DNSRecordsMongodb implements DNSRecordsInterface {
         }
         const { collection } = await this.#get_collection();
         const insertedDocs = await collection.insertMany(record);
-        const insertedIds = insertedDocs.map((doc) => doc.toObject()._id);
-        return await this.DNSRecordDetails(
-            insertedIds
-                .map((a) => ({ id: a.toString() })),
-            // .insertedIds.map((a) => ({ id: a.toString() })),
-        );
+        return insertedDocs.map((doc) => doc.toObject()).map((a) => ({
+            ...a,
+            id: a._id.toString(),
+        }));
+        // const insertedIds = insertedDocs.map((doc) => doc.toObject()._id);
+        // return await this.DNSRecordDetails(
+        //     insertedIds
+        //         .map((a) => ({ id: a.toString() })),
+        //     // .insertedIds.map((a) => ({ id: a.toString() })),
+        // );
     }
     async OverwriteDNSRecord(
         array: DDNScontentType[],
