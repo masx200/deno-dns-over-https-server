@@ -70,7 +70,7 @@ export async function getHostEntry(domain: string): Promise<string[]> {
 ### 总结
 
 这段代码的主要功能是使用 `hostile` 包从本地的 hosts 文件中查找指定域名的 IP 地址，并返回一个包含这些 IP 地址的数组。通过使用 `Promise` 和 `async/await` 语法，代码变得更加简洁和易读。同时，通过 `try/catch` 块，代码能够优雅地处理可能出现的错误。 */
-import hostile from "npm:hostile@1.4.0";
+import hostile from "npm:@masx200/hostile@1.4.1";
 
 export async function getHostEntry(domain: string): Promise<string[]> {
     try {
