@@ -4,7 +4,20 @@ import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
 import { base64Encode } from "./base64Encode.tsx";
-
+import { CacheStoragefetchDebug } from "./CacheStoragefetchDebug.tsx";
+import { get_ttl_min } from "./get_ttl_min.ts";
+const cachedFetch = async function (
+    input: RequestInfo | URL, // 请求的URL或URL对象
+    init?: RequestInit | undefined, // 请求的初始化配置，可选参数
+): Promise<Response> {
+    return await CacheStoragefetchDebug(
+        "deno-dns-over-https-server",
+        fetchDebug,
+        get_ttl_min(),
+        input,
+        init,
+    );
+};
 /**
  * 转发DNS over HTTPS请求的代理函数
  * @param {string} doh - DNS over HTTPS服务器的URL
@@ -38,13 +51,13 @@ export async function proxyDnsOverHttps(
             const geturl = new URL(remoteUrl);
 
             geturl.searchParams.set("dns", base64Encode(body));
-            return await fetchDebug(geturl, {
+            return await cachedFetch(geturl, {
                 // body,
                 headers: headers,
                 method: "GET",
             });
         }
-        return await fetchDebug(remoteUrl, {
+        return await cachedFetch(remoteUrl, {
             body,
             headers: headers,
             method: req.method,

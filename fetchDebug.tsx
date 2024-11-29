@@ -1,6 +1,12 @@
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
 
 // 异步函数，发送一个用于调试的请求
+/**
+ * 异步函数fetchDebug用于发送请求并打印请求和响应的详细信息
+ * @param input 请求的URL或URL对象
+ * @param init 可选参数，请求的初始化配置，如方法、头信息等
+ * @returns 返回一个Promise，解析为响应对象Response
+ */
 export async function fetchDebug(
     input: RequestInfo | URL, // 请求的URL或URL对象
     init?: RequestInit | undefined, // 请求的初始化配置，可选参数
