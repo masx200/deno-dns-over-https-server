@@ -35,10 +35,12 @@ export async function Strict_Transport_Security(
         });
         return res;
     } else {
-        const res = new Response(res2.body, {
-            status: ctx.response.status,
-            headers,
-        });
-        return res;
+        res2.headers = headers;
+        return res2;
+        // const res = new Response(res2.body, {
+        //     status: ctx.response.status,
+        //     headers,
+        // });
+        // return res;
     }
 }

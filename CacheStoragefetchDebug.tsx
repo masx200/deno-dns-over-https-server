@@ -26,7 +26,7 @@ export async function CacheStoragefetchDebug(
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
         console.log(`CacheStorage ${cachename} cache hit:` + request.url);
-        return cachedResponse;
+        return cachedResponse.clone();
     }
     console.log(`CacheStorage ${cachename} cache miss:` + request.url);
     const response = await fetchDebug(input, init);
