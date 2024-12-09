@@ -66,7 +66,9 @@ export async function CacheStoragefetchDebug(
             );
         }
         if (response.body) {
-            const [body1, body2] = response.body.tee();
+            const body = await bodyToBuffer(response.body);
+            const body1 = body;
+            const body2 = body;
             const res2 = new Response(body2, {
                 headers: hea2,
                 status: response.status,
