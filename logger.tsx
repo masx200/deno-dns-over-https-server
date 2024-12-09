@@ -38,6 +38,8 @@ export async function logger(
 
     await next();
     const { response } = context;
+
+    console.log(response.body);
     console.log(
         JSONSTRINGIFYNULL4(
             {
