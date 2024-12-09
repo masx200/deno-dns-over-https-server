@@ -22,7 +22,7 @@ export async function Strict_Transport_Security(
     headers.append("Strict-Transport-Security", "max-age=31536000");
     // console.log(ctx.response.body);
     const res2 = ctx.response;
-
+    console.log("Strict_Transport_Security", res2.body);
     // console.log(res2.body);
     // 必须把响应的主体转换为Uint8Array才行
     if (!res2.body?.locked) {
