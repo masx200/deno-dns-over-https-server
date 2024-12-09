@@ -1,5 +1,6 @@
 // 异步函数，发送一个用于调试的请求
 import { parse, stringify } from "@masx200/cache-control-parser";
+import { bodyToBuffer } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/body/bodyToBuffer.ts";
 /**
  * 从缓存中获取数据，如果缓存不存在则请求数据并缓存起来
  * 此函数主要用于调试目的，通过调整缓存控制头来确保请求的响应符合预期的缓存策略
@@ -27,7 +28,8 @@ export async function CacheStoragefetchDebug(
     if (cachedResponse) {
         console.log(`CacheStorage ${cachename} cache hit:` + request.url);
         // console.log(cachedResponse.body);
-        return cachedResponse.clone();
+        const body = await bodyToBuffer(cachedResponse.body);
+        return new Response(body, cachedResponse);
     }
     console.log(`CacheStorage ${cachename} cache miss:` + request.url);
     const response = await fetchDebug(input, init);
