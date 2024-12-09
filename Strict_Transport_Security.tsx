@@ -21,12 +21,22 @@ export async function Strict_Transport_Security(
 
     headers.append("Strict-Transport-Security", "max-age=31536000");
     // console.log(ctx.response.body);
+    const res2 = ctx.response;
     // 必须把响应的主体转换为Uint8Array才行
-    const body = ctx.response.body && (await bodyToBuffer(ctx.response.body));
-    // headers.delete("content-length");
-    const res = new Response(body, {
-        status: ctx.response.status,
-        headers,
-    });
-    return res;
+    if (!res2.body?.locked) {
+        const body = ctx.response.body &&
+            (await bodyToBuffer(ctx.response.body));
+        // headers.delete("content-length");
+        const res = new Response(body, {
+            status: ctx.response.status,
+            headers,
+        });
+        return res;
+    } else {
+        const res = new Response(res2.body, {
+            status: ctx.response.status,
+            headers,
+        });
+        return res;
+    }
 }
