@@ -82,6 +82,8 @@ export async function cache_dns_query_post_and_get_method(
                 ),
             );
             const response_body = await bodyToBuffer(ctx.response.body);
+            /* TypeError: ReadableStream is locked or disturbed */
+            ctx.response.body = response_body;
             // console.log(ttl)
             /* TypeError: KV reads quota is exhausted. */
             await cache.set(cache_key, {
