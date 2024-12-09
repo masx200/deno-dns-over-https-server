@@ -93,7 +93,7 @@ export async function parse_dns_message(
         if (
             res.status === 200 &&
             res.headers.get("content-type") === "application/dns-message" &&
-            !res.body?.islocked
+            !res.body?.locked
         ) {
             console.log(res.body);
             const resbody = res.body && (await bodyToBuffer(res.body));
