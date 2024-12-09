@@ -62,13 +62,21 @@ export async function CacheStoragefetchDebug(
                 }),
             );
         }
-        const res2 = new Response(response.body, {
-            headers: hea2,
-            status: response.status,
-            statusText: response.statusText,
-        });
-        await cache.put(request, res2.clone());
-        return res2;
+        if (response.body) {
+            const [body1, body2] = response.body.tee();
+            const res2 = new Response(body2, {
+                headers: hea2,
+                status: response.status,
+                statusText: response.statusText,
+            });
+            await cache.put(request, res2.clone());
+            const res3 = new Response(body1, {
+                headers: hea2,
+                status: response.status,
+                statusText: response.statusText,
+            });
+            return res3;
+        }
     }
     return response;
 }
