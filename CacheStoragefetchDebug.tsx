@@ -26,7 +26,7 @@ export async function CacheStoragefetchDebug(
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
         console.log(`CacheStorage ${cachename} cache hit:` + request.url);
-        console.log(cachedResponse.body);
+        // console.log(cachedResponse.body);
         return cachedResponse.clone();
     }
     console.log(`CacheStorage ${cachename} cache miss:` + request.url);
@@ -76,7 +76,7 @@ export async function CacheStoragefetchDebug(
                 status: response.status,
                 statusText: response.statusText,
             });
-            console.log(res3.body);
+            // console.log(res3.body);
             return res3;
         }
     }

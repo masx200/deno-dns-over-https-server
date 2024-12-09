@@ -51,17 +51,21 @@ export async function proxyDnsOverHttps(
             const geturl = new URL(remoteUrl);
 
             geturl.searchParams.set("dns", base64Encode(body));
-            return await cachedFetch(geturl, {
+            const newLocal_1 = await cachedFetch(geturl, {
                 // body,
                 headers: headers,
                 method: "GET",
             });
+            console.log(newLocal_1.body);
+            return newLocal_1;
         }
-        return await cachedFetch(remoteUrl, {
+        const newLocal = await cachedFetch(remoteUrl, {
             body,
             headers: headers,
             method: req.method,
         });
+        console.log(newLocal.body);
+        return newLocal;
     } catch (error) {
         console.error(error);
         // 返回500错误响应
