@@ -36,6 +36,8 @@ export async function loop_detection_prevent_forwarded(
         console.error("loop detected", message);
         return new Response("loop detected\n" + message, { status: 508 });
     } else {
-        return await next();
+        const res = await next();
+        console.log("loop_detection_prevent_forwarded", res.body);
+        return res;
     }
 }
