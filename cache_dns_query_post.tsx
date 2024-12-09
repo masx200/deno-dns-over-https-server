@@ -64,7 +64,8 @@ export async function cache_dns_query_post_and_get_method(
             return; // 跳过缓存处理，继续执行下一个中间件函数
         }
     }
-    await next();
+    const res = await next();
+    console.log("cache_dns_query_post_and_get_method", res.body);
     if (should_cache_request_response(ctx)) {
         if (!cache_key) return;
         try {
