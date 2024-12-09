@@ -10,12 +10,9 @@ export async function staticHandler(
 ): Promise<RetHandler> {
     const req = new Request(context.request.url, context.request);
     const target = "./static/dist";
-    return await serveDir(req, {
+    const response = await serveDir(req, {
         fsRoot: target,
-        // showDirListing: serverArgs["dir-listing"],
-        // showDotfiles: serverArgs.dotfiles,
-        //  enableCors: serverArgs.cors,
-        //  quiet: !serverArgs.verbose,
-        //   headers,
     });
+    if (response.status === 404) return next();
+    return response;
 }
