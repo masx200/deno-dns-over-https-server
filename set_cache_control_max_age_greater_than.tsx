@@ -23,7 +23,7 @@ export function set_cache_control_max_age_greater_than(
         }
 
         const res = await next();
-        console.log("parse_dns_message", res.body);
+        console.log("set_cache_control_max_age_greater_than", res.body);
         if (!condition(context)) return;
         const cacheControlHeader = context.response.headers.get(
             "cache-control",
