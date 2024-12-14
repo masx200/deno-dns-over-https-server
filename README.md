@@ -69,6 +69,6 @@ var kv = await Deno.openKv(
 );
 for await (const entry of kv.list({ prefix: [] })) {
     console.log(entry);
-    await kv.delete(entry.key);
+    kv.delete(entry.key).then(console.log, console.error);
 }
 ```
