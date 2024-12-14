@@ -14,7 +14,7 @@ export async function CachePromiseInterfaceFactory(): Promise<
     const cache = await Deno.openKv();
 
     return {
-        async get(key) {
+        async get(key): Promise<ResponseCacheType | undefined> {
             // 获取缓存中的数据
             // 获取缓存条目并判断是否有效
             const result = await cache.get<ResponseCacheType>([key]);
@@ -38,9 +38,11 @@ export async function CachePromiseInterfaceFactory(): Promise<
                 return undefined;
             }
         },
-        async set(key, value) {
+        async set(key, value): Promise<Deno.KvCommitResult> {
             // 设置缓存数据
-            const result = await cache.set([key], value);
+            const result = await cache.set([key], value, {
+                expireIn: value.ttl,
+            });
             // console.log(await Array.fromAsync(cache.list({ prefix: [] }))));
 
             if (!result.ok) {
@@ -51,6 +53,7 @@ export async function CachePromiseInterfaceFactory(): Promise<
             console.log(
                 JSONSTRINGIFYNULL4({ function: "set", key, value }, null, 4),
             );
+            return result;
         },
     } satisfies CachePromiseInterface;
 }

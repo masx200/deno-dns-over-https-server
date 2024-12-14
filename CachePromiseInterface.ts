@@ -31,7 +31,7 @@ export type CachePromiseInterface = {
      * @param value 缓存项的键值对象，包含value和expires属性
      * @returns 返回一个Promise，表示设置成功
      */
-    set(key: string, value: ResponseCacheType): Promise<void>;
+    set(key: string, value: ResponseCacheType): Promise<Deno.KvCommitResult>;
 
     /**
      * 获取缓存项
