@@ -54,3 +54,21 @@ jsonrpc 接口在文件`DNSRecordsInterface.ts`中
 可以使用客户端 deno-ddns-over-https-client 进行访问 ddns 服务
 
 `jsonrpc`的调用的例子在文件夹`dns_records`中
+
+## 删除deno deploy 上的kv 数据
+
+设置环境变量`DENO_KV_ACCESS_TOKEN=****************************************`
+
+```sh
+npx -y cross-env  "DENO_KV_ACCESS_TOKEN=****************************************" deno repl -A --unstable-kv
+```
+
+```ts
+var kv = await Deno.openKv(
+    "https://api.deno.com/databases/************************************/connect",
+);
+for await (const entry of kv.list({ prefix: [] })) {
+    console.log(entry);
+    await kv.delete(entry.key);
+}
+```
