@@ -60,13 +60,15 @@ export async function reply_dns_query(
         const address: string[] | undefined = localdomainhosts.length
             ? localdomainhosts
             : (await Promise.all([
+                // dNSRecordsInstance.ListDNSRecords({
+                //     name: name,
+                //     type: "A",
+                // }),
                 dNSRecordsInstance.ListDNSRecords({
                     name: name,
-                    type: "A",
-                }),
-                dNSRecordsInstance.ListDNSRecords({
-                    name: name,
-                    type: "AAAA",
+                    type: DNSRecordType.AAAA == packet.question[0]?.type
+                        ? "AAAA"
+                        : "A",
                 }),
             ])).flat().map((a) => a.content);
         if (
