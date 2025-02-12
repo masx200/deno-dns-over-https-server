@@ -81,14 +81,12 @@ export async function getHostEntry(domain: string): Promise<string[]> {
                 if (err) {
                     reject(err);
                 } else {
-                    const addresses: string[] = [];
-
-                    for (const [IP, Host] of result) {
-                        if (Host == domain && IP.length) {
-                            addresses.push(IP);
-                        }
-                    }
-                    resolve(addresses);
+                    const addresses: { name: string; content: string }[] =
+                        parseHostEntries(result);
+                    resolve(
+                        addresses.filter((x) => x.name === domain)
+                            .map((x) => x.content),
+                    );
                 }
             });
         });
@@ -110,13 +108,8 @@ if (import.meta.main) {
                 if (err) {
                     reject(err);
                 } else {
-                    const addresses: { name: string; content: string }[] = [];
-
-                    for (const [IP, Host] of result) {
-                        if (Host.length && IP.length) {
-                            addresses.push({ content: IP, name: Host });
-                        }
-                    }
+                    const addresses: { name: string; content: string }[] =
+                        parseHostEntries(result);
                     resolve(addresses);
                 }
             });
@@ -136,4 +129,30 @@ if (import.meta.main) {
             4,
         ),
     );
+}
+
+function parseHostEntries(result: string[][]) {
+    const addresses: { name: string; content: string }[] = [];
+
+    for (const [IP, Host] of result) {
+        if (Host.length && IP.length) {
+            if (Host.trim().length > 0 && IP.trim().length == 0) {
+                const array = Host.trim()
+                    .split(/ +/g)
+                    .map((x) => x.trim());
+                const content = array[0];
+                const name = array[1];
+                addresses.push({
+                    content: content,
+                    name: name,
+                });
+            } else {
+                addresses.push({
+                    content: IP.trim(),
+                    name: Host.trim(),
+                });
+            }
+        }
+    }
+    return addresses;
 }
