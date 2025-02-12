@@ -21,9 +21,9 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 例如设置 `doh`为
 `["https://doh.pub/dns-query","https://security.cloudflare-dns.com/dns-query"]`
 
-添加了负载均衡的故障转移功能和校验dns数据包格式的功能
+添加了负载均衡的故障转移功能和校验 dns 数据包格式的功能
 
-设置doh服务的路径通过环境变量`DOH_PATHNAME`为 "/dns-query"
+设置 doh 服务的路径通过环境变量`DOH_PATHNAME`为 "/dns-query"
 
 ### dns 记录说明
 
@@ -55,7 +55,7 @@ jsonrpc 接口在文件`DNSRecordsInterface.ts`中
 
 `jsonrpc`的调用的例子在文件夹`dns_records`中
 
-## 删除deno deploy 上的kv 数据
+## 删除 deno deploy 上的 kv 数据
 
 设置环境变量`DENO_KV_ACCESS_TOKEN=****************************************`
 
@@ -71,4 +71,10 @@ for await (const entry of kv.list({ prefix: [] })) {
     console.log(entry);
     kv.delete(entry.key).then(console.log, console.error);
 }
+```
+
+## 导出所有本地的系统 hosts 文件为 json 格式
+
+```shell
+deno run -A getHostEntry.ts >hosts.log
 ```

@@ -70,6 +70,7 @@ export async function getHostEntry(domain: string): Promise<string[]> {
 ### 总结
 
 这段代码的主要功能是使用 `hostile` 包从本地的 hosts 文件中查找指定域名的 IP 地址，并返回一个包含这些 IP 地址的数组。通过使用 `Promise` 和 `async/await` 语法，代码变得更加简洁和易读。同时，通过 `try/catch` 块，代码能够优雅地处理可能出现的错误。 */
+import { isIPv6 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
 import hostile from "npm:@masx200/hostile@1.4.1";
 
 export async function getHostEntry(domain: string): Promise<string[]> {
@@ -101,4 +102,38 @@ export async function getHostEntry(domain: string): Promise<string[]> {
         console.error(`Failed to get host entry for ${domain}:`, error);
         return [];
     }
+}
+if (import.meta.main) {
+    const entry = await new Promise<{ name: string; content: string }[]>(
+        (resolve, reject) => {
+            hostile.get(false, (err: Error, result: string[][]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const addresses: { name: string; content: string }[] = [];
+
+                    for (const [IP, Host] of result) {
+                        if (Host.length && IP.length) {
+                            addresses.push({ content: IP, name: Host });
+                        }
+                    }
+                    resolve(addresses);
+                }
+            });
+        },
+    );
+
+    console.log(
+        JSON.stringify(
+            entry.map((x) => {
+                return {
+                    name: x.name,
+                    content: x.content,
+                    type: isIPv6(x.content) ? "AAAA" : "A",
+                };
+            }),
+            null,
+            4,
+        ),
+    );
 }

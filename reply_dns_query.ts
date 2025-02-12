@@ -109,9 +109,13 @@ export async function reply_dns_query(
                     ttl: get_ttl_min(),
                     class: {
                         "IN": {
-                            "A": ipv4.length ? ipv4.sort(()=>Math.random()-0.5) : null,
+                            "A": ipv4.length
+                                ? ipv4.sort(() => Math.random() - 0.5)
+                                : null,
                             // TODO: Currently only A is returned as logic in dns_server shortcircuits the AAAA record.
-                            "AAAA": ipv6.length ? ipv6 .sort(()=>Math.random()-0.5): null,
+                            "AAAA": ipv6.length
+                                ? ipv6.sort(() => Math.random() - 0.5)
+                                : null,
                             // "TXT": "This is some text.",
                         },
                     },

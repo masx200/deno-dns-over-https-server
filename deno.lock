@@ -622,6 +622,11 @@
     "https://esm.sh/v135/@masx200/cache-control-parser@2.2.0/denonext/cache-control-parser.mjs": "94d33ab4475743c08215e62dded1ae7c547f563628b50b7b7b74517f879708df"
   },
   "workspace": {
+    "dependencies": [
+      "jsr:@std/assert@1",
+      "npm:@types/node@20.2.5",
+      "npm:mongoose@8.7.3"
+    ],
     "packageJson": {
       "dependencies": [
         "npm:@masx200/hostile@1.4.1",
