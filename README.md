@@ -76,5 +76,6 @@ for await (const entry of kv.list({ prefix: [] })) {
 ## 导出所有本地的系统 hosts 文件为 json 格式
 
 ```shell
+deno cache -I getHostEntry.ts
 deno run -A getHostEntry.ts >hosts.log
 ```
