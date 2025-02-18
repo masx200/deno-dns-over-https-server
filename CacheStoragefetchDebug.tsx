@@ -1,6 +1,8 @@
 // 异步函数，发送一个用于调试的请求
 import { parse, stringify } from "@masx200/cache-control-parser";
 import { bodyToBuffer } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/body/bodyToBuffer.ts";
+import { get_dns_query_cache_key } from "./get_dns_query_cache_key.tsx";
+import { get_ttl_min } from "./get_ttl_min.ts";
 /**
  * 从缓存中获取数据，如果缓存不存在则请求数据并缓存起来
  * 此函数主要用于调试目的，通过调整缓存控制头来确保请求的响应符合预期的缓存策略
@@ -26,17 +28,41 @@ export async function CacheStoragefetchDebug(
     const request = new Request(input, init);
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
-        console.log(`CacheStorage ${cachename} cache hit:` + request.url);
+        // console.log(`CacheStorage ${cachename} cache hit:` + request.url);
         // console.log(cachedResponse.body);
         const body = await bodyToBuffer(cachedResponse.body);
-        return new Response(body, cachedResponse);
+        const request_body = body;
+        const cachestatusheaders = new Headers(cachedResponse.headers);
+        const identifier = `DenoDeployCache ${new URL(request.url).hostname}`;
+        const cache_key = get_dns_query_cache_key({
+            method: request.method,
+            url: request.url,
+            body: request_body,
+        });
+        const response = cachedResponse;
+        const header_cache_control = response.headers.get("cache-control");
+        const ttl = Math.max(
+            get_ttl_min(),
+            Number(
+                (header_cache_control &&
+                    parse(header_cache_control)?.["max-age"]) ??
+                    0,
+            ),
+        );
+        cachestatusheaders.append(
+            "Cache-Status",
+            identifier + `;key=${cache_key};hit;ttl=${ttl}`,
+        );
+        return new Response(body, {
+            status: cachedResponse.status,
+            headers: cachestatusheaders,
+            statusText: cachedResponse.statusText,
+        });
     }
-    console.log(`CacheStorage ${cachename} cache miss:` + request.url);
+    // console.log(`CacheStorage ${cachename} cache miss:` + request.url);
     const response = await fetchDebug(input, init);
     if (request.method == "GET" && response.ok) {
-        const cacheControlHeader = response.headers.get(
-            "cache-control",
-        );
+        const cacheControlHeader = response.headers.get("cache-control");
         const hea2 = new Headers(response.headers);
 
         if (cacheControlHeader) {
@@ -48,7 +74,7 @@ export async function CacheStoragefetchDebug(
                         stringify({
                             "max-age": min_age,
                             "s-maxage": min_age,
-                            "public": true,
+                            public: true,
                             private: false,
                         }),
                     );
@@ -60,7 +86,7 @@ export async function CacheStoragefetchDebug(
                 stringify({
                     "max-age": min_age,
                     "s-maxage": min_age,
-                    "public": true,
+                    public: true,
                     private: false,
                 }),
             );
@@ -69,6 +95,32 @@ export async function CacheStoragefetchDebug(
             const body = await bodyToBuffer(response.body);
             const body1 = body;
             const body2 = body;
+
+            const cachestatusheaders = new Headers(hea2);
+            const identifier = `DenoDeployCache ${
+                new URL(request.url).hostname
+            }`;
+            const request_body = body;
+            const cache_key = get_dns_query_cache_key({
+                method: request.method,
+                url: request.url,
+                body: request_body,
+            });
+            const header_cache_control = response.headers.get("cache-control");
+            const ttl = Math.max(
+                get_ttl_min(),
+                Number(
+                    (header_cache_control &&
+                        parse(header_cache_control)?.["max-age"]) ??
+                        0,
+                ),
+            );
+            cachestatusheaders.append(
+                "Cache-Status",
+                identifier +
+                    `;key=${cache_key};stored;fwd=miss;ttl=${ttl};fwd-status=${response.status}`,
+            );
+
             const res2 = new Response(body2, {
                 headers: hea2,
                 status: response.status,
@@ -76,7 +128,7 @@ export async function CacheStoragefetchDebug(
             });
             await cache.put(request, res2.clone());
             const res3 = new Response(body1, {
-                headers: hea2,
+                headers: cachestatusheaders,
                 status: response.status,
                 statusText: response.statusText,
             });
