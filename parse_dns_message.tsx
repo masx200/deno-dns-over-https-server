@@ -89,7 +89,7 @@ export async function parse_dns_message(
             }
         }
         const res = await next();
-        console.log("parse_dns_message", res.body);
+        // console.log("parse_dns_message", res.body);
         if (
             res.status === 200 &&
             res.headers.get("content-type") === "application/dns-message" &&

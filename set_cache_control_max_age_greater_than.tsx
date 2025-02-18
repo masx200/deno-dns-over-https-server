@@ -22,8 +22,9 @@ export function set_cache_control_max_age_greater_than(
             return next();
         }
 
+        // deno-lint-ignore no-unused-vars
         const res = await next();
-        console.log("set_cache_control_max_age_greater_than", res.body);
+        // console.log("set_cache_control_max_age_greater_than", res.body);
         if (!condition(context)) return;
         const cacheControlHeader = context.response.headers.get(
             "cache-control",
