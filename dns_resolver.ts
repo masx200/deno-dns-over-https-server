@@ -61,12 +61,20 @@ export async function resolveDNS(
                 read().then(
                     () => {
                         // console.log(r);
-                        isclosed = true;
-                        listener.close();
+                        if (!isclosed) {
+                          isclosed = true;
+              
+                          listener.close();
+                      }
                     },
                     (e) => {
                         console.error(e);
                         readerror = e;
+                        if (!isclosed) {
+                          isclosed = true;
+              
+                          listener.close();
+                      }
                     }
                 ),
                 // 发送 DNS 查询数据包到目标服务器
@@ -75,6 +83,11 @@ export async function resolveDNS(
                     (e) => {
                         console.error(e);
                         senderror = e;
+                        if (!isclosed) {
+                          isclosed = true;
+              
+                          listener.close();
+                      }
                     }
                 ),
             ]),
