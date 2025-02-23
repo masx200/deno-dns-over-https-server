@@ -119,15 +119,12 @@ export async function resolve_dns_query(
                     ctx.response.headers.set("cache-control", "max-age=" + ttl);
                     return;
                 } else {
-                    const data = base64Decode(
-                        new URL(url).searchParams.get("dns") ?? "",
-                    );
                     const packet: DNSPACKETInterface = Packet.parse(
-                        Buffer.Buffer.from(data as Uint8Array),
+                        Buffer.Buffer.from(body as Uint8Array),
                     );
                     const dnsresponse = await reply_dns_query_with_interceptor(
                         packet,
-                        data,
+                        body as Uint8Array,
                         ctx,
                         ctx.request,
                     );
