@@ -27,6 +27,8 @@ if (import.meta.main) {
         doh: Deno.env.get("doh"),
         token: Deno.env.get("token"),
     });
+
+    console.log(Deno.env.toObject());
     // 解析命令行参数，并获取端口号和主机名
     let { port, hostname } = parse(Deno.args);
     console.log({ port, hostname });
