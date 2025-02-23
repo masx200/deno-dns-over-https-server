@@ -1,3 +1,4 @@
+import { uniqBy } from "lodash-es";
 /* 当然，我可以为你详细解释这段代码。以下是代码的逐行解释：
 
 ### 代码解释
@@ -84,8 +85,9 @@ export async function getHostEntry(domain: string): Promise<string[]> {
                     const addresses: { name: string; content: string }[] =
                         parseHostEntries(result);
                     resolve(
-                        addresses.filter((x) => x.name === domain)
-                            .map((x) => x.content),
+                        addresses
+                            .filter((x) => x.name === domain)
+                            .map((x) => x.content)
                     );
                 }
             });
@@ -113,22 +115,25 @@ if (import.meta.main) {
                     resolve(addresses);
                 }
             });
-        },
+        }
     );
 
-    console.log(
-        JSON.stringify(
-            entry.map((x) => {
-                return {
-                    name: x.name,
-                    content: x.content,
-                    type: isIPv6(x.content) ? "AAAA" : "A",
-                };
-            }),
-            null,
-            4,
-        ),
+    const entries = uniqBy(
+        entry.map((x) => {
+            return {
+                name: x.name,
+                content: x.content,
+                type: isIPv6(x.content) ? "AAAA" : "A",
+            };
+        }),
+        (obj: any) =>
+            JSON.stringify({
+                type: obj.type,
+                name: obj.name,
+                content: obj.content,
+            })
     );
+    console.log(JSON.stringify(entries, null, 4));
 }
 
 function parseHostEntries(result: string[][]) {

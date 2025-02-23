@@ -1,5 +1,6 @@
 {
     "imports": {
+        "lodash-es":"npm:lodash-es@4.17.21",
         "@std/assert": "jsr:@std/assert@1",
         "mongoose": "npm:mongoose@8.7.3",
         "node:test": "npm:@types/node@20.2.5/test.d.ts",
