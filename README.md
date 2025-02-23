@@ -25,6 +25,21 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 
 设置 doh 服务的路径通过环境变量`DOH_PATHNAME`为 "/dns-query"
 
+### 环境变量
+
+| 环境变量                   | 说明                                           | 类型                                         |
+| -------------------------- | ---------------------------------------------- | -------------------------------------------- |
+| `doh`                      | 上游 dns over https 网址                       | `string` 或 `string[]`(JSON)                 |
+| `ttl`                      | 最小缓存时间(秒)                               | `number`                                     |
+| `DOH_PATHNAME`             | 这个 dns over https 服务的路径                 | `string`                                     |
+| `token`                    | dns 记录管理的秘钥                             | `string`                                     |
+| `mongodb_url`              | mongodb 数据库地址                             | `string`                                     |
+| `mongodb_db`               | mongodb 数据库名称                             | `string`                                     |
+| `mongodb_collection`       | mongodb 数据库集合名称                         | `string`                                     |
+| `DNS_INTERCEPTOR`          | 拦截 dns 请求的参数数组                        | `Array<{suffix: string;url: string;}>`(JSON) |
+| `DNS_INTERCEPTOR`.`url`    | 上游服务器 url 支持 udp 协议和 http/https 协议 | `string`                                     |
+| `DNS_INTERCEPTOR`.`suffix` | suffix 是域名后缀,不包含"."                    | `string`                                     |
+
 ### dns 记录说明
 
 为了 dns 负载均衡,可以对 dns 记录随机排序
@@ -65,7 +80,7 @@ npx -y cross-env  "DENO_KV_ACCESS_TOKEN=****************************************
 
 ```ts
 var kv = await Deno.openKv(
-    "https://api.deno.com/databases/************************************/connect",
+    "https://api.deno.com/databases/************************************/connect"
 );
 for await (const entry of kv.list({ prefix: [] })) {
     console.log(entry);

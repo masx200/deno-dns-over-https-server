@@ -59,6 +59,11 @@ export async function proxyDnsOverHttps(
             // console.log(newLocal_1.body);
             return res2;
         }
+        if (req.method !== "GET") {
+            return new Response(`${STATUS_TEXT[405]}`, {
+                status: 405,
+            });
+        }
         const res3 = await cachedFetch(remoteUrl, {
             body,
             headers: headers,

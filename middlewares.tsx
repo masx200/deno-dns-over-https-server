@@ -17,7 +17,7 @@ import { dns_records_authentication } from "./dns_records_authentication.tsx";
 import { staticHandler } from "./staticHandler.tsx";
 export const middlewares: Middleware[] = [
     // 错误处理中间件，捕获并处理请求链中的异常，返回500错误响应。
-    error_handler, 
+    error_handler,
 
     // 日志记录中间件，记录请求和响应的详细信息，包括连接信息、请求URL、方法和头信息等。
     logger,

@@ -12,8 +12,9 @@ import {
 import Packet from "npm:native-dns-packet@0.1.1";
 // console.log(JSONSTRINGIFYNULL4({ Packet });
 import Buffer from "npm:buffer@6.0.3";
-import { reply_dns_query } from "./reply_dns_query.ts";
 import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
+import { reply_dns_query } from "./reply_dns_query.ts";
+import { reply_dns_query_with_interceptor } from "./reply_dns_query_with_interceptor.ts";
 // import { DNSPACKET } from "./DNSPACKET.ts";
 
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
@@ -57,7 +58,36 @@ export async function resolve_dns_query(
                 ctx.response.headers.set("cache-control", "max-age=" + ttl);
                 return;
             } else {
-                return next();
+                const data = base64Decode(
+                    new URL(url).searchParams.get("dns") ?? "",
+                );
+                const packet: DNSPACKETInterface = Packet.parse(
+                    Buffer.Buffer.from(data as Uint8Array),
+                );
+                const dnsresponse = await reply_dns_query_with_interceptor(
+                    packet,
+                    data,
+                    ctx,
+                    ctx.request,
+                );
+                if (dnsresponse instanceof Response) {
+                    return dnsresponse;
+                }
+                const { success, result } = dnsresponse;
+
+                if (success && result?.length) {
+                    const ttl = get_ttl_min();
+                    ctx.response.body = result;
+                    ctx.response.status = 200;
+                    ctx.response.headers.set(
+                        "content-type",
+                        "application/dns-message",
+                    );
+                    ctx.response.headers.set("cache-control", "max-age=" + ttl);
+                    return;
+                } else {
+                    return next();
+                }
             }
             // console.log(
             //     JSONSTRINGIFYNULL4({ request: { packet, data: data } }, null, 4),
@@ -89,7 +119,39 @@ export async function resolve_dns_query(
                     ctx.response.headers.set("cache-control", "max-age=" + ttl);
                     return;
                 } else {
-                    return next();
+                    const data = base64Decode(
+                        new URL(url).searchParams.get("dns") ?? "",
+                    );
+                    const packet: DNSPACKETInterface = Packet.parse(
+                        Buffer.Buffer.from(data as Uint8Array),
+                    );
+                    const dnsresponse = await reply_dns_query_with_interceptor(
+                        packet,
+                        data,
+                        ctx,
+                        ctx.request,
+                    );
+                    if (dnsresponse instanceof Response) {
+                        return dnsresponse;
+                    }
+                    const { success, result } = dnsresponse;
+
+                    if (success && result?.length) {
+                        const ttl = get_ttl_min();
+                        ctx.response.body = result;
+                        ctx.response.status = 200;
+                        ctx.response.headers.set(
+                            "content-type",
+                            "application/dns-message",
+                        );
+                        ctx.response.headers.set(
+                            "cache-control",
+                            "max-age=" + ttl,
+                        );
+                        return;
+                    } else {
+                        return next();
+                    }
                 }
                 // console.log(
                 //     JSONSTRINGIFYNULL4(

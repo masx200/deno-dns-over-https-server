@@ -87,7 +87,7 @@ export async function getHostEntry(domain: string): Promise<string[]> {
                     resolve(
                         addresses
                             .filter((x) => x.name === domain)
-                            .map((x) => x.content)
+                            .map((x) => x.content),
                     );
                 }
             });
@@ -115,7 +115,7 @@ if (import.meta.main) {
                     resolve(addresses);
                 }
             });
-        }
+        },
     );
 
     const entries = uniqBy(
@@ -131,7 +131,7 @@ if (import.meta.main) {
                 type: obj.type,
                 name: obj.name,
                 content: obj.content,
-            })
+            }),
     );
     console.log(JSON.stringify(entries, null, 4));
 }

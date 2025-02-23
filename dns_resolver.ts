@@ -8,7 +8,7 @@
 export async function resolveDNS(
     dnsPacket: Uint8Array,
     serverAddress: string,
-    serverPort: number
+    serverPort: number,
 ): Promise<Uint8Array> {
     // 创建一个 UDP 套接字监听随机端口
     const listener = Deno.listenDatagram({
@@ -62,20 +62,20 @@ export async function resolveDNS(
                     () => {
                         // console.log(r);
                         if (!isclosed) {
-                          isclosed = true;
-              
-                          listener.close();
-                      }
+                            isclosed = true;
+
+                            listener.close();
+                        }
                     },
                     (e) => {
                         console.error(e);
                         readerror = e;
                         if (!isclosed) {
-                          isclosed = true;
-              
-                          listener.close();
-                      }
-                    }
+                            isclosed = true;
+
+                            listener.close();
+                        }
+                    },
                 ),
                 // 发送 DNS 查询数据包到目标服务器
                 send().then(
@@ -84,14 +84,14 @@ export async function resolveDNS(
                         console.error(e);
                         senderror = e;
                         if (!isclosed) {
-                          isclosed = true;
-              
-                          listener.close();
-                      }
-                    }
+                            isclosed = true;
+
+                            listener.close();
+                        }
+                    },
                 ),
             ]),
-            3000
+            3000,
         );
         // 接收来自服务器的响应
         if (response) {
@@ -115,9 +115,37 @@ export async function resolveDNS(
 async function main() {
     // 构造一个简单的 DNS 查询数据包 (A 记录查询 example.com)
     const dnsQuery = new Uint8Array([
-        0x0, 0x3, 0x1, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5, 0x7a,
-        0x68, 0x69, 0x68, 0x75, 0x3, 0x63, 0x6f, 0x6d, 0x3, 0x6c, 0x61, 0x6e,
-        0x0, 0x0, 0x1c, 0x0, 0x1,
+        0x0,
+        0x3,
+        0x1,
+        0x0,
+        0x0,
+        0x1,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x5,
+        0x7a,
+        0x68,
+        0x69,
+        0x68,
+        0x75,
+        0x3,
+        0x63,
+        0x6f,
+        0x6d,
+        0x3,
+        0x6c,
+        0x61,
+        0x6e,
+        0x0,
+        0x0,
+        0x1c,
+        0x0,
+        0x1,
     ]);
 
     const serverAddress = "122.112.208.1"; // Google Public DNS
@@ -137,7 +165,7 @@ if (import.meta.main) {
 }
 export function timeoutPromise<T>(
     promise: Promise<T>,
-    ms: number = 3000
+    ms: number = 3000,
 ): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
