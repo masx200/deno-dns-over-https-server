@@ -37,7 +37,7 @@ export async function reply_dns_query_with_interceptor(
                     const result = await resolveDNS(
                         data,
                         url.hostname,
-                        Number(url.port ?? "53"),
+                        Number(url.port.length ? url.port : "53"),
                     );
                     return { success: true, result: result };
                 } else {
