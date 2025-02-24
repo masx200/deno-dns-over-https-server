@@ -5,7 +5,7 @@
  * @param serverPort - DNS 服务器的端口 (例如 53)
  * @returns Promise<Uint8Array> - 返回 DNS 响应数据包的二进制格式
  */
-export async function resolveDNS(
+export async function resolveDNSudp(
     dnsPacket: Uint8Array,
     serverAddress: string,
     serverPort: number,
@@ -127,6 +127,15 @@ async function main() {
         0x0,
         0x0,
         0x0,
+        0x8,
+        0x7a,
+        0x68,
+        0x75,
+        0x61,
+        0x6e,
+        0x6c,
+        0x61,
+        0x6e,
         0x5,
         0x7a,
         0x68,
@@ -137,10 +146,6 @@ async function main() {
         0x63,
         0x6f,
         0x6d,
-        0x3,
-        0x6c,
-        0x61,
-        0x6e,
         0x0,
         0x0,
         0x1c,
@@ -148,12 +153,16 @@ async function main() {
         0x1,
     ]);
 
-    const serverAddress = "122.112.208.1"; // Google Public DNS
+    const serverAddress = "1.1.1.2"; // Google Public DNS
     const serverPort = 53;
 
     try {
         const starttime = Date.now();
-        const response = await resolveDNS(dnsQuery, serverAddress, serverPort);
+        const response = await resolveDNSudp(
+            dnsQuery,
+            serverAddress,
+            serverPort,
+        );
         console.log("cost time", Date.now() - starttime);
         console.log("DNS Response:", response);
     } catch (error) {

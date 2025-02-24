@@ -1,4 +1,4 @@
-import { resolveDNS } from "./dns_resolver.ts";
+import { resolveDNSudp } from "./dns_resolver.ts";
 import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import {
     Context,
@@ -34,7 +34,7 @@ export async function reply_dns_query_with_interceptor(
                         connInfo,
                     );
                 } else if (url.protocol == "udp:") {
-                    const result = await resolveDNS(
+                    const result = await resolveDNSudp(
                         data,
                         url.hostname,
                         Number(url.port.length ? url.port : "53"),
