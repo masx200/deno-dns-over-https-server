@@ -7,7 +7,22 @@
         "dev": "deno run -A --allow-net=:8000 ./main.tsx",
         "check": "deno check ./main.tsx"
     },
-    "importMap": "import_map.json",
+    "imports": {
+        "@std/io": "jsr:@std/io@^0.225.2",
+        "jsr:@std/io/write-all": "https://jsr.io/@std/io/0.225.2/write_all.ts",
+        "jsr:@std/io/read-all": "https://jsr.io/@std/io/0.225.2/read_all.ts",
+        "jsr:@std/assert": "https://jsr.io/@std/assert/1.0.6/mod.ts",
+        "lodash-es": "npm:lodash-es@4.17.21",
+        "@std/assert": "jsr:@std/assert@^1.0.11",
+        "mongoose": "npm:mongoose@8.7.3",
+        "node:test": "npm:@types/node@20.2.5/test.d.ts",
+        "net": "node:net",
+        "node:assert": "npm:@types/node@20.2.5/assert.d.ts",
+        "node:http2": "npm:@types/node@20.2.5/http2.d.ts",
+        "@hattip/response": "https://esm.sh/@hattip/response@0.0.34/",
+        "http": "node:http",
+        "@masx200/cache-control-parser": "https://esm.sh/@masx200/cache-control-parser@2.2.0/"
+    },
     "fmt": {
         "options": {
             "indentWidth": 4,

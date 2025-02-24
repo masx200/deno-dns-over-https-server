@@ -19,11 +19,16 @@ jobs:
                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
         steps:
+            - name: Install Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v2.x
             - uses: actions/checkout@v4
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
+            - run:  deno test -A --unstable-net
                   #cache: 'npm'
             - run: |
                   cd static
