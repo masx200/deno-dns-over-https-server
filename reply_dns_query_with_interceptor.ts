@@ -7,6 +7,7 @@ import {
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 import { proxyDnsOverHttps } from "./proxyDnsOverHttps.tsx";
 import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
+import { resolveDNStcp } from "./dns_resolver-tcp.ts";
 export async function reply_dns_query_with_interceptor(
     packet: DNSPACKETInterface,
     data: Uint8Array,
@@ -35,6 +36,13 @@ export async function reply_dns_query_with_interceptor(
                     );
                 } else if (url.protocol == "udp:") {
                     const result = await resolveDNSudp(
+                        data,
+                        url.hostname,
+                        Number(url.port.length ? url.port : "53"),
+                    );
+                    return { success: true, result: result };
+                } else if (url.protocol == "tcp:") {
+                    const result = await resolveDNStcp(
                         data,
                         url.hostname,
                         Number(url.port.length ? url.port : "53"),
