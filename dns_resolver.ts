@@ -1,3 +1,4 @@
+import { assert, assertGreater } from "jsr:@std/assert";
 /**
  * 发送 DNS 查询并接收响应
  * @param dnsPacket - DNS 数据包的二进制格式 (Uint8Array)
@@ -27,7 +28,7 @@ export async function resolveDNSudp(
         };
         let senderror = null;
         let readerror = null;
-        let response: Uint8Array | null = null;
+        let response: Uint8Array = new Uint8Array();
 
         const read = async function () {
             for await (const [data, address] of listener) {
@@ -93,8 +94,13 @@ export async function resolveDNSudp(
             ]),
             3000,
         );
+        assertGreater(response.length, 0);
+        assert(
+            !Array.from(response).every((a) => a == 0),
+            "response is all zero data",
+        );
         // 接收来自服务器的响应
-        if (response) {
+        if (response.length > 0) {
             return response; // 返回解析后的 DNS 响应数据包
         } else {
             throw new Error("response is null", {

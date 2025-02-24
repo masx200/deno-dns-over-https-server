@@ -1,3 +1,4 @@
+import { assert, assertGreater } from "jsr:@std/assert";
 /**
  * 发送 DNS 查询并接收响应
  * @param dnsPacket - DNS 数据包的二进制格式 (Uint8Array)
@@ -37,7 +38,11 @@ export async function resolveDNStcp(
         const responseLength = new DataView(buffer.buffer).getUint16(0, false); // 读取前两个字节作为长度字段
         const responseData = buffer.subarray(2, 2 + responseLength); // 提取实际的 DNS 响应数据
         const result = responseData;
-
+        assertGreater(result.length, 0);
+        assert(
+            !Array.from(result).every((a) => a == 0),
+            "response is all zero data",
+        );
         console.log("Received DNS response:", result);
         // 返回接收到的数据
         return result;
