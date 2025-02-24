@@ -38,7 +38,7 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 | `mongodb_url`              | mongodb 数据库地址                                    | `string`                           |
 | `mongodb_db`               | mongodb 数据库名称                                    | `string`                           |
 | `mongodb_collection`       | mongodb 数据库集合名称                                | `string`                           |
-| `DNS_INTERCEPTOR`          | 拦截 dns 请求的参数数组                               | `Array<{suffix: string;url: string |
+| `DNS_INTERCEPTOR`          | 拦截 dns 请求的参数数组                               | `Array<{suffix: string;url: string|string[]}` |
 | `DNS_INTERCEPTOR`.`url`    | 上游服务器 url 支持 udp 和 tcp 协议和 http/https 协议 | `string` 或 `string[]`             |
 | `DNS_INTERCEPTOR`.`suffix` | suffix是域名后缀,开头不包含"."                        | `string`                           |
 
