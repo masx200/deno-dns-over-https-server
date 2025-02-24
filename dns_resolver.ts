@@ -174,6 +174,7 @@ export async function main() {
         console.log("DNS Response:", response);
     } catch (error) {
         console.error("Error resolving DNS:", error);
+        throw error;
     }
 }
 if (import.meta.main) {

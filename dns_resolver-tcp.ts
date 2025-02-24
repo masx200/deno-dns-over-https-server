@@ -11,7 +11,7 @@ import { writeAll } from "jsr:@std/io";
 export async function resolveDNStcp(
     dnsPacket: Uint8Array,
     serverAddress: string,
-    serverPort: number,
+    serverPort: number
 ): Promise<Uint8Array> {
     let conn: Deno.Conn | undefined;
 
@@ -19,7 +19,10 @@ export async function resolveDNStcp(
         // 建立 TCP 连接到 DNS 服务器
         conn = await timeoutPromise(
             Deno.connect({ hostname: serverAddress, port: serverPort }),
-            3000,
+            3000
+        );
+        console.log(
+            "Connected to DNS server:" + serverAddress + ":" + serverPort
         );
         // TCP 协议要求在数据包前加上 2 字节的长度字段
         const lengthPrefix = new Uint8Array(2);
@@ -32,8 +35,8 @@ export async function resolveDNStcp(
         // 接收响应数据包
         // const buffer = new Uint8Array(1024 * 1024); // 创建一个缓冲区用于接收数据
         const buffer = await timeoutPromise(
-            readAll(conn), /* conn.read(buffer) */
-            3000,
+            readAll(conn) /* conn.read(buffer) */,
+            3000
         );
 
         if (buffer.length === 0) {
@@ -46,7 +49,7 @@ export async function resolveDNStcp(
         assertGreater(result.length, 0);
         assert(
             !Array.from(result).every((a) => a == 0),
-            "response is all zero data",
+            "response is all zero data"
         );
         console.log("Received DNS response:", result);
         // 返回接收到的数据
@@ -64,45 +67,12 @@ export async function resolveDNStcp(
 export async function main() {
     // 构造一个简单的 DNS 查询数据包 (A 记录查询 example.com)
     const dnsQuery = new Uint8Array([
-        0x0,
-        0x3,
-        0x1,
-        0x0,
-        0x0,
-        0x1,
-        0x0,
-        0x0,
-        0x0,
-        0x0,
-        0x0,
-        0x0,
-        0x8,
-        0x7a,
-        0x68,
-        0x75,
-        0x61,
-        0x6e,
-        0x6c,
-        0x61,
-        0x6e,
-        0x5,
-        0x7a,
-        0x68,
-        0x69,
-        0x68,
-        0x75,
-        0x3,
-        0x63,
-        0x6f,
-        0x6d,
-        0x0,
-        0x0,
-        0x1c,
-        0x0,
-        0x1,
+        0x0, 0x3, 0x1, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x8, 0x7a,
+        0x68, 0x75, 0x61, 0x6e, 0x6c, 0x61, 0x6e, 0x5, 0x7a, 0x68, 0x69, 0x68,
+        0x75, 0x3, 0x63, 0x6f, 0x6d, 0x0, 0x0, 0x1c, 0x0, 0x1,
     ]);
 
-    const serverAddress = "114.114.114.114";
+    const serverAddress = "142.171.123.133";
     // Google Public DNS
     const serverPort = 53;
 
@@ -111,12 +81,13 @@ export async function main() {
         const response = await resolveDNStcp(
             dnsQuery,
             serverAddress,
-            serverPort,
+            serverPort
         );
         console.log("cost time", Date.now() - starttime);
         console.log("DNS Response:", response);
     } catch (error) {
         console.error("Error resolving DNS:", error);
+        throw error;
     }
 }
 if (import.meta.main) {
@@ -124,7 +95,7 @@ if (import.meta.main) {
 }
 export function timeoutPromise<T>(
     promise: Promise<T>,
-    ms: number = 3000,
+    ms: number = 3000
 ): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
