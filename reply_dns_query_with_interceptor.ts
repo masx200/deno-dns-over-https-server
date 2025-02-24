@@ -1,13 +1,16 @@
-import { resolveDNSudp } from "./dns_resolver.ts";
-import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import {
     Context,
     getOriginalOptions,
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
-import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
-import { proxyDnsOverHttps } from "./proxyDnsOverHttps.tsx";
 import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
+import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
 import { resolveDNStcp } from "./dns_resolver-tcp.ts";
+import { resolveDNSudp } from "./dns_resolver.ts";
+import { DNSInterceptorOptions } from "./DNSInterceptorOptions.ts";
+import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
+import { proxyDnsOverHttps } from "./proxyDnsOverHttps.tsx";
+import { ArrayShuffle } from "./ArrayShuffle.ts";
+import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 export async function reply_dns_query_with_interceptor(
     packet: DNSPACKETInterface,
     data: Uint8Array,
@@ -25,32 +28,99 @@ export async function reply_dns_query_with_interceptor(
         const name = packet.question[0]?.name;
         for (const opt of interceptoroptions) {
             if (name.endsWith("." + opt.suffix)) {
-                const url = new URL(opt.url);
-                if (url.protocol === "http:" || url.protocol === "https:") {
-                    const doh = url.href;
-                    const connInfo: ConnInfo = getOriginalOptions(context);
-                    return await proxyDnsOverHttps(
-                        doh,
-                        /* url */ req,
-                        connInfo,
-                    );
-                } else if (url.protocol == "udp:") {
-                    const result = await resolveDNSudp(
-                        data,
-                        url.hostname,
-                        Number(url.port.length ? url.port : "53"),
-                    );
-                    return { success: true, result: result };
-                } else if (url.protocol == "tcp:") {
-                    const result = await resolveDNStcp(
-                        data,
-                        url.hostname,
-                        Number(url.port.length ? url.port : "53"),
-                    );
-                    return { success: true, result: result };
-                } else {
-                    return { success: false, result: null };
+                const opturl = typeof opt.url == "string" ? [opt.url] : opt.url;
+                const errors = Array<string>();
+                for (const urlstr of ArrayShuffle(opturl)) {
+                    const url = new URL(urlstr);
+                    if (url.protocol === "http:" || url.protocol === "https:") {
+                        const doh = url.href;
+                        const connInfo: ConnInfo = getOriginalOptions(context);
+                        const response = await proxyDnsOverHttps(
+                            doh,
+                            /* url */ req,
+                            connInfo,
+                        );
+                        if (
+                            response.ok &&
+                            response.headers.get("content-type") ===
+                                "application/dns-message"
+                        ) {
+                            return response;
+                        } else {
+                            console.error(
+                                `${doh} ${response.status} ${response.statusText}`,
+                            );
+                            errors.push(
+                                `${doh} ${response.status} ${response.statusText}`,
+                            );
+                            continue;
+                        }
+                    } else if (url.protocol == "udp:") {
+                        try {
+                            const result = await resolveDNSudp(
+                                data,
+                                url.hostname,
+                                Number(url.port.length ? url.port : "53"),
+                            );
+                            return { success: true, result: result };
+                        } catch (error) {
+                            const doh = url.href;
+                            const status = 502;
+                            const statusText = STATUS_TEXT[status];
+                            console.error(
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
+                            );
+                            errors.push(
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
+                            );
+                            continue;
+                        }
+                    } else if (url.protocol == "tcp:") {
+                        try {
+                            const result = await resolveDNStcp(
+                                data,
+                                url.hostname,
+                                Number(url.port.length ? url.port : "53"),
+                            );
+                            return { success: true, result: result };
+                        } catch (error) {
+                            const status = 502;
+                            const doh = url.href;
+                            const statusText = STATUS_TEXT[status];
+                            console.error(
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
+                            );
+                            errors.push(
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
+                            );
+                            continue;
+                        }
+                    } else {
+                        return { success: false, result: null };
+                    }
                 }
+                return new Response(
+                    "all doh server response failed\n" + errors.join("\n"),
+                    {
+                        status: 502,
+                    },
+                );
             }
         }
         return { success: false, result: null };
@@ -58,8 +128,3 @@ export async function reply_dns_query_with_interceptor(
         return { success: false, result: null };
     }
 }
-export interface DNSInterceptorOptions extends
-    Array<{
-        suffix: string;
-        url: string;
-    }> {}

@@ -63,14 +63,15 @@ export async function proxyDnsOverHttps(
             return new Response(`${STATUS_TEXT[405]}`, {
                 status: 405,
             });
+        } else {
+            const res3 = await cachedFetch(remoteUrl, {
+                body,
+                headers: headers,
+                method: req.method,
+            });
+            // console.log(newLocal.body);
+            return res3;
         }
-        const res3 = await cachedFetch(remoteUrl, {
-            body,
-            headers: headers,
-            method: req.method,
-        });
-        // console.log(newLocal.body);
-        return res3;
     } catch (error) {
         console.error(error);
         // 返回500错误响应
