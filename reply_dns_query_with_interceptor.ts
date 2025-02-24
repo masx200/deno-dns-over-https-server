@@ -90,20 +90,32 @@ export async function reply_dns_query_with_interceptor(
                             return { success: true, result: result };
                         } catch (error) {
                             console.error(error);
-                            const status = 502;
-                            const doh = url.href;
-                            const statusText = STATUS_TEXT[status];
-                            console.error(
-                                `${doh} ${status} ${statusText}\n${String(
-                                    error
-                                )}`
-                            );
-                            errors.push(
-                                `${doh} ${status} ${statusText}\n${String(
-                                    error
-                                )}`
-                            );
-                            continue;
+                            //报错再重试一次
+                            console.log("失败一次重试一次");
+                            try {
+                                const result = await resolveDNStcp(
+                                    data,
+                                    url.hostname,
+                                    Number(url.port.length ? url.port : "53")
+                                );
+                                return { success: true, result: result };
+                            } catch (error) {
+                                console.error(error);
+                                const status = 502;
+                                const doh = url.href;
+                                const statusText = STATUS_TEXT[status];
+                                console.error(
+                                    `${doh} ${status} ${statusText}\n${String(
+                                        error
+                                    )}`
+                                );
+                                errors.push(
+                                    `${doh} ${status} ${statusText}\n${String(
+                                        error
+                                    )}`
+                                );
+                                continue;
+                            }
                         }
                     } else {
                         return { success: false, result: null };

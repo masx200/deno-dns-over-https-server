@@ -87,7 +87,21 @@ export async function main() {
         console.log("DNS Response:", response);
     } catch (error) {
         console.error("Error resolving DNS:", error);
-        throw error;
+        //报错再重试一次
+        console.log("失败一次重试一次");
+        try {
+            const starttime = Date.now();
+            const response = await resolveDNStcp(
+                dnsQuery,
+                serverAddress,
+                serverPort
+            );
+            console.log("cost time", Date.now() - starttime);
+            console.log("DNS Response:", response);
+        } catch (error) {
+            console.error("Error resolving DNS:", error);
+            throw error;
+        }
     }
 }
 if (import.meta.main) {
