@@ -26,13 +26,13 @@ export async function CachePromiseInterfaceFactory(): Promise<
                 result.value.status &&
                 result.value.ttl
             ) {
-                console.log(
-                    JSONSTRINGIFYNULL4(
-                        { function: "get", key, value: result.value },
-                        null,
-                        4,
-                    ),
-                );
+                // console.log(
+                //     JSONSTRINGIFYNULL4(
+                //         { function: "get", key, value: result.value },
+                //         null,
+                //         4,
+                //     ),
+                // );
                 return result.value;
             } else {
                 return undefined;
@@ -50,9 +50,9 @@ export async function CachePromiseInterfaceFactory(): Promise<
                     "Failed to set " + key + " to " + JSONSTRINGIFYNULL4(value),
                 );
             }
-            console.log(
-                JSONSTRINGIFYNULL4({ function: "set", key, value }, null, 4),
-            );
+            // console.log(
+            //     JSONSTRINGIFYNULL4({ function: "set", key, value }, null, 4),
+            // );
             return result;
         },
     } satisfies CachePromiseInterface;
