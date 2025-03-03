@@ -46,7 +46,7 @@ export async function parse_dns_message(
 
                 console.log(
                     JSONSTRINGIFYNULL4(
-                        { request: { packet, data: data } },
+                        { request: { packet, /* data: data  */} },
                         null,
                         4,
                     ),
@@ -73,7 +73,7 @@ export async function parse_dns_message(
 
                     console.log(
                         JSONSTRINGIFYNULL4(
-                            { request: { packet, data: body } },
+                            { request: { packet, /* data: body */ } },
                             null,
                             4,
                         ),
@@ -106,7 +106,7 @@ export async function parse_dns_message(
                 ) as DNSPACKETInterface;
                 console.log(
                     JSONSTRINGIFYNULL4(
-                        { response: { packet, data: resbody } },
+                        { response: { packet, /* data: resbody */ } },
                         null,
                         4,
                     ),
