@@ -119,7 +119,13 @@ export async function parse_dns_message(
                 packet.additional = [];
                 const buff = new Buffer.Buffer(1096 * 1000);
                 const written = Packet.write(buff, packet);
-                return new Response(buff.slice(0, written), res);
+                return new Response(buff.slice(0, written), {
+                    ...res,
+                    headers: {
+                        ...Object.fromEntries(res.headers),
+                        "content-length": String(written),
+                    },
+                });
             }
         }
         return;
