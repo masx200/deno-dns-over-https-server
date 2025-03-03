@@ -22,8 +22,8 @@ export type DNSPACKETInterface =
     & {
         authority: any[];
         additional: any[];
-        edns:any
-        edns_options:any[]
-        edns_version:number
-        payload:number
+        edns: any;
+        edns_options: any[];
+        edns_version: number;
+        payload: number;
     };
