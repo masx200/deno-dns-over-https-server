@@ -4,13 +4,13 @@ import {
 } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/mod.ts";
 import { RequestOptions } from "https://cdn.jsdelivr.net/gh/masx200/deno-http-middleware@3.3.0/src/Context.ts";
 import { ConnInfo } from "https://deno.land/std@0.182.0/http/server.ts";
+import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
+import { ArrayShuffle } from "./ArrayShuffle.ts";
 import { resolveDNStcp } from "./dns_resolver-tcp.ts";
 import { resolveDNSudp } from "./dns_resolver.ts";
 import { DNSInterceptorOptions } from "./DNSInterceptorOptions.ts";
 import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 import { proxyDnsOverHttps } from "./proxyDnsOverHttps.tsx";
-import { ArrayShuffle } from "./ArrayShuffle.ts";
-import { STATUS_TEXT } from "https://deno.land/std@0.189.0/http/http_status.ts";
 export async function reply_dns_query_with_interceptor(
     packet: DNSPACKETInterface,
     data: Uint8Array,
@@ -48,10 +48,10 @@ export async function reply_dns_query_with_interceptor(
                             return response;
                         } else {
                             console.error(
-                                `${doh} ${response.status} ${response.statusText}`,
+                                `doh=${doh} ,status=${response.status} ,statusText=${response.statusText}`,
                             );
                             errors.push(
-                                `${doh} ${response.status} ${response.statusText}`,
+                                `doh=${doh} ,status=${response.status} ,statusText=${response.statusText}`,
                             );
                             continue;
                         }
