@@ -28,7 +28,6 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 ### 环境变量
 
 ```
-
 | 环境变量                   | 说明                                                  | 类型                               |
 | -------------------------- | ----------------------------------------------------- | ---------------------------------- |
 | `doh`                      | 上游 dnsover https 网址                               | `string` 或 `string[]`(JSON)       |
@@ -41,7 +40,6 @@ npx -y cross-env "doh=https://dns.alidns.com/dns-query" 'ttl=180' token=token de
 | `DNS_INTERCEPTOR`          | 拦截 dns 请求的参数数组                               | `Array<{suffix: string;url: string|string[]}` |
 | `DNS_INTERCEPTOR`.`url`    | 上游服务器 url 支持 udp 和 tcp 协议和 http/https 协议 | `string` 或 `string[]`             |
 | `DNS_INTERCEPTOR`.`suffix` | suffix是域名后缀,开头不包含"."                        | `string`                           |
-
 ```
 
 ### dns 记录说明

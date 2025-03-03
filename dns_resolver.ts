@@ -9,7 +9,7 @@ import { assert, assertEquals, assertGreater } from "@std/assert";
 export async function resolveDNSudp(
     dnsPacket: Uint8Array,
     serverAddress: string,
-    serverPort: number
+    serverPort: number,
 ): Promise<Uint8Array> {
     // 创建一个 UDP 套接字监听随机端口
     const listener = Deno.listenDatagram({
@@ -78,7 +78,7 @@ export async function resolveDNSudp(
 
                             listener.close();
                         }
-                    }
+                    },
                 ),
                 // 发送 DNS 查询数据包到目标服务器
                 send().then(
@@ -91,15 +91,15 @@ export async function resolveDNSudp(
 
                             listener.close();
                         }
-                    }
+                    },
                 ),
             ]),
-            3000
+            3000,
         );
         assertGreater(response.length, 0);
         assert(
             !Array.from(response).every((a) => a == 0),
-            "response is all zero data"
+            "response is all zero data",
         );
         // 接收来自服务器的响应
         if (response.length > 0) {
@@ -123,9 +123,42 @@ export async function resolveDNSudp(
 export async function main() {
     // 构造一个简单的 DNS 查询数据包 (A 记录查询 example.com)
     const dnsQuery = new Uint8Array([
-        0x0, 0x3, 0x1, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x8, 0x7a,
-        0x68, 0x75, 0x61, 0x6e, 0x6c, 0x61, 0x6e, 0x5, 0x7a, 0x68, 0x69, 0x68,
-        0x75, 0x3, 0x63, 0x6f, 0x6d, 0x0, 0x0, 0x1c, 0x0, 0x1,
+        0x0,
+        0x3,
+        0x1,
+        0x0,
+        0x0,
+        0x1,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x0,
+        0x8,
+        0x7a,
+        0x68,
+        0x75,
+        0x61,
+        0x6e,
+        0x6c,
+        0x61,
+        0x6e,
+        0x5,
+        0x7a,
+        0x68,
+        0x69,
+        0x68,
+        0x75,
+        0x3,
+        0x63,
+        0x6f,
+        0x6d,
+        0x0,
+        0x0,
+        0x1c,
+        0x0,
+        0x1,
     ]);
 
     const serverAddress = "223.6.6.6";
@@ -137,7 +170,7 @@ export async function main() {
         const response = await resolveDNSudp(
             dnsQuery,
             serverAddress,
-            serverPort
+            serverPort,
         );
         console.log("cost time", Date.now() - starttime);
         console.log("DNS Response:", response);
@@ -151,7 +184,7 @@ if (import.meta.main) {
 }
 export function timeoutPromise<T>(
     promise: Promise<T>,
-    ms: number = 3000
+    ms: number = 3000,
 ): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {

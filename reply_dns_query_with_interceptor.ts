@@ -15,7 +15,7 @@ export async function reply_dns_query_with_interceptor(
     packet: DNSPACKETInterface,
     data: Uint8Array,
     context: Context,
-    req: RequestOptions
+    req: RequestOptions,
 ): Promise<
     { success: boolean; result: Uint8Array | null | undefined } | Response
 > {
@@ -23,7 +23,7 @@ export async function reply_dns_query_with_interceptor(
 
     if (dns_interceptor) {
         const interceptoroptions: DNSInterceptorOptions = JSON.parse(
-            dns_interceptor
+            dns_interceptor,
         ) as DNSInterceptorOptions;
         const name = packet.question[0]?.name;
         for (const opt of interceptoroptions) {
@@ -38,7 +38,7 @@ export async function reply_dns_query_with_interceptor(
                         const response = await proxyDnsOverHttps(
                             doh,
                             /* url */ req,
-                            connInfo
+                            connInfo,
                         );
                         if (
                             response.ok &&
@@ -48,10 +48,10 @@ export async function reply_dns_query_with_interceptor(
                             return response;
                         } else {
                             console.error(
-                                `${doh} ${response.status} ${response.statusText}`
+                                `${doh} ${response.status} ${response.statusText}`,
                             );
                             errors.push(
-                                `${doh} ${response.status} ${response.statusText}`
+                                `${doh} ${response.status} ${response.statusText}`,
                             );
                             continue;
                         }
@@ -60,7 +60,7 @@ export async function reply_dns_query_with_interceptor(
                             const result = await resolveDNSudp(
                                 data,
                                 url.hostname,
-                                Number(url.port.length ? url.port : "53")
+                                Number(url.port.length ? url.port : "53"),
                             );
                             return { success: true, result: result };
                         } catch (error) {
@@ -69,14 +69,18 @@ export async function reply_dns_query_with_interceptor(
                             const status = 502;
                             const statusText = STATUS_TEXT[status];
                             console.error(
-                                `${doh} ${status} ${statusText}\n${String(
-                                    error
-                                )}`
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
                             );
                             errors.push(
-                                `${doh} ${status} ${statusText}\n${String(
-                                    error
-                                )}`
+                                `${doh} ${status} ${statusText}\n${
+                                    String(
+                                        error,
+                                    )
+                                }`,
                             );
                             continue;
                         }
@@ -85,7 +89,7 @@ export async function reply_dns_query_with_interceptor(
                             const result = await resolveDNStcp(
                                 data,
                                 url.hostname,
-                                Number(url.port.length ? url.port : "53")
+                                Number(url.port.length ? url.port : "53"),
                             );
                             return { success: true, result: result };
                         } catch (error) {
@@ -96,7 +100,7 @@ export async function reply_dns_query_with_interceptor(
                                 const result = await resolveDNStcp(
                                     data,
                                     url.hostname,
-                                    Number(url.port.length ? url.port : "53")
+                                    Number(url.port.length ? url.port : "53"),
                                 );
                                 return { success: true, result: result };
                             } catch (error) {
@@ -105,14 +109,18 @@ export async function reply_dns_query_with_interceptor(
                                 const doh = url.href;
                                 const statusText = STATUS_TEXT[status];
                                 console.error(
-                                    `${doh} ${status} ${statusText}\n${String(
-                                        error
-                                    )}`
+                                    `${doh} ${status} ${statusText}\n${
+                                        String(
+                                            error,
+                                        )
+                                    }`,
                                 );
                                 errors.push(
-                                    `${doh} ${status} ${statusText}\n${String(
-                                        error
-                                    )}`
+                                    `${doh} ${status} ${statusText}\n${
+                                        String(
+                                            error,
+                                        )
+                                    }`,
                                 );
                                 continue;
                             }
@@ -125,7 +133,7 @@ export async function reply_dns_query_with_interceptor(
                     "all doh server response failed\n" + errors.join("\n"),
                     {
                         status: 502,
-                    }
+                    },
                 );
             }
         }

@@ -77,7 +77,7 @@ export class DNSPacket {
             });
         }
         // console.log("DNSPacket.Bytes", JSONSTRINGIFYNULL4(packet, null, 4));
-        const buff = new Buffer.Buffer(10960);
+        const buff = new Buffer.Buffer(1096 * 1000);
         const written = Packet.write(buff, packet);
         return buff.slice(0, written);
         // const header = this.Header?.Bytes;

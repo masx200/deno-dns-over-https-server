@@ -18,4 +18,8 @@ export type DNSPACKETInterface =
             res3: number;
             rcode: number;
         };
+    }
+    & {
+        authority: any[];
+        additional: any[];
     };

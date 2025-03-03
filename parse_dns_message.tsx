@@ -11,6 +11,7 @@ import Packet from "npm:native-dns-packet@0.1.1";
 import Buffer from "npm:buffer@6.0.3";
 import { base64Decode } from "./base64Decode.tsx";
 import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
+import { DNSPACKETInterface } from "./DNSPACKETInterface.ts";
 // console.log(JSONSTRINGIFYNULL4({ Buffer });
 /**
  * 解析DNS消息。
@@ -22,7 +23,7 @@ import { JSONSTRINGIFYNULL4 } from "./JSONSTRINGIFYNULL4.ts";
  */
 export async function parse_dns_message(
     ctx: Context,
-    next: NextFunction,
+    next: NextFunction
 ): Promise<RetHandler> {
     const req = ctx.request;
     const { url } = req;
@@ -37,24 +38,24 @@ export async function parse_dns_message(
         ) {
             try {
                 const data = base64Decode(
-                    new URL(url).searchParams.get("dns") ?? "",
+                    new URL(url).searchParams.get("dns") ?? ""
                 );
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(data as Uint8Array),
-                );
+                    Buffer.Buffer.from(data as Uint8Array)
+                ) as DNSPACKETInterface;
 
                 console.log(
                     JSONSTRINGIFYNULL4(
                         { request: { packet, data: data } },
                         null,
-                        4,
-                    ),
+                        4
+                    )
                 );
             } catch (error) {
                 console.error(error);
                 return new Response(
                     "bad request\ninvalid dns message\n" + String(error),
-                    { status: 400 },
+                    { status: 400 }
                 );
             }
         } else if (
@@ -67,15 +68,15 @@ export async function parse_dns_message(
             if (body?.length) {
                 try {
                     const packet = Packet.parse(
-                        Buffer.Buffer.from(body as Uint8Array),
-                    );
+                        Buffer.Buffer.from(body as Uint8Array)
+                    ) as DNSPACKETInterface;
 
                     console.log(
                         JSONSTRINGIFYNULL4(
                             { request: { packet, data: body } },
                             null,
-                            4,
-                        ),
+                            4
+                        )
                     );
                     // console.log();
                     // console.log(JSONSTRINGIFYNULL4({ packet });
@@ -83,7 +84,7 @@ export async function parse_dns_message(
                     console.error(error);
                     return new Response(
                         "bad request\ninvalid dns message\n" + String(error),
-                        { status: 400 },
+                        { status: 400 }
                     );
                 }
             }
@@ -101,18 +102,24 @@ export async function parse_dns_message(
 
             if (resbody?.length) {
                 const packet = Packet.parse(
-                    Buffer.Buffer.from(resbody as Uint8Array),
-                );
+                    Buffer.Buffer.from(resbody as Uint8Array)
+                ) as DNSPACKETInterface;
                 console.log(
                     JSONSTRINGIFYNULL4(
                         { response: { packet, data: resbody } },
                         null,
-                        4,
-                    ),
+                        4
+                    )
                 );
                 // console.log(JSONSTRINGIFYNULL4({ resbody });
 
                 // console.log(JSONSTRINGIFYNULL4({ packet });
+
+                /* 删除dns数据包中的ADDITIONAL */
+                packet.additional = [];
+                const buff = new Buffer.Buffer(1096 * 1000);
+                const written = Packet.write(buff, packet);
+                return new Response(buff.slice(0, written), res);
             }
         }
         return;
