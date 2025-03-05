@@ -96,7 +96,7 @@ export async function getHostEntry(domain: string): Promise<string[]> {
             console.log("getHostEntry success", domain, entry);
             return entry;
         }
-        console.error(`Failed to get host entry for ${domain}:`);
+        console.error(`Failed to get host entry for ${domain}:`+"no entry found");
         return [];
     } catch (error) {
         console.error(`Failed to get host entry for ${domain}:`, error);
