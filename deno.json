@@ -8,6 +8,7 @@
         "check": "deno check ./main.tsx"
     },
     "imports": {
+        "@std/cli": "jsr:@std/cli@^1.0.14",
         "@std/io": "jsr:@std/io@^0.225.2",
         "jsr:@std/io/write-all": "https://jsr.io/@std/io/0.225.2/write_all.ts",
         "jsr:@std/io/read-all": "https://jsr.io/@std/io/0.225.2/read_all.ts",

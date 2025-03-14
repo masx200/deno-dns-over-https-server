@@ -95,4 +95,5 @@ for await (const entry of kv.list({ prefix: [] })) {
 ```shell
 deno cache -I getHostEntry.ts
 deno run -A getHostEntry.ts >hosts.log
+deno run -A getHostEntry.ts --o=hosts.log
 ```

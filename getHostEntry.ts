@@ -1,4 +1,8 @@
+import { isIPv6 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
+import { parseArgs } from "jsr:@std/cli/parse-args";
 import { uniqBy } from "lodash-es";
+import hostile from "npm:@masx200/hostile@1.4.1";
+
 /* 当然，我可以为你详细解释这段代码。以下是代码的逐行解释：
 
 ### 代码解释
@@ -71,8 +75,6 @@ export async function getHostEntry(domain: string): Promise<string[]> {
 ### 总结
 
 这段代码的主要功能是使用 `hostile` 包从本地的 hosts 文件中查找指定域名的 IP 地址，并返回一个包含这些 IP 地址的数组。通过使用 `Promise` 和 `async/await` 语法，代码变得更加简洁和易读。同时，通过 `try/catch` 块，代码能够优雅地处理可能出现的错误。 */
-import { isIPv6 } from "https://deno.land/std@0.169.0/node/internal/net.ts";
-import hostile from "npm:@masx200/hostile@1.4.1";
 
 export async function getHostEntry(domain: string): Promise<string[]> {
     try {
@@ -96,7 +98,9 @@ export async function getHostEntry(domain: string): Promise<string[]> {
             console.log("getHostEntry success", domain, entry);
             return entry;
         }
-        console.error(`Failed to get host entry for ${domain}:`+"no entry found");
+        console.error(
+            `Failed to get host entry for ${domain}:` + "no entry found",
+        );
         return [];
     } catch (error) {
         console.error(`Failed to get host entry for ${domain}:`, error);
@@ -104,19 +108,15 @@ export async function getHostEntry(domain: string): Promise<string[]> {
     }
 }
 if (import.meta.main) {
-    const entry = await new Promise<{ name: string; content: string }[]>(
-        (resolve, reject) => {
-            hostile.get(false, (err: Error, result: string[][]) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const addresses: { name: string; content: string }[] =
-                        parseHostEntries(result);
-                    resolve(addresses);
-                }
-            });
-        },
-    );
+    await main();
+}
+
+async function main() {
+    const { o: outputToFile } = parseArgs(Deno.args, {
+        string: ["o"],
+    });
+
+    const entry = await getAllHostEntries();
 
     const entries = uniqBy(
         entry.map((x) => {
@@ -133,10 +133,36 @@ if (import.meta.main) {
                 content: obj.content,
             }),
     );
-    console.log(JSON.stringify(entries, null, 4));
+    if (outputToFile) {
+        const outputFilePath = outputToFile;
+        const jsonData = JSON.stringify(entries, null, 4);
+        await Deno.writeTextFile(outputFilePath, jsonData);
+        // console.log(`Data has been written to ${outputFilePath}`);
+    } else {
+        console.log(JSON.stringify(entries, null, 4));
+    }
 }
-
-function parseHostEntries(result: string[][]) {
+export async function getAllHostEntries(): Promise<
+    { name: string; content: string }[]
+> {
+    const entry = await new Promise<{ name: string; content: string }[]>(
+        (resolve, reject) => {
+            hostile.get(false, (err: Error, result: string[][]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const addresses: { name: string; content: string }[] =
+                        parseHostEntries(result);
+                    resolve(addresses);
+                }
+            });
+        },
+    );
+    return entry;
+}
+function parseHostEntries(
+    result: string[][],
+): { name: string; content: string }[] {
     const addresses: { name: string; content: string }[] = [];
 
     for (const [IP, Host] of result) {
