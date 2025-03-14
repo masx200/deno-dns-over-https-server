@@ -1,6 +1,5 @@
 import { assert, assertGreater } from "@std/assert";
-import { readAll } from "jsr:@std/io";
-import { writeAll } from "jsr:@std/io";
+import { readAll, writeAll } from "jsr:@std/io";
 /**
  * 发送 DNS 查询并接收响应
  * @param dnsPacket - DNS 数据包的二进制格式 (Uint8Array)
@@ -19,7 +18,7 @@ export async function resolveDNStcp(
         // 建立 TCP 连接到 DNS 服务器
         conn = await timeoutPromise(
             Deno.connect({ hostname: serverAddress, port: serverPort }),
-            3000,
+            5000,
         );
         console.log(
             "Connected to DNS server:" + serverAddress + ":" + serverPort,
@@ -36,7 +35,7 @@ export async function resolveDNStcp(
         // const buffer = new Uint8Array(1024 * 1024); // 创建一个缓冲区用于接收数据
         const buffer = await timeoutPromise(
             readAll(conn), /* conn.read(buffer) */
-            3000,
+            5000,
         );
 
         if (buffer.length === 0) {
@@ -142,7 +141,7 @@ if (import.meta.main) {
 }
 export function timeoutPromise<T>(
     promise: Promise<T>,
-    ms: number = 3000,
+    ms: number = 5000,
 ): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {

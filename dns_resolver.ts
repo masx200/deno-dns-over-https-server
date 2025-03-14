@@ -94,7 +94,7 @@ export async function resolveDNSudp(
                     },
                 ),
             ]),
-            3000,
+            5000,
         );
         assertGreater(response.length, 0);
         assert(
@@ -184,7 +184,7 @@ if (import.meta.main) {
 }
 export function timeoutPromise<T>(
     promise: Promise<T>,
-    ms: number = 3000,
+    ms: number = 5000,
 ): Promise<T> {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
