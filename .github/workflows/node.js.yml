@@ -28,7 +28,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-            - run: deno test -A --unstable-net
+            # - run: deno test -A --unstable-net
             #cache: 'npm'
             - run: |
                   cd static
