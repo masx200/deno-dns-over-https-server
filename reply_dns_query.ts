@@ -37,7 +37,7 @@ import { getHostEntry } from "./getHostEntry.ts";
  */
 export async function reply_dns_query(
     packet: DNSPACKETInterface,
-    data: Uint8Array,
+    data: Uint8Array
 ): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
     try {
         /**
@@ -50,32 +50,57 @@ export async function reply_dns_query(
          *          如果packet的question数组的第一个元素的type不是A或AAAA，则返回{ success: false, result: null }。
          */
         if (
-            !([DNSRecordType.A, DNSRecordType.AAAA].includes(
-                packet.question[0]?.type,
-            ))
-        ) return { success: false, result: null };
+            ![DNSRecordType.A, DNSRecordType.AAAA].includes(
+                packet.question[0]?.type
+            )
+        )
+            return { success: false, result: null };
         const name = packet.question[0]?.name;
 
         const localdomainhosts = await getHostEntry(name);
-        const address: string[] | undefined = localdomainhosts.length
+        let address: string[] | undefined = localdomainhosts.length
             ? localdomainhosts
-            : (await Promise.all([
-                // dNSRecordsInstance.ListDNSRecords({
-                //     name: name,
-                //     type: "A",
-                // }),
-                dNSRecordsInstance.ListDNSRecords({
-                    name: name,
-                    type: DNSRecordType.AAAA == packet.question[0]?.type
-                        ? "AAAA"
-                        : "A",
-                }),
-            ])).flat().map((a) => a.content);
+            : (
+                  await Promise.all([
+                      // dNSRecordsInstance.ListDNSRecords({
+                      //     name: name,
+                      //     type: "A",
+                      // }),
+                      dNSRecordsInstance.ListDNSRecords({
+                          name: name,
+                          type:
+                              DNSRecordType.AAAA == packet.question[0]?.type
+                                  ? "AAAA"
+                                  : "A",
+                      }),
+                  ])
+              )
+                  .flat()
+                  .map((a) => a.content);
+
+        /* 添加泛域名解析功能 */
+        // 如果没有找到匹配的地址记录，尝试使用泛域名解析
+        if (!address?.length) {
+            address = (
+                await Promise.all([
+                    dNSRecordsInstance.ListDNSRecords({
+                        name: "*." + name.split(".").slice(1).join("."),
+                        type:
+                            DNSRecordType.AAAA == packet.question[0]?.type
+                                ? "AAAA"
+                                : "A",
+                    }),
+                ])
+            )
+                .flat()
+                .map((a) => a.content);
+        }
         if (
-            address?.length && name &&
-            ([DNSRecordType.A, DNSRecordType.AAAA].includes(
-                packet.question[0]?.type,
-            ))
+            address?.length &&
+            name &&
+            [DNSRecordType.A, DNSRecordType.AAAA].includes(
+                packet.question[0]?.type
+            )
         ) {
             /* 可能有重复的地址 */
             const ipv4 = uniq(address.filter((a) => isIPv4(a)));
@@ -108,12 +133,12 @@ export async function reply_dns_query(
                 [name]: {
                     ttl: get_ttl_min(),
                     class: {
-                        "IN": {
-                            "A": ipv4.length
+                        IN: {
+                            A: ipv4.length
                                 ? ipv4.sort(() => Math.random() - 0.5)
                                 : null,
                             // TODO: Currently only A is returned as logic in dns_server shortcircuits the AAAA record.
-                            "AAAA": ipv6.length
+                            AAAA: ipv6.length
                                 ? ipv6.sort(() => Math.random() - 0.5)
                                 : null,
                             // "TXT": "This is some text.",
