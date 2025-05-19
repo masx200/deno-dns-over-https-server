@@ -80,7 +80,10 @@ export async function reply_dns_query(
 
         /* 添加泛域名解析功能 */
         // 如果没有找到匹配的地址记录，尝试使用泛域名解析
-        if (!address?.length) {
+        if (
+            !address?.length &&
+            "*." + name.split(".").slice(1).join(".") !== name
+        ) {
             address = (
                 await Promise.all([
                     dNSRecordsInstance.ListDNSRecords({
