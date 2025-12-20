@@ -180,7 +180,7 @@ async function importToMongoDB(
         );
         throw error;
     } finally {
-        await client.close();
+        client.close();
         console.log("MongoDB 连接已关闭");
     }
 }
