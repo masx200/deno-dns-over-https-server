@@ -2,17 +2,20 @@
 
 ## 概述
 
-`import-hosts-to-mongodb.ts` 是一个用于将 hosts.log 文件中的 DNS 记录导入到 MongoDB 数据库的 Deno 程序。该程序支持批量导入、重复记录检测、错误处理和详细的进度显示。
+`import-hosts-to-mongodb.ts` 是一个用于将 hosts.log 文件中的 DNS 记录导入到
+MongoDB 数据库的 Deno
+程序。该程序支持批量导入、重复记录检测、错误处理和详细的进度显示。
 
 ## 功能特性
 
 - ✅ 支持批量导入 DNS 记录到 MongoDB
-- ✅ 自动检测并跳过重复记录
+- ✅ 智能合并记录（域名+记录类型为唯一标识）
+- ✅ 自动检测并更新内容不同的记录
 - ✅ 支持 A 记录和 AAAA 记录
 - ✅ 详细的错误处理和日志输出
 - ✅ 命令行参数配置
 - ✅ 进度显示和统计信息
-- ✅ 自动添加创建时间戳
+- ✅ 自动添加创建和更新时间戳
 
 ## 环境要求
 
@@ -30,18 +33,18 @@ deno run --allow-read --allow-net --allow-env import-hosts-to-mongodb.ts [选项
 
 ### 必需参数
 
-| 参数 | 说明 | 示例 |
-|------|------|------|
-| `--mongodb_url` | MongoDB 连接 URL | `mongodb://localhost:27017` |
-| `--mongodb_db` | 数据库名称 | `dns_db` |
-| `--mongodb_collection` | 集合名称 | `dns_records` |
+| 参数                   | 说明             | 示例                        |
+| ---------------------- | ---------------- | --------------------------- |
+| `--mongodb_url`        | MongoDB 连接 URL | `mongodb://localhost:27017` |
+| `--mongodb_db`         | 数据库名称       | `dns_db`                    |
+| `--mongodb_collection` | 集合名称         | `dns_records`               |
 
 ### 可选参数
 
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
+| 参数     | 说明           | 默认值      |
+| -------- | -------------- | ----------- |
 | `--file` | hosts 文件路径 | `hosts.log` |
-| `--help` | 显示帮助信息 | - |
+| `--help` | 显示帮助信息   | -           |
 
 ### 使用示例
 
@@ -88,16 +91,16 @@ hosts.log 文件必须是 JSON 格式，包含 DNS 记录数组：
 
 ```json
 [
-  {
-    "name": "example.com",
-    "content": "192.168.1.1",
-    "type": "A"
-  },
-  {
-    "name": "example.com",
-    "content": "2001:db8::1",
-    "type": "AAAA"
-  }
+    {
+        "name": "example.com",
+        "content": "192.168.1.1",
+        "type": "A"
+    },
+    {
+        "name": "example.com",
+        "content": "2001:db8::1",
+        "type": "AAAA"
+    }
 ]
 ```
 
@@ -112,12 +115,14 @@ hosts.log 文件必须是 JSON 格式，包含 DNS 记录数组：
 程序运行时会显示以下信息：
 
 ### 1. 连接信息
+
 ```
 连接到 MongoDB...
 准备导入 3137 条记录...
 ```
 
 ### 2. 进度显示
+
 ```
 已处理 1000/3137 条记录...
 已处理 2000/3137 条记录...
@@ -125,36 +130,48 @@ hosts.log 文件必须是 JSON 格式，包含 DNS 记录数组：
 ```
 
 ### 3. 导入结果统计
-```
-导入完成！
-- 新增记录: 3137
-- 跳过重复记录: 0
-- 总记录数: 3137
 
-集合 "dns_records" 总记录数: 3137
+```
+合并完成！
+- 新增记录: 2500
+- 合并更新记录: 500
+- 跳过相同记录: 137
+- 总处理记录数: 3137
+
+集合 "dns_records" 总记录数: 3000
 MongoDB 连接已关闭
 ```
 
 ### 4. 错误信息
+
 - 如果记录格式不正确，会显示警告信息
 - 如果文件不存在或格式错误，会显示错误信息
 - 如果 MongoDB 连接失败，会显示详细的错误信息
 
-## 重复记录检测
+## 记录合并逻辑
 
-程序使用以下字段组合来检测重复记录：
+程序使用以下字段组合作为唯一标识：
+
 - `name`（域名）
 - `type`（记录类型）
-- `content`（IP 地址）
 
-如果发现重复记录，会跳过导入并显示信息：
+### 合并策略
+
+1. **新增记录**：如果域名+记录类型组合不存在，直接插入新记录
+2. **合并更新**：如果域名+记录类型组合存在但IP地址不同，更新IP地址
+3. **跳过相同**：如果域名+记录类型和IP地址都完全相同，跳过处理
+
+### 处理示例
+
 ```
-跳过已存在的记录: example.com (A)
+新增记录: example.com (A)
+合并记录: example.com (AAAA) ::1 -> 2001:db8::1
+跳过相同记录: example.com (A)
 ```
 
 ## 数据存储格式
 
-导入到 MongoDB 的记录会自动添加 `createdAt` 时间戳：
+导入到 MongoDB 的记录会自动添加时间戳：
 
 ```json
 {
@@ -162,9 +179,15 @@ MongoDB 连接已关闭
   "name": "example.com",
   "content": "192.168.1.1",
   "type": "A",
-  "createdAt": ISODate("2025-12-20T12:00:00Z")
+  "createdAt": ISODate("2025-12-20T12:00:00Z"),
+  "updatedAt": ISODate("2025-12-20T13:00:00Z")
 }
 ```
+
+### 时间戳说明
+
+- `createdAt`：记录首次创建时间（新增记录时设置）
+- `updatedAt`：记录最后更新时间（合并更新时设置）
 
 ## 批量处理
 
@@ -220,7 +243,9 @@ MongoDB 连接已关闭
 3. **索引优化**
    - 导入前可以在 MongoDB 中创建索引以提高查询速度
    ```javascript
-   db.dns_records.createIndex({ "name": 1, "type": 1, "content": 1 }, { unique: true })
+   // 针对合并逻辑优化索引
+   db.dns_records.createIndex({ "name": 1, "type": 1 }, { unique: true });
+   db.dns_records.createIndex({ "content": 1 }); // 可选：用于IP地址查询
    ```
 
 ## 替代方案

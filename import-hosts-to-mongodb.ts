@@ -4,10 +4,12 @@ import { parse } from "https://deno.land/std@0.224.0/flags/mod.ts";
 import { MongoClient } from "https://deno.land/x/mongo@v0.32.0/mod.ts";
 
 interface DNSRecord {
+    _id?: { toString(): string };
     name: string;
     content: string;
     type: string;
     createdAt?: Date;
+    updatedAt?: Date;
 }
 
 interface Args {
@@ -29,6 +31,12 @@ function showHelp() {
   --mongodb_collection <col> MongoDB 集合名称 (必需)
   --file <path>              hosts 文件路径 (默认: hosts.log)
   --help                     显示此帮助信息
+
+说明:
+  该工具会智能合并DNS记录，基于域名+记录类型作为唯一标识：
+  - 新增：如果记录不存在，直接插入
+  - 合并：如果记录存在但IP不同，更新IP地址  
+  - 跳过：如果记录完全相同，跳过处理
 
 示例:
   deno run --allow-read --allow-net import-hosts-to-mongodb.ts \\
@@ -90,30 +98,52 @@ async function importToMongoDB(
         const db = client.database(dbName);
         const collection = db.collection<DNSRecord>(collectionName);
 
-        console.log(`准备导入 ${records.length} 条记录...`);
+        console.log(`准备合并 ${records.length} 条记录...`);
 
-        // 批量插入，每批最多 1000 条
+        // 批量处理，每批最多 1000 条
         const batchSize = 1000;
         let insertedCount = 0;
-        let updatedCount = 0;
+        let mergedCount = 0;
+        let skippedCount = 0;
 
         for (let i = 0; i < records.length; i += batchSize) {
             const batch = records.slice(i, i + batchSize);
 
             for (const record of batch) {
-                // 检查是否已存在相同的记录（name + type + content 组合）
+                // 检查是否已存在相同的记录（name + type 组合）
                 const existing = await collection.findOne({
                     name: record.name,
                     type: record.type,
-                    content: record.content,
                 });
 
                 if (existing) {
-                    console.log(
-                        `跳过已存在的记录: ${record.name} (${record.type})`,
-                    );
-                    updatedCount++;
+                    if (existing.content !== record.content) {
+                        // 记录存在但内容不同，进行合并更新
+                        await collection.updateOne(
+                            { _id: existing._id },
+                            {
+                                $set: {
+                                    content: record.content,
+                                    updatedAt: new Date(),
+                                },
+                                $setOnInsert: {
+                                    createdAt: existing.createdAt || new Date(),
+                                },
+                            },
+                        );
+                        console.log(
+                            `合并记录: ${record.name} (${record.type}) ${existing.content} -> ${record.content}`,
+                        );
+                        mergedCount++;
+                    } else {
+                        // 记录完全相同，跳过
+                        console.log(
+                            `跳过相同记录: ${record.name} (${record.type})`,
+                        );
+                        skippedCount++;
+                    }
                 } else {
+                    // 记录不存在，插入新记录
                     await collection.insertOne({
                         ...record,
                         createdAt: new Date(),
@@ -129,16 +159,20 @@ async function importToMongoDB(
             );
         }
 
-        console.log(`\n导入完成！`);
+        console.log(`\n合并完成！`);
         console.log(`- 新增记录: ${insertedCount}`);
-        console.log(`- 跳过重复记录: ${updatedCount}`);
-        console.log(`- 总记录数: ${records.length}`);
+        console.log(`- 合并更新记录: ${mergedCount}`);
+        console.log(`- 跳过相同记录: ${skippedCount}`);
+        console.log(`- 总处理记录数: ${records.length}`);
 
         // 显示集合统计信息
         const totalCount = await collection.countDocuments({});
         console.log(`\n集合 "${collectionName}" 总记录数: ${totalCount}`);
     } catch (error) {
-        console.error("MongoDB 操作失败:", error instanceof Error ? error.message : String(error));
+        console.error(
+            "MongoDB 操作失败:",
+            error instanceof Error ? error.message : String(error),
+        );
         throw error;
     } finally {
         await client.close();
@@ -180,7 +214,10 @@ async function main() {
 
         console.log("\n✅ 导入成功完成！");
     } catch (error) {
-        console.error("\n❌ 导入失败:", error instanceof Error ? error.message : String(error));
+        console.error(
+            "\n❌ 导入失败:",
+            error instanceof Error ? error.message : String(error),
+        );
         Deno.exit(1);
     }
 }

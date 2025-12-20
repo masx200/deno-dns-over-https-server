@@ -131,7 +131,10 @@ async function main() {
 
         console.log("\n✅ 准备完成！");
     } catch (error) {
-        console.error("\n❌ 处理失败:", error instanceof Error ? error.message : String(error));
+        console.error(
+            "\n❌ 处理失败:",
+            error instanceof Error ? error.message : String(error),
+        );
         Deno.exit(1);
     }
 }
