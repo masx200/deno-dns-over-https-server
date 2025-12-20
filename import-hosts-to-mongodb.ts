@@ -69,8 +69,8 @@ async function parseHostsFile(filePath: string): Promise<DNSRecord[]> {
             }
         }
 
-        return records.filter((record) =>
-            record.name && record.content && record.type
+        return records.filter(
+            (record) => record.name && record.content && record.type
         );
     } catch (error) {
         if (error instanceof Deno.errors.NotFound) {
@@ -87,7 +87,7 @@ async function importToMongoDB(
     records: DNSRecord[],
     mongodbUrl: string,
     dbName: string,
-    collectionName: string,
+    collectionName: string
 ) {
     const client = new MongoClient();
 
@@ -111,51 +111,55 @@ async function importToMongoDB(
 
             for (const record of batch) {
                 // 检查是否已存在相同的记录（name + type 组合）
-                const existing = await collection.findOne({
+
+                for await (const existing of collection.find({
                     name: record.name,
                     type: record.type,
-                });
-
-                if (existing) {
-                    if (existing.content !== record.content) {
-                        // 记录存在但内容不同，进行合并更新
-                        await collection.updateOne(
-                            { _id: existing._id },
-                            {
-                                $set: {
-                                    content: record.content,
-                                    updatedAt: new Date(),
-                                },
-                                $setOnInsert: {
-                                    createdAt: existing.createdAt || new Date(),
-                                },
-                            },
-                        );
-                        console.log(
-                            `合并记录: ${record.name} (${record.type}) ${existing.content} -> ${record.content}`,
-                        );
-                        mergedCount++;
+                }))
+                    if (existing) {
+                        if (existing.content !== record.content) {
+                            // 记录存在但内容不同，进行合并更新
+                            console.log(
+                                await collection.updateMany(
+                                    { _id: existing._id },
+                                    {
+                                        $set: {
+                                            content: record.content,
+                                            updatedAt: new Date(),
+                                        },
+                                        $setOnInsert: {
+                                            createdAt:
+                                                existing.createdAt ||
+                                                new Date(),
+                                        },
+                                    }
+                                )
+                            );
+                            console.log(
+                                `合并记录: ${record.name} (${record.type}) ${existing.content} -> ${record.content}`
+                            );
+                            mergedCount++;
+                        } else {
+                            // 记录完全相同，跳过
+                            console.log(
+                                `跳过相同记录: ${record.name} (${record.type})`
+                            );
+                            skippedCount++;
+                        }
                     } else {
-                        // 记录完全相同，跳过
-                        console.log(
-                            `跳过相同记录: ${record.name} (${record.type})`,
-                        );
-                        skippedCount++;
+                        // 记录不存在，插入新记录
+                        await collection.insertOne({
+                            ...record,
+                            createdAt: new Date(),
+                        });
+                        insertedCount++;
                     }
-                } else {
-                    // 记录不存在，插入新记录
-                    await collection.insertOne({
-                        ...record,
-                        createdAt: new Date(),
-                    });
-                    insertedCount++;
-                }
             }
 
             console.log(
-                `已处理 ${
-                    Math.min(i + batchSize, records.length)
-                }/${records.length} 条记录...`,
+                `已处理 ${Math.min(i + batchSize, records.length)}/${
+                    records.length
+                } 条记录...`
             );
         }
 
@@ -171,7 +175,7 @@ async function importToMongoDB(
     } catch (error) {
         console.error(
             "MongoDB 操作失败:",
-            error instanceof Error ? error.message : String(error),
+            error instanceof Error ? error.message : String(error)
         );
         throw error;
     } finally {
@@ -192,7 +196,7 @@ async function main() {
     if (!args.mongodb_url || !args.mongodb_db || !args.mongodb_collection) {
         console.error("错误: 缺少必需参数");
         console.error(
-            "请提供 --mongodb_url, --mongodb_db, 和 --mongodb_collection",
+            "请提供 --mongodb_url, --mongodb_db, 和 --mongodb_collection"
         );
         console.error("\n使用 --help 查看详细使用说明");
         Deno.exit(1);
@@ -209,14 +213,14 @@ async function main() {
             records,
             args.mongodb_url!,
             args.mongodb_db!,
-            args.mongodb_collection!,
+            args.mongodb_collection!
         );
 
         console.log("\n✅ 导入成功完成！");
     } catch (error) {
         console.error(
             "\n❌ 导入失败:",
-            error instanceof Error ? error.message : String(error),
+            error instanceof Error ? error.message : String(error)
         );
         Deno.exit(1);
     }
