@@ -37,7 +37,7 @@ import { getHostEntry } from "./getHostEntry.ts";
  */
 export async function reply_dns_query(
     packet: DNSPACKETInterface,
-    data: Uint8Array
+    data: Uint8Array,
 ): Promise<{ success: boolean; result: Uint8Array | null | undefined }> {
     try {
         /**
@@ -51,32 +51,32 @@ export async function reply_dns_query(
          */
         if (
             ![DNSRecordType.A, DNSRecordType.AAAA].includes(
-                packet.question[0]?.type
+                packet.question[0]?.type,
             )
-        )
+        ) {
             return { success: false, result: null };
+        }
         const name = packet.question[0]?.name;
 
         const localdomainhosts = await getHostEntry(name);
         let address: string[] | undefined = localdomainhosts.length
             ? localdomainhosts
             : (
-                  await Promise.all([
-                      // dNSRecordsInstance.ListDNSRecords({
-                      //     name: name,
-                      //     type: "A",
-                      // }),
-                      dNSRecordsInstance.ListDNSRecords({
-                          name: name,
-                          type:
-                              DNSRecordType.AAAA == packet.question[0]?.type
-                                  ? "AAAA"
-                                  : "A",
-                      }),
-                  ])
-              )
-                  .flat()
-                  .map((a) => a.content);
+                await Promise.all([
+                    // dNSRecordsInstance.ListDNSRecords({
+                    //     name: name,
+                    //     type: "A",
+                    // }),
+                    dNSRecordsInstance.ListDNSRecords({
+                        name: name,
+                        type: DNSRecordType.AAAA == packet.question[0]?.type
+                            ? "AAAA"
+                            : "A",
+                    }),
+                ])
+            )
+                .flat()
+                .map((a) => a.content);
 
         /* 添加泛域名解析功能 */
         // 如果没有找到匹配的地址记录，尝试使用泛域名解析
@@ -88,10 +88,9 @@ export async function reply_dns_query(
                 await Promise.all([
                     dNSRecordsInstance.ListDNSRecords({
                         name: "*." + name.split(".").slice(1).join("."),
-                        type:
-                            DNSRecordType.AAAA == packet.question[0]?.type
-                                ? "AAAA"
-                                : "A",
+                        type: DNSRecordType.AAAA == packet.question[0]?.type
+                            ? "AAAA"
+                            : "A",
                     }),
                 ])
             )
@@ -102,7 +101,7 @@ export async function reply_dns_query(
             address?.length &&
             name &&
             [DNSRecordType.A, DNSRecordType.AAAA].includes(
-                packet.question[0]?.type
+                packet.question[0]?.type,
             )
         ) {
             /* 可能有重复的地址 */

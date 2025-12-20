@@ -10,13 +10,8 @@
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     font-family:
-        ui-sans-serif,
-        system-ui,
-        sans-serif,
-        Apple Color Emoji,
-        Segoe UI Emoji,
-        Segoe UI Symbol,
-        Noto Color Emoji;
+        ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+        Segoe UI Symbol, Noto Color Emoji;
     font-feature-settings: normal;
     font-variation-settings: normal;
     -moz-tab-size: 4;
@@ -50,14 +45,8 @@ b, strong {
 }
 code, kbd, pre, samp {
     font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        Liberation Mono,
-        Courier New,
-        monospace;
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono,
+        Courier New, monospace;
     font-feature-settings: normal;
     font-size: 1em;
     font-variation-settings: normal;
