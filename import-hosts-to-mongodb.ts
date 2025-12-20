@@ -115,7 +115,7 @@ async function importToMongoDB(
                 for await (const existing of collection.find({
                     name: record.name,
                     type: record.type,
-                }))
+                })) {
                     if (existing) {
                         if (existing.content !== record.content) {
                             // 记录存在但内容不同，进行合并更新
@@ -154,6 +154,7 @@ async function importToMongoDB(
                         });
                         insertedCount++;
                     }
+                }
             }
 
             console.log(
